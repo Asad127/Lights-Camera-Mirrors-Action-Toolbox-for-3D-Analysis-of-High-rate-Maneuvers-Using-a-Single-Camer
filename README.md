@@ -1,5 +1,5 @@
-# 3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP
-## Camera calibration example - Corner extraction-calibration-additional tools 
+# **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
+## **Camera calibration example - Corner extraction-calibration-additional tools** 
 
 
 
@@ -8,7 +8,7 @@ Please report bugs/questions/suggestions to Jean-Yves Bouguet at jean-yves.bougu
 
 The C implementation of this toolbox is included in the Open Source Computer Vision library distributed by Intel and freely available online.
 
-**Content**
+# **Content**
 
 - System requirements
 - Getting started
@@ -20,11 +20,11 @@ The C implementation of this toolbox is included in the Open Source Computer Vis
 - References
 - A few links related to camera calibration
 
-**System requirements**
+# **System requirements**
   This toolbox works on Matlab 5.x and Matlab 6.x (up to Matlab 6.5) on Windows, Unix and Linux systems (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other platform supporting Matlab 5.x and 6.x.
 
 
-**Getting started**
+# **Getting started**
 
 - Go to the download page, and retrieve the latest version of the complete camera calibration toolbox for Matlab.
 - Store the individual matlab files (.m files) into a unique folder TOOLBOX_calib (default folder name).
@@ -46,13 +46,14 @@ Since both modes have the exact same user interface, in the context of this docu
 Note that the mode selection step can be bypassed altogether by directly running calib_gui(0) for the normal mode or calib_gui(1) for the memory efficient mode (try help calib_gui for more information).
 
 - You are now ready to use the toolbox for calibration.
-- 
-**Calibration example**
 
-- First calibration example - Corner extraction, calibration, additional tools
-    This section takes you through a complete calibration example based on a total of 20 (and 25) images of a planar checkerboard. This example lets you learn how to use all the features of the toolbox: loading calibration images, extracting image corners, running the main calibration engine, displaying the results, controlling accuracies, adding and suppressing images, undistorting images, exporting calibration data to different formats... This example is highly recommended for someone who is just starting using the toolbox. 
+# **Calibration examples**
 
-**First calibration example - Corner extraction, calibration, additional tools**
+**Calibration example - Corner extraction, calibration, additional tools**
+
+This section takes you through a complete calibration example based on a total of 20 (and 25) images of a planar checkerboard. This example lets you learn how to use all the features of the toolbox: loading calibration images, extracting image corners, running the main calibration engine, displaying the results, controlling accuracies, adding and suppressing images, undistorting images, exporting calibration data to different formats... This example is highly recommended for someone who is just starting using the toolbox. 
+
+**Calibration example using original view - Corner extraction, calibration, additional tools**
 This section takes you through a complete calibration example based on a total of 20 (and 25) images of a planar checkerboard placed in the mirror setup.
 
 This example lets you learn how to use all the features of the toolbox: loading calibration images, extracting image corners, running the main calibration engine, displaying the results, controlling accuracies, adding and suppressing images, undistorting images, exporting calibration data to different formats... This example is highly recommended for someone who is just starting using the toolbox.
@@ -186,3 +187,16 @@ he extrinsic parameters (relative positions of the grids with respect to the cam
 On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane. To switch from a "camera-centered" view to a "world-centered" view, just click on the Switch to world-centered view button located at the bottom-left corner of the figure.
 
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
+
+******
+
+## Features
+
+
+## License
+
+MIT
+
+
+
+  
