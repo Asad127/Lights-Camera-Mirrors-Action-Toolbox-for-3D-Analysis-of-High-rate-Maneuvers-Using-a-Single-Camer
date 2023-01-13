@@ -1,9 +1,8 @@
 # 3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP
 ## Camera calibration example - Corner extraction-calibration-additional tools 
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+
  This is a release of a Camera Calibration Toolbox for Matlab® with a complete documentation. This document may also be used as a tutorial on camera calibration since it includes general information about calibration, references and related links.
 Please report bugs/questions/suggestions to Jean-Yves Bouguet at jean-yves.bouguet@intel.com.
 
@@ -35,6 +34,7 @@ The C implementation of this toolbox is included in the Open Source Computer Vis
 
 
 This selection window lets you choose between two modes of operation of the toolbox: standard or memory efficient. In standard mode, all the images used for calibration are loaded into memory once and never read again from disk. This minimizes the overall number of disk access, and speeds up all image processing and image display functions. However, if the images are large, or there are a lot of them, then the OUT OF MEMORY error message may be encountered. If this is the case, the new memory efficient version of the toolbox may be used. In this mode, every image is loaded one by one and never stored permanently in memory.
+
 ![image](https://user-images.githubusercontent.com/65610334/211983174-64161d3e-ad95-41e0-b7f5-759fc5859001.png)
 
 If you choose to run the standard version of the toolbox now, you can always switch to the other memory efficient mode later in case the OUT OF MEMORY error message is encountered. The two modes of operation are totally compatible (for input and output) and interchangeable.
