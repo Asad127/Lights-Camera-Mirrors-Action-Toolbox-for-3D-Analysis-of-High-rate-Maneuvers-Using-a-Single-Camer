@@ -38,7 +38,8 @@ Click on the Image names button in the Camera calibration tool window. Enter the
 - **Extract the grid corners:**
 Click on the Extract grid corners button in the Camera calibration tool window.
 
-![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
+
+------------------------------------------------------------![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
 
 Extraction of the grid corners on the images
 Number(s) of image(s) to process ([] = all images) = 
@@ -94,7 +95,7 @@ After corner extraction, the matlab data file calib_data.mat is automatically ge
 After corner extraction, click on the button Calibration of the Camera calibration tool to run the main camera calibration procedure.
 
 
-  ![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
+ ------------------------------------------------------------ ![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
 
 Calibration is done in two steps: first initialization, and then nonlinear optimization.
 The initialization step computes a closed-form solution for the calibration parameters based not including any lens distortion (program name: init_calib_param.m).
@@ -135,7 +136,7 @@ The Calibration parameters are stored in a number of variables.
 
 Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question
 
-  ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
+ ------------------------------------------------------------ ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
   
 Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
 Number(s) of image(s) to show ([] = all images) = 
@@ -155,7 +156,7 @@ The reprojection error is also shown in the form of **color-coded crosses:**
 In order to exit the error analysis tool, right-click on anywhere on the figure (you will understand later the use of this option).
 Click on Show Extrinsic in the Camera calibration tool. 
 
-![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
+------------------------------------------------------------![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
 
 The extrinsic parameters (relative positions of the grids with respect to the camera) are then shown in a form of a 3D plot: 
 
