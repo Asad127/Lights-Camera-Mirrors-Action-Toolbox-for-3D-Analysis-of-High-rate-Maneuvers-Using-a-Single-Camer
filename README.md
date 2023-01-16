@@ -311,7 +311,8 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 ## **3D Reconstruction of different objects**
 
 ## **Points selection**
--Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
+
+- Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
 
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
