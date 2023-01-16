@@ -174,7 +174,7 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 
 This section explains how to use all the **features** of the toolbox to calibrate the **mirror**.
 ## **Steps**
- - **The initial procedures necessary to calibrate the mirror are exactly the same as those described in the calibration of the original view**.
+ - **The initial procedures necessary to calibrate the mirror are exactly the same as those described in the calibration of the primary original view**.
 - **The only thing that is different is the order in which you click because, in the mirror, the points are reflected**.
 - **The section below explains visually the order of clicking in the mirror**.
 
@@ -223,18 +223,7 @@ After corner extraction, the matlab data file calib_data.mat is automatically ge
 
 **Main Calibration step**
 
-After corner extraction, click on the button Calibration of the Camera calibration tool to run the main camera calibration procedure.
-Calibration is done in two steps: first initialization, and then nonlinear optimization.
-The initialization step computes a closed-form solution for the calibration parameters based not including any lens distortion (program name: init_calib_param.m).
-The non-linear optimization step minimizes the total reprojection error (in the least squares sense) over all the calibration parameters (9 DOF for intrinsic: focal, principal point, distortion coefficients, and 6*20 DOF extrinsic => 129 parameters). For a complete description of the calibration parameters, click on that link. The optimization is done by iterative gradient descent with an explicit (closed-form) computation of the Jacobian matrix (program name: go_calib_optim.m).
-
-Aspect ratio optimized (est_aspect_ratio = 1) -> both components of fc are estimated (DEFAULT).
-Principal point optimized (center_optim=1) - (DEFAULT). To reject principal point, set center_optim=0
-Skew not optimized (est_alpha=0) - (DEFAULT)
-Distortion not fully estimated (defined by the variable est_dist):
-     Sixth order distortion not estimated (est_dist(5)=0) - (DEFAULT) .
-Initialization of the principal point at the center of the image.
-Initialization of the intrinsic parameters using the vanishing points of planar patterns.
+The main calibration step for the mirror view **same** as described for the **original view**.
 
 **Initialization of the intrinsic parameters - Number of images: 12**
 
@@ -260,10 +249,7 @@ Estimation of uncertainties...done
 
 **Note: The numerical errors are approximately three times the standard deviations (for reference).**
 
-The Calibration parameters are stored in a number of variables. 
-
-Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question **Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:*8
-**Number(s) of image(s) to show ([] = all images) = **
+The Calibration parameters are stored in a number of variables.  The **reprojection** on the **images** step is the same as **explained** in the **original view**.
 
 
 The following figures shows the  four images with the **detected corners (red crosses)** and the reprojected grid corners (circles). 
@@ -281,13 +267,13 @@ The **reprojection error** is also shown in the form of **color-coded crosses:**
 ![r5](https://user-images.githubusercontent.com/65610334/212606286-b63e08bc-d689-41c8-81f0-7d249d653b8b.jpg)
 In order to exit the error analysis tool, right-click on anywhere on the figure (you will understand later the use of this option).
 
-Click on **Show Extrinsic in the Camera calibration tool**. 
+Follow the same technique as indicated in the **calibration of original view** to display the **extrinsic parameter**. 
 
 The extrinsic parameters (relative positions of the grids with respect to the camera) are then shown in a form of a 3D plot: 
 
 ![3d](https://user-images.githubusercontent.com/65610334/212606407-4e0ecebd-f88a-4601-be5e-90e711b6797d.jpg)
 
-On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane. To switch from a "camera-centered" view to a "world-centered" view, just click on the Switch to world-centered view button located at the bottom-left corner of the figure.
+Simply click the Switch to **world-centered view** button in the bottom-left corner of the image to go from a **"camera-centered" perspective to a "world-centered" view**. 
 
 ![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
@@ -327,7 +313,8 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 ## **Note**
 **We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
 ## License
-**MIT*
+**ROMI LAB
+SEECS-NUST-PAKISTAN**
 
 
 
