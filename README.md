@@ -113,9 +113,9 @@ Initialization of the intrinsic parameters using the vanishing points of planar 
 **Calibration parameters after initialization:**
 
 - Focal Length:          fc = [ 1529.18846   1529.18846 ]
-Principal point:       cc = [ 1631.50000   734.50000 ]
-Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
-Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
+- Principal point:       cc = [ 1631.50000   734.50000 ]
+- Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
+- Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
 
 **Main calibration optimization procedure - Number of images: 12**
 Gradient descent iterations: 1...2...3...4...5...6...7...8...9...10...done
@@ -124,10 +124,10 @@ Estimation of uncertainties...done
 **Calibration results after optimization (with uncertainties):**
 
 - Focal Length:          fc = [ 1507.97898   1496.24779 ] ± [ 26.82888   26.88096 ]
-Principal point:       cc = [ 1536.92900   695.75342 ] ± [ 38.21710   42.19543 ]
-Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
-Distortion:            kc = [ -0.12315   0.13155   0.00248   -0.01555  0.00000 ] ± [ 0.05752   0.11221   0.00904   0.00697  0.00000 ]
-Pixel error:          err = [ 0.23942   0.24756 ]
+- Principal point:       cc = [ 1536.92900   695.75342 ] ± [ 38.21710   42.19543 ]
+- Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
+- Distortion:            kc = [ -0.12315   0.13155   0.00248   -0.01555  0.00000 ] ± [ 0.05752   0.11221   0.00904   0.00697  0.00000 ]
+- Pixel error:          err = [ 0.23942   0.24756 ]
 
 **Note: The numerical errors are approximately three times the standard deviations (for reference).**
 
@@ -327,7 +327,7 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 ## **Note**
 **We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
 ## License
-**MIT**
+**MIT*
 
 
 
