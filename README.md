@@ -324,11 +324,14 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 - Now you have the marked corresponding **2d** points for the object you want to reconstruct it.
 - Load the **merged parameter file** which contains the camera matrix for the original and mirror view.
 - Run the following file https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/3reconstruction.m to reconstruct different objects.
+- 
 - The ouput of the above code is as follows:
+- 
 ![R4](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
-- The illustration 3d world points  is shown below:
-              ![untitl211221ed](https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg)
+- The illustration 3d world points  is shown below: **Note(We flip the world coordinated points during the 3d reconstruction in the mirror viewed as the camera toolbox reflects the world coordinates points in the mirror compared to the original view)**  
+ ![untitl211221ed](https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg)
+        
 
 - While the error histogram between the 2d original points and 2d estimated points is as follows:
 
