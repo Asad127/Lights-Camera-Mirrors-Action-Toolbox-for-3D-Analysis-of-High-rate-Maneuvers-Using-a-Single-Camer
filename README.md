@@ -44,12 +44,17 @@ Number(s) of image(s) to process ([] = all images) =
 
   Then, select the default window size of the corner finder: wintx=winty=5 by pressing "enter" with empty arguments to the wintx and winty question. 
 This leads to a effective window of size 11x11 pixels.
-    **Extraction of the grid corners on the images
+
+    **Extraction of the grid corners on the images**
+    
     Number(s) of image(s) to process ([] = all images) = 
+    
     Window size for corner finder (wintx and winty):
+    
     wintx ([] = 26) = 13
     winty ([] = 26) = 13
-    Window size = 27x27**
+    Window size = 27x27
+    
 Do you want to use the automatic square counting mechanism (0=[]=default)
   or do you always want to enter the number of squares manually (1,other)?
 
