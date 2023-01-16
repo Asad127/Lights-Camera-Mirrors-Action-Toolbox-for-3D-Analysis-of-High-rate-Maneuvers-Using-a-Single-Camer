@@ -10,7 +10,8 @@ If you are new to the camera calibration toolbox. Go to the following website ht
 # Calibration Dataset Collection
 The following section explains the camera calibration dataset in details. Setup for calibration and multi-view capturing of object is shown in the follwowing figure.
 
-images
+
+  ![123](https://user-images.githubusercontent.com/65610334/212621713-6e8b4379-a18b-4971-83ee-c91948d93592.jpeg)
 
 - **Print a checker pattern and note the size of the square on the checker pattern.**
 -**Place your camera on the camera stand and place it at a certain distance from the mirror setup/container.**
