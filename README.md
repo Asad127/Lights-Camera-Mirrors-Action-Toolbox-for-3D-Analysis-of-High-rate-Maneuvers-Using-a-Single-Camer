@@ -313,8 +313,7 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 ## **Note**
 **We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
 ## License
-**ROMI LAB
-SEECS-NUST-PAKISTAN**
+**MIT**
 
 
 
