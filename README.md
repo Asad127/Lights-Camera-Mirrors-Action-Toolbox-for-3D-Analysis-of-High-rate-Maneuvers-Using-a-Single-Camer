@@ -37,6 +37,9 @@ Click on the Image names button in the Camera calibration tool window. Enter the
 ![Calibration Images](https://user-images.githubusercontent.com/65610334/212247154-20bdaa4c-e473-4a52-afed-8535061711e3.png)
 - **Extract the grid corners:**
 Click on the Extract grid corners button in the Camera calibration tool window.
+
+![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
+
 Extraction of the grid corners on the images
 Number(s) of image(s) to process ([] = all images) = 
 
@@ -89,6 +92,10 @@ After corner extraction, the matlab data file calib_data.mat is automatically ge
 **Main Calibration step**
 
 After corner extraction, click on the button Calibration of the Camera calibration tool to run the main camera calibration procedure.
+
+
+  ![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
+
 Calibration is done in two steps: first initialization, and then nonlinear optimization.
 The initialization step computes a closed-form solution for the calibration parameters based not including any lens distortion (program name: init_calib_param.m).
 The non-linear optimization step minimizes the total reprojection error (in the least squares sense) over all the calibration parameters (9 DOF for intrinsic: focal, principal point, distortion coefficients, and 6*20 DOF extrinsic => 129 parameters). For a complete description of the calibration parameters, click on that link. The optimization is done by iterative gradient descent with an explicit (closed-form) computation of the Jacobian matrix (program name: go_calib_optim.m).
@@ -126,7 +133,11 @@ Pixel error:          err = [ 0.23942   0.24756 ]
 
 The Calibration parameters are stored in a number of variables. 
 
-Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
+Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question
+
+  ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
+  
+Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
 Number(s) of image(s) to show ([] = all images) = 
 
 
@@ -143,7 +154,10 @@ The reprojection error is also shown in the form of **color-coded crosses:**
 ![error11](https://user-images.githubusercontent.com/65610334/212270799-077fa4b1-0888-40b4-b471-e7cf41e0760e.jpg)
 In order to exit the error analysis tool, right-click on anywhere on the figure (you will understand later the use of this option).
 Click on Show Extrinsic in the Camera calibration tool. 
-he extrinsic parameters (relative positions of the grids with respect to the camera) are then shown in a form of a 3D plot: 
+
+![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
+
+The extrinsic parameters (relative positions of the grids with respect to the camera) are then shown in a form of a 3D plot: 
 
 ![extrrr](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
@@ -156,37 +170,14 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 
 ## **Calibrating Mirror View**
 
-**Calibrating using mirror view - Corner extraction, calibration, additional tools**
+***Calibrating using mirror view - Corner extraction, calibration, additional tools**
 
-This section explains how to use all the features of the toolbox: loading calibration images, extracting image corners, running the main calibration engine, displaying the results, controlling accuracies, adding and suppressing images, undistorting images, exporting calibration data to different formats...
+This section explains how to use all the **features** of the toolbox to calibrate the **mirror**.
 ## **Steps**
- - Download the calibration images all at once from Dataset folder or one by one, and store the 20 images into a seperate folder named calib_example. 
- ![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
+ - **The initial procedures necessary to calibrate the mirror are exactly the same as those described in the calibration of the primary original view**.
+- **The only thing that is different is the order in which you click because, in the mirror, the points are reflected**.
+- **The section below explains visually the order of clicking in the mirror**.
 
-- From within matlab, go to the example folder calib_data containing the images. 
-- From within matlab, go to the example folder calib_data containing the images. 
-Click on the Image names button in the Camera calibration tool window. Enter the basename of the calibration images (Image) and the image format (tif).All the images (the 20 of them) are then loaded in memory (through the command Read images that is automatically executed) in the variables I_1, I_2 ,..., I_20.The number of images is stored in the variable n_ima (=20 here).
-
-![Calibration Images](https://user-images.githubusercontent.com/65610334/212247154-20bdaa4c-e473-4a52-afed-8535061711e3.png)
-- **Extract the grid corners:**
-Click on the Extract grid corners button in the Camera calibration tool window.
-Extraction of the grid corners on the images
-Number(s) of image(s) to process ([] = all images) = **press enter**
-
-  **Press "enter" (with an empty argument) to select all the images (otherwise, you would enter a list of image indices like [2 5 8 10 12] to extract corners of a subset of images).**
-
-  Then, select the default window size of the corner finder: wintx=winty=5 by pressing "enter" with empty arguments to the wintx and winty question. 
-This leads to a effective window of size 11x11 pixels.
-    **Extraction of the grid corners on the images
-    Number(s) of image(s) to process ([] = all images) =  **press enter**
-    Window size for corner finder (wintx and winty):
-    wintx ([] = 26) = 13
-    winty ([] = 26) = 13
-    Window size = 27x27**
-Do you want to use the automatic square counting mechanism (0=[]=default)
-  or do you always want to enter the number of squares manually (1,other)? **press enter**
-
-The corner extraction engine includes an automatic mechanism for counting the number of squares in the grid. This tool is specially convenient when working with a large number of images since the user does not have to manually enter the number of squares in both x and y directions of the pattern.
 
 **Processing image 1...
 Using (wintx,winty)=(13,13) - Window size = 27x27      (Note: To reset the window size, run script clearwin)
@@ -202,10 +193,14 @@ Click on the four extreme corners of the rectangular complete pattern (the first
 
 **Ordering rule for clicking:** 
 
-The first clicked point is selected to be associated to the origin point of the reference frame attached to the grid. The other three points of the rectangular grid can be clicked in any order. This first-click rule is especially important if you need to calibrate externally multiple cameras (i.e. compute the relative positions of several cameras in space)
+- **The first point which is the origin in the mirror view is the reflected version of the origin point original view.**
+- **The 2nd point in the mirror view is the reflected version of the 2nd point's original view.**
+- **The 3rd point in the mirror view is the reflected version of the 3rd point's original view.**
+- **The 4th point in the mirror view is the reflected version of the 4th point's original view.**
+
 
 ![asddd](https://user-images.githubusercontent.com/65610334/212284205-98c2ad36-cfc8-4c32-bb10-5470510179c5.jpg)
-The boundary of the calibration grid is then shown below: 
+The boundary of the **calibration grid** is then shown below: 
 ![BBIMAGES](https://user-images.githubusercontent.com/65610334/212285450-3e0ecadc-eb91-4ae3-a029-32efa048535f.jpg)
 
 Enter the sizes dX and dY in X and Y of each square in the grid (in this case, dX=dY=13mm=default values): 
@@ -332,8 +327,7 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 ## **Note**
 **We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
 ## License
-**ROMI LAB
-SEECS-NUST-PAKISTAN**
+**MIT**
 
 
 
