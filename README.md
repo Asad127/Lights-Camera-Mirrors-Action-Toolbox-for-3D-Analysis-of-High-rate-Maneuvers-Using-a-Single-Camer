@@ -1,5 +1,5 @@
 # **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
-
+## **Camera calibration  - Corner extraction-calibration-additional tools** 
 # **System requirements**
   This toolbox works on Matlab 5.x and Matlab 6.x (up to Matlab 6.5) on Windows, Unix and Linux systems (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other platform supporting Matlab 5.x and 6.x.
 
@@ -8,7 +8,8 @@
 If you are new to the camera calibration toolbox. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about camera calibration.This  is highly recommended for someone who is just starting using the toolbox. 
 
 # Calibration Dataset Collection
-The following section explains the camera calibration dataset in detail. The setup for calibration and multi-view capturing of objects is shown in the following figure.
+The following section explains the camera calibration dataset in details. Setup for calibration and multi-view capturing of object is shown in the follwowing figure.
+
 
   ![123](https://user-images.githubusercontent.com/65610334/212621713-6e8b4379-a18b-4971-83ee-c91948d93592.jpeg)
 
@@ -53,7 +54,7 @@ Do you want to use the automatic square counting mechanism (0=[]=default)
   or do you always want to enter the number of squares manually (1,other)?
 
 
-The corner extraction engine includes an automatic mechanism for counting the number of squares in the grid. This tool is specially convenient when working with a large number of images since the user does not have to manually enter the number of squares in both x and y directions of the pattern. On some very rare occasions however, this code may not predict the right number of squares. This would typically happen when calibrating lenses with extreme distortions. At this point in the corner extraction procedure, the program gives the option to the user to disable the automatic square counting code. In that special mode, the user would be prompted for the square count for every image. In this present example, it is perfectly appropriate to keep working in the default mode (i.e. with automatic square counting activated), and therefore, simply press "enter" with an empty argument. (NOTE: it is generally recommended to first use the corner extraction code in this default mode, and then, if need be, re-process the few images with "problems")
+The corner extraction engine includes an automatic mechanism for counting the number of squares in the grid. 
 
 **Processing image 1...
 Using (wintx,winty)=(13,13) - Window size = 27x27      (Note: To reset the window size, run script clearwin)
@@ -123,24 +124,21 @@ Pixel error:          err = [ 0.23942   0.24756 ]
 
 **Note: The numerical errors are approximately three times the standard deviations (for reference).**
 
-The Calibration parameters are stored in a number of variables. For a complete description of them, visit this page. Notice that the skew coefficient alpha_c and the 6th order radial distortion coefficient (the last entry of kc) have not been estimated (this is the default mode). Therefore, the angle between the x and y pixel axes is 90 degrees. In most practical situations, this is a very good assumption. However, later on, a way of introducing the skew coefficient alpha_c in the optimization will be presented.
-
-Observe that only 10 gradient descent iterations are required in order to reach the minimum. This means only 10 evaluations of the reprojection function + Jacobian computation and inversion. The reason for that fast convergence is the quality of the initial guess for the parameters computed by the initialization procedure.
-For now, ignore the recommendation of the system to reduce the distortion model. The reprojection error is still too large to make a judgement on the complexity of the model. This is mainly because some of the grid corners were not very precisely extracted for a number of images.
+The Calibration parameters are stored in a number of variables. 
 
 Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
 Number(s) of image(s) to show ([] = all images) = 
 
 
-The following figures shows the first four images with the detected corners (red crosses) and the reprojected grid corners (circles). 
+The **following figures** shows the  **four images** with the detected corners (red crosses) and the reprojected grid corners (circles). 
 
 
 ![Asad](https://user-images.githubusercontent.com/65610334/212270143-6e7e929a-3dee-4e6a-903a-d3b5ce15f6cf.jpg)
 
-Number(s) of image(s) to show ([] = all images) = 
-Pixel error:      err = [0.23942   0.24756] (all active images)
+**Number(s) of image(s) to show ([] = all images) = 
+Pixel error:      err = [0.23942   0.24756] (all active images)**
 
-The reprojection error is also shown in the form of color-coded crosses: 
+The reprojection error is also shown in the form of **color-coded crosses:** 
 
 ![error11](https://user-images.githubusercontent.com/65610334/212270799-077fa4b1-0888-40b4-b471-e7cf41e0760e.jpg)
 In order to exit the error analysis tool, right-click on anywhere on the figure (you will understand later the use of this option).
@@ -267,16 +265,13 @@ Estimation of uncertainties...done
 
 **Note: The numerical errors are approximately three times the standard deviations (for reference).**
 
-The Calibration parameters are stored in a number of variables. For a complete description of them, visit this page. Notice that the skew coefficient alpha_c and the 6th order radial distortion coefficient (the last entry of kc) have not been estimated (this is the default mode). Therefore, the angle between the x and y pixel axes is 90 degrees. In most practical situations, this is a very good assumption. However, later on, a way of introducing the skew coefficient alpha_c in the optimization will be presented.
+The Calibration parameters are stored in a number of variables. 
 
-Observe that only 13 gradient descent iterations are required in order to reach the minimum. This means only 13 evaluations of the reprojection function + Jacobian computation and inversion. The reason for that fast convergence is the quality of the initial guess for the parameters computed by the initialization procedure.
-For now, ignore the recommendation of the system to reduce the distortion model. The reprojection error is still too large to make a judgement on the complexity of the model. This is mainly because some of the grid corners were not very precisely extracted for a number of images.
-
-Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
-Number(s) of image(s) to show ([] = all images) = 
+Click on Reproject on images in the Camera calibration tool to show the reprojections of the grids onto the original images. These projections are computed based on the current intrinsic and extrinsic parameters. Input an empty string (just press "enter") to the question **Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:*8
+**Number(s) of image(s) to show ([] = all images) = **
 
 
-The following figures shows the first four images with the detected corners (red crosses) and the reprojected grid corners (circles). 
+The following figures shows the  four images with the **detected corners (red crosses)** and the reprojected grid corners (circles). 
 
 
 
@@ -311,8 +306,7 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 ## **3D Reconstruction of different objects**
 
 ## **Points selection**
-
-- Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
+-Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
 
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
@@ -325,14 +319,11 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 - Now you have the marked corresponding **2d** points for the object you want to reconstruct it.
 - Load the **merged parameter file** which contains the camera matrix for the original and mirror view.
 - Run the following file https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/3reconstruction.m to reconstruct different objects.
-
 - The ouput of the above code is as follows:
-
 ![R4](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
-- The illustration 3d world points  is shown below: **Note(We flip the world coordinated points during the 3d reconstruction in the mirror viewed as the camera toolbox reflects the world coordinates points in the mirror compared to the original view)**  
- ![untitl211221ed](https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg)
-        
+- The illustration 3d world points  is shown below:
+              ![untitl211221ed](https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg)
 
 - While the error histogram between the 2d original points and 2d estimated points is as follows:
 
