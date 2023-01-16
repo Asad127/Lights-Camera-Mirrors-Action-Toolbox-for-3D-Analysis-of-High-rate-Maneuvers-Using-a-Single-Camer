@@ -8,8 +8,7 @@
 If you are new to the camera calibration toolbox. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about camera calibration.This  is highly recommended for someone who is just starting using the toolbox. 
 
 # Calibration Dataset Collection
-The following section explains the camera calibration dataset in details. Setup for calibration and multi-view capturing of object is shown in the follwowing figure.
-
+The following section explains the camera calibration dataset in detail. The setup for calibration and multi-view capturing of objects is shown in the following figure.
 
   ![123](https://user-images.githubusercontent.com/65610334/212621713-6e8b4379-a18b-4971-83ee-c91948d93592.jpeg)
 
