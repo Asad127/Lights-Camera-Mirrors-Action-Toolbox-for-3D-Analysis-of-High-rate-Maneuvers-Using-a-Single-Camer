@@ -276,8 +276,14 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 
 ## **Camera Matrix**
 
-- Once you do the camera calibration for the original view, extract the focal length, principal point, rotation, and translation vector and save it into a mat file.
-- Repeat the above step for the mirror view.
+- The calibration process outputs the camera pose (rotation R and translation T) for each image in the calibration set. 
+- Throughout calibration, the camera remains fixed in place and only the checker is moved.
+- In order to test for reconstruction, when taking images, we additionally capture an image of the checker in a flat position to serve as our reference for the camera pose. 
+- This image may be kept in the original-view calibration set for pose extraction, or we can estimate its pose separately using the Comp. Extrinsic function of the toolbox post-calibration.
+- Then, without moving the camera, we remove the checker and introduce the object for reconstruction, and capture its images in various positions. We then use the R and T from the reference image with the checker to serve as the pose for this set of test images as well.
+- Once the camera calibration is completed for the original view, extract the focal length and principal point from variable named as KK and cc respectively.
+- Extract the pose of last image from calibration dataset and use that pose as a reference for reconstructing different objects.
+- Repeat the above steps for the mirror view as well.
 - Now merge both files to a single file containing your camera matrix for original and mirror view.
 - The mergerd file should look like this https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/merged_params.mat.
 
