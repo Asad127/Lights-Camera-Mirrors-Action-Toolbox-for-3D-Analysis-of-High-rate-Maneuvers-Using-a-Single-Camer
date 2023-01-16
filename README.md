@@ -290,7 +290,6 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 **Camera Matrix for Mirror View**
 
 - The procedure for extracting the camera matrix for the mirror view is the same as described for the original view.
-
 - Save the camera intrinsics into a variable named KK_2.
 - Save the rotation and translation matrix into a variable named Rc_2 and Tc_2 respectively.
 - Save these variables into a .mat file
@@ -301,6 +300,7 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 - Calibration for both the original and mirror view is completed. Now you have two mat files containing the camera matrix for the original and mirror view.
 - Now merge both files to a single file containing your camera matrix for original and mirror view.
 - The mergerd file should look like this https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/merged_params.mat.
+---------------------------  ![merout](https://user-images.githubusercontent.com/65610334/212697559-11b17a6a-50d7-4ae4-ba68-1dae61a465c6.PNG)
 
 ## **3D Reconstruction of different objects**
 
