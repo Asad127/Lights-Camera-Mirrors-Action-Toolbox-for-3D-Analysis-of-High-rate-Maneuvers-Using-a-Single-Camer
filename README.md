@@ -202,25 +202,15 @@ Click on the four extreme corners of the rectangular complete pattern (the first
 ![asddd](https://user-images.githubusercontent.com/65610334/212284205-98c2ad36-cfc8-4c32-bb10-5470510179c5.jpg)
 The boundary of the **calibration grid** is then shown below: 
 ![BBIMAGES](https://user-images.githubusercontent.com/65610334/212285450-3e0ecadc-eb91-4ae3-a029-32efa048535f.jpg)
+Follow the **same procedure** for **corner extraction** as explained in detail in the **calibration of the original view**.
 
-Enter the sizes dX and dY in X and Y of each square in the grid (in this case, dX=dY=13mm=default values): 
-**Processing image 1...**
-Using (wintx,winty)=(13,13) - Window size = 27x27      (Note: To reset the window size, run script clearwin)
-Click on the four extreme corners of the rectangular complete pattern (the first clicked corner is the origin)...
-Size dX of each square along the X direction ([]=30mm) = 13
-Size dY of each square along the Y direction ([]=30mm) = 13
 ![casaasaa](https://user-images.githubusercontent.com/65610334/212286733-16bbf630-b0c9-4b64-ad22-22fe9e80503e.jpg)
-If the guessed grid corners (red crosses on the image) are not close to the actual corners,
-it is necessary to enter an initial guess for the radial distortion factor kc (useful for subpixel detection)
-Need of an initial guess for distortion? ([]=no, other=yes) 
-Corner extraction...
+
+**Corner extraction...**
 
 ![extracted acdcc](https://user-images.githubusercontent.com/65610334/212286285-18da988a-4855-4b63-885e-e1035fa1f071.jpg)
 
 **Follow the same procedure for the rest of images in the dataset.**
-
-After corner extraction, the matlab data file calib_data.mat is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, ...). This file is only created in case of emergency when for example matlab is abruptly terminated before saving. Loading this file would prevent you from having to click again on the images.
-
 **Main Calibration step**
 
 The main calibration step for the mirror view **same** as described for the **original view**.
