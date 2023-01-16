@@ -1,5 +1,5 @@
 # **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
-## **Camera calibration  - Corner extraction-calibration-additional tools** 
+
 # **System requirements**
   This toolbox works on Matlab 5.x and Matlab 6.x (up to Matlab 6.5) on Windows, Unix and Linux systems (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other platform supporting Matlab 5.x and 6.x.
 
