@@ -172,8 +172,20 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
-****************************************************************************************************************************************************************************************************************************************************************************************
-****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+## **Camera matrix for original view**
+
+- The calibration process outputs the camera pose (rotation R and translation T) for each image in the calibration set. 
+- Throughout calibration, the camera remains fixed in place and only the checker is moved.
+- In order to test for reconstruction, when taking images, we additionally capture an image of the checker in a flat position to serve as our reference for the camera pose. 
+- This image may be kept in the original-view calibration set for pose extraction, or we can estimate its pose separately using the Comp. Extrinsic function of the toolbox post-calibration.
+- Then, without moving the camera, we remove the checker and introduce the object for reconstruction, and capture its images in various positions. We then use the R and T from the reference image with the checker to serve as the pose for this set of test images as well.
+- Once the camera calibration is completed for the original view, extract the focal length and principal point from the variable named KK and cc respectively, and save these extrinsic in the variable named as KK_1.
+- Extract the pose of last image from calibration dataset and save it into variable as Tc_1 and Rc_1.
+- Use these pose as a reference for reconstructing different objects.
+- Save these variables into a .mat file
+
+***
+***
 
 ## **Calibrating Mirror View**
 
@@ -274,27 +286,34 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 
 ![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
-## **Camera Matrix**
 
-- The calibration process outputs the camera pose (rotation R and translation T) for each image in the calibration set. 
-- Throughout calibration, the camera remains fixed in place and only the checker is moved.
-- In order to test for reconstruction, when taking images, we additionally capture an image of the checker in a flat position to serve as our reference for the camera pose. 
-- This image may be kept in the original-view calibration set for pose extraction, or we can estimate its pose separately using the Comp. Extrinsic function of the toolbox post-calibration.
-- Then, without moving the camera, we remove the checker and introduce the object for reconstruction, and capture its images in various positions. We then use the R and T from the reference image with the checker to serve as the pose for this set of test images as well.
-- Once the camera calibration is completed for the original view, extract the focal length and principal point from variable named as KK and cc respectively.
-- Extract the pose of last image from calibration dataset and use that pose as a reference for reconstructing different objects.
-- Repeat the above steps for the mirror view as well.
+**Camera Matrix for Mirror View**
+
+- The procedure for extracting the camera matrix for the mirror view is the same as described for the original view.
+
+- Save the camera intrinsics into a variable named KK_2.
+- Save the rotation and translation matrix into a variable named Rc_2 and Tc_2 respectively.
+- Save these variables into a .mat file
+
+
+## **Camera matrix for original and mirror view**
+
+- Calibration for both the original and mirror view is completed. Now you have two mat files containing the camera matrix for the original and mirror view.
 - Now merge both files to a single file containing your camera matrix for original and mirror view.
 - The mergerd file should look like this https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/merged_params.mat.
 
 ## **3D Reconstruction of different objects**
 
 ## **Points selection**
--Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
-
+- Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 - Run the point_marker.mat file and select the points in the original view you want to reconstruct it.
+- For the test images, we mark the correspondences between the original and mirror images in a script. 
+- That script generates a .mat file with the variable xj containing these correspondences. For 2 image correspondence over n points, the file generates a 2x2n matrix such that the first n columns correspond to the n points in the original view, and the next n columns to the reflected n points in the mirror view. 
+- Additionally, column 1 (original view pixel) of xj corresponds to the pixels in the n+1 column (reflected view pixel for the same physical point), 2 to the n+2 column, and so on. 
+- We can then use xj by appropriately slicing it to select the pair if corresponding points points we need for reconstruction
+
 - Repeat the same procedure and select the corresponding points in the mirror view.(Note: The corresponding points in the mirror will be the reflected points compared to the original points)
 
 ![ddd Diagram](https://user-images.githubusercontent.com/65610334/212617135-aa878f26-fa2d-4e7f-841a-9f663eefbc5b.jpg)
