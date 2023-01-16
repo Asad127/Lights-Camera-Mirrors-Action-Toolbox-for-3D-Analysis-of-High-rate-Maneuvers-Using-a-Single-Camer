@@ -174,7 +174,7 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 
 This section explains how to use all the **features** of the toolbox to calibrate the **mirror**.
 ## **Steps**
- - **The initial procedures necessary to calibrate the mirror are exactly the same as those described in the calibration of the primary original view**.
+ - **The initial procedures necessary to calibrate the mirror are exactly the same as those described in the calibration of the original view**.
 - **The only thing that is different is the order in which you click because, in the mirror, the points are reflected**.
 - **The section below explains visually the order of clicking in the mirror**.
 
