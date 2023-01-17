@@ -1,18 +1,18 @@
 # **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
 ***
 ***
-## **Camera calibration  - Corner extraction-calibration-additional tools** 
+# **Camera calibration  - Corner extraction-calibration-additional tools** 
 ***
 ***
 
-### **System requirements**
+# **System requirements**
   This toolbox works on Matlab 5.x and Matlab 6.x (up to Matlab 6.5) on Windows, Unix and Linux systems (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other platform supporting Matlab 5.x and 6.x.
 
 
-### **Getting started**
+# **Getting started**
 If you are new to the camera calibration toolbox. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about camera calibration.This  is highly recommended for someone who is just starting using the toolbox. 
 
-# Calibration Dataset Collection
+# **Calibration Dataset Collection**
 The following section explains the camera calibration dataset in details. Setup for calibration and multi-view capturing of object is shown in the follwowing figure.
 
 
@@ -31,7 +31,7 @@ The following section explains the camera calibration dataset in details. Setup 
 **Calibration original view - Corner extraction, calibration, additional tools**
 
 This section explains how to use all the features of the toolbox: loading calibration images, extracting image corners, running the main calibration engine, displaying the results, controlling accuracies, adding and suppressing images, undistorting images, exporting calibration data to different formats...
-## **Steps**
+# **Steps**
  - Download the calibration images all at once from the following link https://github.com/Asad127/3D-RECONSTRUCTION/tree/main/Dataset or one by one, and store all the images into a seperate folder named calib_data.
  ![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
 
@@ -171,7 +171,7 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
-## **Camera matrix for original view**
+# **Camera matrix for original view**
 
 - The calibration process outputs the camera pose (rotation R and translation T) for each image in the calibration set. 
 - Throughout calibration, the camera remains fixed in place and only the checker is moved.
@@ -186,12 +186,12 @@ On this figure, the frame (Oc,Xc,Yc,Zc) is the camera reference frame. The red p
 ***
 ***
 
-## **Calibrating Mirror View**
+# **Calibrating Mirror View**
 
 ***Calibrating using mirror view - Corner extraction, calibration, additional tools**
 
 This section explains how to use all the **features** of the toolbox to calibrate the **mirror**.
-## **Steps**
+# **Steps**
  - **The initial procedures necessary to calibrate the mirror are exactly the same as those described in the calibration of the primary original view**.
 - **The only thing that is different is the order in which you click because, in the mirror, the points are reflected**.
 - **The section below explains visually the order of clicking in the mirror**.
@@ -204,7 +204,7 @@ Click on the four extreme corners of the rectangular complete pattern (the first
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
 ***************************************************************************************************************************************************************************************************************************************************************************************
 *******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
-## Note 
+# Note 
 **The clicking ordering rule in the mirror will be the reflected order compared to the original view.**
 ***************************************************************************************************************************************************************************************************************************************************************************************
 *******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
@@ -286,7 +286,7 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 ![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
 
-## **Camera Matrix for Mirror View**
+# **Camera Matrix for Mirror View**
 
 - The procedure for extracting the camera matrix for the mirror view is the same as described for the original view.
 - Save the camera intrinsics into a variable named KK_2.
@@ -294,7 +294,7 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 - Save these variables into a .mat file
 
 
-## **Camera Matrix for Original and Mirror View**
+# **Camera Matrix for Original and Mirror View**
 
 - Calibration for both the original and mirror view is completed. Now you have two mat files containing the camera matrix for the original and mirror view.
 - Now merge both files to a single file containing your camera matrix for original and mirror view.
