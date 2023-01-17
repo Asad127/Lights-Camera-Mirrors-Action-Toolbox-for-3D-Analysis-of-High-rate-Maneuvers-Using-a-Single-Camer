@@ -2,9 +2,9 @@
 ***
 ***
 
-```diff - This is a red colored line 
-+ This is a green colored line
-@@ This is a purple colored line @@ 
+```diff  
+ This is a green colored line
+
 ```
 
 ## **Camera calibration  - Corner extraction-calibration-additional tools** 
