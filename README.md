@@ -1,8 +1,8 @@
-## **$\color{Dodgerblue{\textrm{3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP}}$**
+## **$\textcolor{yellow}{3D\ RECONSTRUCTION\ USING SINGLE\ CAMERA\ AND\ MIRROR\ SETUP}$**
 ***
 ***
 
-## $\textcolor{yellow}{This\ is\ a\ Big\ Title}$
+## $\textcolor{yellow}{3D\ RECONSTRUCTION\ USING SINGLE\ CAMERA\ AND\ MIRROR\ SETUP}$
 
 ## **Camera calibration  - Corner extraction-calibration-additional tools** 
 ***
