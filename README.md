@@ -1,12 +1,6 @@
 # **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
 ***
 ***
-
-```diff  
- This is a green colored line
-
-```
-
 ## **Camera calibration  - Corner extraction-calibration-additional tools** 
 ***
 ***
