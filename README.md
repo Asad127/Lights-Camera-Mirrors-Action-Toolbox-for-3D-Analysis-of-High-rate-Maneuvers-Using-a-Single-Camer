@@ -1,4 +1,4 @@
-## **$\color{DodgerRed{\textrm{3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP.}}$**
+## **$\color{Red{\textrm{3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP.}}$**
 ***
 ***
 
