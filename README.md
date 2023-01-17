@@ -287,7 +287,7 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 ![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
 
-**Camera Matrix for Mirror View**
+## **Camera Matrix for Mirror View**
 
 - The procedure for extracting the camera matrix for the mirror view is the same as described for the original view.
 - Save the camera intrinsics into a variable named KK_2.
@@ -295,33 +295,176 @@ Simply click the Switch to **world-centered view** button in the bottom-left cor
 - Save these variables into a .mat file
 
 
-## **Camera matrix for original and mirror view**
+## **Camera Matrix for Original and Mirror View**
 
 - Calibration for both the original and mirror view is completed. Now you have two mat files containing the camera matrix for the original and mirror view.
 - Now merge both files to a single file containing your camera matrix for original and mirror view.
 - The mergerd file should look like this https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/merged_params.mat.
 ---------------------------  ![merout](https://user-images.githubusercontent.com/65610334/212697559-11b17a6a-50d7-4ae4-ba68-1dae61a465c6.PNG)
 
-## **3D Reconstruction of different objects**
+# **3D Reconstruction of Different Objects**
+You can remove the calibration checker pattern at this stage if you want to. It is no longer needed.
 
-## **Points selection**
-- Place the object in the calibrated region you want to reconstruct it. Make sure that the should be seen perfectly in the calibrated mirrors.
+## **1. World Reference and Choice of Extrinsics (R and T)**
+In order to reconstruct an object, we need a reference for the world frame and a pose for the camera relative to that frame. Additionally, we may assume that the camera does not move between image captures, so that the camera pose relative to the reference world frame remains the same for all future images. In our setup, the camera remains fixed and only the checker is moved, so we can apply the assumption that the camera does not move between images. 
+
+The calibration process outputs the camera pose (rotation R and translation T) for each image in the calibration set. In light of this, we capture an image (henceforth the *reference image*) of the checker in a flat position to serve as our world reference for the camera's pose during reconstruction of other test objects. To estimate the pose from the reference image, we can either keep it in the original-view calibration set so that we get the R and T directly during calibration, or we can use the `Comp. Extrinsic` function of the toolbox post-calibration. Since we have two views calibrated separately (the original and reflected sets), we need to do this two times -- once for each view of the reference image.
+
+Usually, we add the reference image as the last image of the calibration set for our own ease, but you can just as easily keep the first image as a reference. We prefer a flat position because it makes the most geometrical sense for our setup. 
+
+>**NOTE:** In the event the assumption of a fixed camera is violated, the camera's pose must first be estimated using some algorithm like Perspective-n-Point (PnP). If the new position still has a view of the checker, the toolbox's `Comp. Extrinsic` function can be used as well.
+
+#### Overall Process
+
+At the end, for the two reference images, we require just a few parameters for the next steps. Since we have two views, let us define `j = {1,2}` where `j = 1` means the original view and `j = 2` means the mirror view. Then, assuming we kept the reference image as the k^th^ image of the calibration set (`k = 1,2,3,...`), then we have:
+
+- Camera Intrinsics (`KK_j` -- already have these from the calibration steps)
+- Rotation (`Rc_k` in toolbox -- orientation of the camera relative to world frame in reference image)
+    - Rename this to `Rc_j` (ignore this step if `k = j`)
+- Translation (`Tc_k` in toolbox -- translation of camera center relative to world frame in reference image)
+    - Rename this to `Tc_j` (ignore this step if `k = j`)
+
+Save these variables from their respective calibration workspaces (*original* and *mirror*) separately, rename them according to the view number `j` e.g., `Rc_1` (original) and `Rc_2` (mirror), and then merge them together. In summary:
+
+1. Save the variables `KK`, `Rc_k`, and `Tc_k` from the ***original view calibration*** workspace into `original_params.mat`
+2. Save variables `KK`, `Rc_k`, and `Tc_k` from the ***mirror view calibration*** workspace into `reflected_params.mat`
+3. Rename the variables in `original_params.mat` as follows: `KK ---> KK_1`, `Rc_k ---> Rc_1`, `Tc_k ---> Tc_1`
+4. Rename the variables in `reflected_params.mat` as follows: `KK ---> KK_2`, `Rc_k ---> Rc_2`, `Tc_k ---> Tc_2`
+5. Merge the two .mat files into one `merged_params.mat` for later use
+    - Variables in `merged_params.mat` : `KK_1`, `Rc_1`, `Tc_1`, `KK_2`, `Rc_2`, `Tc_2`  
+
+##### Why Rename?
+If the calibration set had 15 images and the 15^th^ was the chosen reference, it would be `Rc_15` in the toolbox workspace. Our reconstruction script assume the reference R and T are subscripted 1 for original view and 2 for mirror view, so we need to rename them. 
+
+##### Next Steps
+Moving on, without moving the camera, remove the checker (optional), introduce the object for reconstruction, and capture its images in various positions. Finally, during reconstruction, use the R and T from the reference image to serve as the pose for the test images as well. These steps are disucssed in more detail in the upcoming sections.
+
+## **2. Gathering Test Images**
+Place the object you want to reconstruct in the calibrated region, and make sure its features are clearly visible in both the calibrated mirrors. Capture as many images you want with the test object in various positions. Finally, make exactly **one copy** of each captured image, so that there are two images for each scene. The idea is to use the copies for working with the mirrored views later.
+
+The **naming** of these image files is important. The basename should be the same (we use 'Image') followed by a natural number. To keep things simple, we use odd numbers for original views and even numbers for the reflected view copies, and assume that the pairs are arranged consecutively i.e., image 1 is paired with image 2, image 3 with image 4, and so on. This provides a quick way of working with any pair of images.
+
+An example test image is given below. Note how all the dots are visible in both the reflection and the original object.
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
-- Run the point_marker.mat file and select the points in the original view you want to reconstruct it.
-- For the test images, we mark the correspondences between the original and mirror images in a script. 
-- That script generates a .mat file with the variable xj containing these correspondences. For 2 image correspondence over n points, the file generates a 2x2n matrix such that the first n columns correspond to the n points in the original view, and the next n columns to the reflected n points in the mirror view. 
-- Additionally, column 1 (original view pixel) of xj corresponds to the pixels in the n+1 column (reflected view pixel for the same physical point), 2 to the n+2 column, and so on. 
-- We can then use xj by appropriately slicing it to select the pair if corresponding points points we need for reconstruction
+<center><i>Example test image</i></center>
 
-- Repeat the same procedure and select the corresponding points in the mirror view.(Note: The corresponding points in the mirror will be the reflected points compared to the original points)
+## **3. Point Marking on 2D Test Images**
+
+Now, we need to extract some **corresponding 2D points** (pixels) from the original and reflected view of the object in the test image(s). We have created the script `point_marker.mat` to manually click and store the pixels corresponding to the object's features in any given image pair. 
+
+Simply place the script next to the image(s) from the earlier sub-section and proceed with the steps below. 
+
+>**NOTE:** We will be reconstructing the 3D coordinates using these 2D points, so it is important to ***mark them accurately.***
+
+### SCRIPT: `point_marker.mat`
+1. Open the script and check the value of `npoints`. This is a user parameter - set its value to however many points you want to mark in the image.
+2. Run the script and select the pair of images you want to work with. E.g., `[1 2]` or `[3 4]`. Remember, odd is original, even is reflected, and we arranged pairs as consecutive numbers.
+**NOTE:** The script currently only supports only one pair of images, so `[1 2 3 4]` is not a valid input, and neither is `[1 2 3]`. 
+3. An image will pop up. Here, mark exactly `n` points on the **original view** of the object you want to reconstruct by clicking on them.
+3. After marking exactly `n` points, another image window will open. Here, you must again mark `n` corresponding points in the **mirror view**. 
+**NOTE:** Mark the points in the *same physical order* as in Step 2 and make sure to click on the *reflected* point (i.e., if you marked the top-right corner as the first pixel in Step 2, you must mark the top-left corner in the reflected view).
+4. Once the correspondences are marked, the script will generate a `points_x_nimo_column.mat` file containing two variables:
+    - `npoints`: An integer describing the number of points marked.
+    - `xj`: The pixel locations of the marked points in both the views.
 
 ![ddd Diagram](https://user-images.githubusercontent.com/65610334/212617135-aa878f26-fa2d-4e7f-841a-9f663eefbc5b.jpg)
+<center><i>Point correspondences visualized on text object</i></center>
 
-## **3D Reconstruction**
-- Now you have the marked corresponding **2d** points for the object you want to reconstruct it.
-- Load the **merged parameter file** which contains the camera matrix for the original and mirror view.
-- Run the following file https://github.com/Asad127/3D-RECONSTRUCTION/blob/main/Code/3reconstruction.m to reconstruct different objects.
+#### Output Details: `xj`
+
+For two-view correspondence over `n` points, `xj` is a `2 x 2n` matrix. The two rows represent the `x` and `y` pixel coordinates. The columns `1 : n` are the points marked in the original view and columns `n + 1 : 2n` are the reflected corresponding points, marked in the mirror view.
+
+The pixel location in **column 1** of `xj` (i.e., first marked point in the original view) *corresponds* to the pixel location in **column `n + 1`** (i.e., first marked point in the mirror view). Similarly, the second pixel in column 2 corresponds to the reflected pixel at `n + 2`, and so on.
+
+In general, the pixel in column `k` such that `k <= n` corresponds to the pixel in column `n + k`. Each of these pixel correspondences represents a single physical point in the world. We can then use `xj` by appropriately slicing it to select the pair of corresponding points points we need for reconstruction.
+
+> **NOTE 1:** `xj` is named so after the variable names in the projection equation `x = K * [R T] * X`, where `x` is the pixel projection of `X`. The `j` is to indicate that it contains the pixel locations over all the different views.
+
+> **NOTE 2:** While we mark a total of `2n` pixels over two images in this step, we are actually only dealing with `n` real-world points. They are just projected to two views. If we had k views, we would have a total of `k * n` points.
+
+## **4. 3D Point Estimation and Reconstruction**
+By now, we have: 
+
+- Merged Camera Matrix [via CALIBRATION -- `merged_params.mat`]
+    - Extrinsic Matrix (Rotation + Translation) 
+    - Intrinsic Matrix (Focal Lengths + Principal Point Offsets)
+- 2D pixel correspondences between the original and mirror views [via POINT MARKING -- `points_x_nimo_column.mat`]
+
+Note that `merged_params.mat` has the variables:
+- `KK_1`, `Tc_1`, `Rc_1` : Camera matrix for original view
+- `KK_2`, `Tc_2`, `Rc_2` : Camera matrix for mirror view
+
+You can see this also follows our earlier convention of image naming where an odd number means an original view image and an even number means a mirror image. Keeping this distinction helps us greatly in the coding stage.
+
+We are finally ready to begin reconstruction of the object's physical points in 3D world coordinates.
+
+#### The Basic Idea for Estimation
+At its core, our approach to the problem of reconstruction is to think of it as an optimization problem. We presume that a fairly accurate solution for the depth (Z-coordinate) of each 2D point (pixel) on the object exists, given any two views of the object. The two views apply the constraint that the two rays from the camera centers to the object point in 3D space will intersect at that object point, which is at some depth Z.
+
+Now, since there is only one world reference frame, the same 3D world points must project to two different pixel locations on the two cameras. We already know these pixel locations -- we marked them just now! Therefore, all we really need to do is figure out the choice of 3D points for which the forward projection (i.e., pixel projection `x = K * [R T] * X`) of both the views is correct (i.e., the reprojection error in both images is collectively minimized). 
+
+Like with other optimization problems, we start with a wild guess or a simple matrix of ones for the world coordinates `X`, calculate the reprojection error, and update our guess accordingly. We settled on the mean squared per-pixel reprojection error.
+
+### SCRIPT: `reconstruction_3d.m`
+As a preliminary, open the script and look at the following:
+
+1. Set the value of `org_dist` if you have a regular repeating pattern for error histogram (otherwise it is not needed)
+2. Set optimizer options. We worked with:
+
+        options = optimoptions('lsqnonlin', 'display', 'off', 'MaxIter', 500, 'MaxFunEvals', 6.240000e+05)
+        options.Algorithm('levenberg-marquardt')
+3. Make sure your images names match the onesi n the script, otherwise imread will fail to load them.
+
+Now run the script.
+
+#### Initialization
+1. Load the following .mat files created earlier:
+    - `merged_params.mat` 
+    - `points_x_nimo_column.mat`
+2. Input which pair of images you want to work with e.g., `[1 2]`, etc.
+3. Define the total number of views and number of images based on user input.
+4. Assign the pose and intrinsics from `merged_params.mat` into slice friendly variables.
+
+#### Optimization With `lsqnonlin`
+The optimization is done on a per-pixel basis. Note 2D points and pixels are used interchangeably.
+
+1. Initialize:
+    - Initial guess for 3D world points as a homogenous vector of ones `X_init = ones(4, 1)` 
+    - Array of zeros to store estimated homogenous 3D coordinates against each pixel `X = zeros(4, npoints)`. For each estimated 3D point in the optimize step, the corresponding column of this matrix is updated.
+    - Array of zeros to store the pixel projection of the same physical point in each of the two views `xpp = zeros(3, n_views)`. We will fill this during the optimization loop over all the pixels
+2. Optimize over all pixels such that for each pixel `i`:
+    - Get the pixel location in both views from xj by indexing into its i^th^ and n+i^th^ columns and store it in `xpp`.
+    - Estimate the 3D points with non-linear least squares (`lsqnonlin`) using the ***target vectored error function*** `reconst_coords_per_px`.
+    - Normalize the estimated homogenous 3D points w.r.t. the homogenous coordinate.
+    - Store the result in the corresponding i^th^ column of `X`.
+3. Once the optimization loop is finished, we have an estimate for the 3D points of all the `n` points we marked.
+
+##### Vectored Error Function for `lsqnonlin`
+The vectored error function takes the following as its input:
+1. Which parameter to optimize over the given inputs? (`X`)
+2. Initial guess for parameter to optimize (`X_init`)
+3. Number of views (`2`)
+4. Pixel points over all the views (`xpp`)
+5. Intrinsic Matrix (`K`)
+6. Rotation Matrix (`R`)
+7. Translation Vector (`T`)
+
+Here, `xpp` is the true value since it was assigned values from `xj`, the 2D points marked earlier. Then, using a for loop, we can slice into the relevant view's pose, intrinsics, and use the current guess for `X` to get some predicted pixel projections. Subtracting the results from the actual pixel projections in the j^th^ column of `xpp`, we get the reprojection error. At the end, we have a vector error of just 2 elements (1 error against 1 pixel for each view). The function then recurses as per `lsqnonlin` implementation until a threshold of error is reached or until the gradient sizes become too small (the function plateaus).
+
+However, for the mirrored view (`j = 2`), we need to make sure we swap the x and y axes (the first two rows) of the world frame. This is because the calibration toolbox forces right-handedness of frames which causes the mirrored corresponding point to have a Z-axis pointing down instead of up, like in the original view. This causes the x and y axes in the original view to become the y and x axes in the reflected view for the toolbox. This is clearly wrong for our correspondence, so we must swap the axes for the world frame of the mirrored view ourselves to ensure their swapped nature does not cause errors in the optimization against the correct framing of the original view. In simpler words, we are essentially aligning the axes of both the 3D world frames, so that the resulting estimation is correct.
+
+    if j == 2
+        X = [X(2); X(1); X(3); X(4)];
+    end
+
+> NOTE: `lsqnonlin` implements mean square error implicitly using the vectored error provided and calculates gradients based on their collective minimzation, so we can be sure it optimizes for both views at once.
+
+#### Result Accuracy and Visualization
+We can now plot the results for verification. We get the pixel projections using the estimated world coordinates (red stars) and plot them against the originally marked pixel points. This gauges the reprojection error. Then, we plot the 3D world points in 3D space to get a sense of whether the actual structure of the object was recovered, or if the optimizer failed to recover structure even with a small reprojection error. We also calculate a few metrics like the mean reprojection error over the entire set of `n` points and print them to the command window. Finally, if we used a regular pattern, we can also plot a histogram of errors. However, this is very situational.
+
+Again, since we swapped the axes of the mirrored frame during the estimation of the world points, we need to swap them back to their original form (Z-axis down convention) before we find their pixel projections. This is because while our trick allowed it to deal with the problem by tricking the extrinsics into thinking it was being multiplied with X instead of Y and Y instead of X (as it should be if the toolbox did not force right-handedness), we have essentially ended up with a swapped version of the world coordinates that the right-handed system of the mirrored image understands. Thus, to plot them correctly, we must swap them back to their original form when plugging them into the forward projection equation.
+
 - The ouput of the above code is as follows:
 ![R4](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
