@@ -1,6 +1,5 @@
-## **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
+## **$\color{DodgerBlue}{\textrm{3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP.}}$**
 ***
-1. $\color{DodgerBlue}{\textrm{3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP.}}$
 ***
 
 ## $\textcolor{yellow}{This\ is\ a\ Big\ Title}$
