@@ -1,18 +1,18 @@
-## **$\textcolor{yellow}{3D\ RECONSTRUCTION\ USING SINGLE\ CAMERA\ AND\ MIRROR\ SETUP}$**
+# **$\textcolor{Red}{3D\ RECONSTRUCTION\ USING SINGLE\ CAMERA\ AND\ MIRROR\ SETUP}$**
 ***
 ***
 
-## $\textcolor{yellow}{3D\ RECONSTRUCTION\ USING SINGLE\ CAMERA\ AND\ MIRROR\ SETUP}$
+
 
 ## **Camera calibration  - Corner extraction-calibration-additional tools** 
 ***
 ***
 
-# **System requirements**
+### **System requirements**
   This toolbox works on Matlab 5.x and Matlab 6.x (up to Matlab 6.5) on Windows, Unix and Linux systems (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other platform supporting Matlab 5.x and 6.x.
 
 
-# **Getting started**
+### **Getting started**
 If you are new to the camera calibration toolbox. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about camera calibration.This  is highly recommended for someone who is just starting using the toolbox. 
 
 # Calibration Dataset Collection
