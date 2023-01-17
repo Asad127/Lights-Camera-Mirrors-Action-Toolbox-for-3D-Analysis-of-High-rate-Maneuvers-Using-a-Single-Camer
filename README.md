@@ -1,8 +1,8 @@
 ## **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
 ***
 ***
-$\color{red}{3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP}$
-## **{red}{Camera calibration  - Corner extraction-calibration-additional tools}** 
+
+## **Camera calibration  - Corner extraction-calibration-additional tools** 
 ***
 ***
 
