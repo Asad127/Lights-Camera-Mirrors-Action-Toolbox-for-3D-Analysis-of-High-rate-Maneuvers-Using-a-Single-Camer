@@ -1,5 +1,5 @@
 # **$\textcolor{Red}{3D\ RECONSTRUCTION\ USING SINGLE\ CAMERA\ 
-AND\ MIRROR\ SETUP}$**
+\AND\ MIRROR\ SETUP}$**
 ***
 ***
 
