@@ -16,7 +16,7 @@ If you are new to the **camera calibration toolbox**. Go to the following websit
 
 # **Calibration Dataset Collection**
 ***
-The following section **explains** how to setup the system for **capturing multiple views** using a **single camera fixed** on a tripod. In the figures below, we show the mirror container, the tripod, and the light source we have used to capture our images.
+The following section **explains** how to setup the system for **capturing multiple views** using a **single camera fixed** on a tripod. In the figure below, we show the **mirror container, the tripod, and the light source** we have used to capture our **images**.
 
 ![add23](https://user-images.githubusercontent.com/65610334/213106012-f078cfec-923d-4d63-8a3c-c8f7fee9ae92.PNG)
 
