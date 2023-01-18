@@ -21,12 +21,18 @@ The following section **explains** how to setup the system for **capturing multi
 ![w11](https://user-images.githubusercontent.com/65610334/213187130-b907fcc0-bced-43c0-99a9-ee44dae10d69.PNG)
 
 - **Print a checker pattern and measure the dimensions (x and y) of any one square on the chessboard.**
+- 
   ![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
+
 - **Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.**
+- 
 ![w43](https://user-images.githubusercontent.com/65610334/213187833-99e95ccb-4358-4e17-a54e-be245f93dc82.PNG)
+
 - **Place the chessboard in the mirror container and make sure it can be seen in all three views.i.e original and both the mirror view.** 
 ***Note: Camera stand and mirror setup should not move throughout the process.***
+
 ![m1](https://user-images.githubusercontent.com/65610334/213096148-a47db345-14b7-4b3e-9a0d-8ad0de3f9e05.PNG)
+
 - **Change the position of the chessboard in a limited region to ensure that the pattern can be seen in all views, i.e., the original and both the mirror views, and capture an image.**
 - **Repeat the above steps to capture at least 15-20 images of the checker pattern at different positions.**
  
@@ -42,18 +48,25 @@ This section explains how to use the **Camera Calibration Toolbox for Matlab** t
 1. Download the calibration images all at once from the following link https://github.com/Asad127/3D-RECONSTRUCTION/tree/main/Dataset or one by one, and store all the images into a seperate folder named **calib_data**.
 2. From within MATALB, go to the folder **calib_data** containing the images. 
 3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
+4. 
  ![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
+
 4. After clicking on the Image names button, the following output will be displayed in the command window in which you have to enter the basename of the image and the type of format.
+5. 
 ![c1](https://user-images.githubusercontent.com/65610334/213191810-6f565d40-7329-431f-b4e6-2a7110305909.jpg)
 
 5. After completing the above steps, the following **output** will pop up.
+6. 
 ![Calibration Images](https://user-images.githubusercontent.com/65610334/212247154-20bdaa4c-e473-4a52-afed-8535061711e3.png)
 
 ### **2. Extract the Grid Corners**
+
 1. Click on the  highlited button of **Extract Grid Corners** in the calibration GUI.
 
 ![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
+
 2. After clicking on the highlighted button of **Extract grid corners**, it will ask about the window size and automatic square counting mechanism.
+3. 
 ![c2](https://user-images.githubusercontent.com/65610334/213191980-d15f847a-52db-4f7a-9357-22a4f2dfc577.jpg)
 
 3. The accompanying **output** will appear after step 2 is completed. 
@@ -62,38 +75,38 @@ This section explains how to use the **Camera Calibration Toolbox for Matlab** t
 
 #### **Clicking Order for Extreme Internal Corners** 
 
-The first clicked point is selected to be associated to the origin point of the world reference frame attached to the grid. The second click defines the direction of the Y-axis of the reference frame from (1^st^ click ---> 2^nd^ click). The third click defines the direction of the X-axis of the reference frame (2^nd^ click ---> 3^rd^ click). The fourth click will complete the plane's definition, and the toolbox will proceed to compute the corners.
+The first clicked point is **selected** to be associated to the origin point of the world reference frame attached to the grid. The **second** click defines the direction of the **Y-axis** of the reference frame from **(1st click ---> 2nd click)**. The **third** click defines the direction of the **X-axis** of the reference frame **(2nd click ---> 3rd click)**. The fourth click will complete the **plane's definition**, and the toolbox will proceed to **compute** the corners.
 
 > NOTE: As you mark the points in each image, note the clicking order. We will need it to associate the reflected points properly when calibrating the mirror images.
 
-We illustrate the clicking order that we followed for our calibration below.
+We **illustrate** the clicking order that we followed for our calibration below.
 
 ![asddddd](https://user-images.githubusercontent.com/65610334/213100379-beb1dad9-47d7-47b4-bd3b-30200bd67aef.png)
 
-The planar boundary of the calibration grid is then shown below.
+The **planar boundary** of the calibration grid is then shown below.
 
 ![bd](https://user-images.githubusercontent.com/65610334/212264520-26a30d6e-2eff-41bc-867e-8f561fecaf16.jpg)
 
-After marking the four extreme corners, the toolbox prompts for the dimensions of the squares on the chessboard pattern. Here, you enter the values measured earlier.
+After marking the **four extreme corners**, the toolbox prompts for the dimensions of the **squares on the chessboard pattern**. Here, you enter the values measured earlier.
 
 ![c3](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
 
 The **tooblox** first guesses the **corner locations**, and then refines them to subpixel accuracy.
 
 ![corners11](https://user-images.githubusercontent.com/65610334/212265637-e70c9ba5-b7da-4542-bac6-321273b4a3c2.jpg)
+
 ![extraxted corners](https://user-images.githubusercontent.com/65610334/212265827-fec020ae-8599-48cf-b542-401dc5c90dc8.jpg)
 
 **Follow the same procedure for the rest of images in the dataset. For the rest of the images, you will only be prompted for an initial guess for distortion.**
 
-After corner extraction, the matlab data file `calib_data.mat` is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, etc.). This file is only created in case of emergency when for example matlab is abruptly terminated before saving. Loading this file would prevent you from having to click again on the images.
-
+After **corner extraction**, the matlab data file `calib_data.mat` is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, etc.).
 
 ![h55](https://user-images.githubusercontent.com/65610334/213192784-ebcafe65-982a-46ba-b996-1acfb174a7dc.PNG)
 
-
 ### **3. Main Calibration Step**
 
-After corner extraction, click on the button **Calibration** on the calibration GUI to run the main camera calibration procedure.
+After **corner extraction**, click on the button **Calibration** on the calibration GUI to run the main camera calibration procedure.
+
 ![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
 
     Initialization of the intrinsic parameters - Number of images: 12
@@ -124,29 +137,35 @@ The calibration parameters are stored in a number of variables in the workspace.
 ### **4. Reprojection Using Estimated Camera Parameters** 
 
 Click on **Reproject on images** in the calibration GUI to show the reprojections of the grids onto the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
+
 ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
   
     Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
     Number(s) of image(s) to show ([] = all images) = []
 
 The **following figures** shows the  **four images** with the detected corners (red crosses) and the reprojected grid corners (circles). 
+
 ![Asad](https://user-images.githubusercontent.com/65610334/212270143-6e7e929a-3dee-4e6a-903a-d3b5ce15f6cf.jpg)
 
     Number(s) of image(s) to show ([] = all images) = []
     Pixel error:      err = [0.23942   0.24756] (all active images)
 
 The reprojection error is also shown in the form of **color-coded crosses**, as shown in the figure below. 
+
 ![error11](https://user-images.githubusercontent.com/65610334/212270799-077fa4b1-0888-40b4-b471-e7cf41e0760e.jpg)
 
 ### **5. Plot the Camera and Chessboards in 3D Space**
 
 Click on Show Extrinsic in the Camera calibration tool. 
+
 ![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
 
-This will plot the camera and chessboards using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane.
+This will plot the **camera and chessboards** using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane.
+
 ![extrrr](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
- To switch from a "camera-centered" view to a "world-centered" view, just click on the **Switch to world-centered view** button located at the bottom-left corner of the figure.
+ To switch from a **"camera-centered" view to a "world-centered"** view, just click on the **Switch to world-centered view** button located at the bottom-left corner of the figure.
+ 
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
 ### **6. Saving the Calibration Results**
@@ -154,44 +173,45 @@ Click on the highlighted button of **Save** on the calibration GUI.
 
 ![W2](https://user-images.githubusercontent.com/65610334/213089098-8d0d4f67-8d9c-44df-b708-bc5984c4499f.png)
 
-The toolbox generates two files:
+The **toolbox generates** two files:
 - `Calib_Result.mat` : The workspace containing all the calibration variables involved in the process. 
 - `Calib_Result.m` : A script containing just the estimated intrinsics of the camera and extrinsics of each image in the calibration set.
 
 ### **7. Extracting the Parameters Required for 3D Reconstruction**
 
-We need only a few variables from the full workspace for 3D reconstruction. Assuming we kept the reference image as the k^th^ image of the calibration set (`k = 1,2,3,...`), then we need only the following variables from `Calib_Result.mat`:
+We need only a few variables from the full workspace for 3D reconstruction. Assuming we kept the reference image as the kth image of the calibration set (`k = 1,2,3,...`), then we need only the following variables from `Calib_Result.mat`:
 
 - Camera Intrinsics (`KK` -- `3x3` intrinsics of the camera)
 - Rotation (`Rc_k` in toolbox -- `3x3` orientation of the camera relative to world frame in reference image)
 - Translation (`Tc_k` in toolbox -- `3x1` translation of camera center relative to world frame in reference image)
 
-Save these variables into a new workspace `original_params.mat`. This workspace has only three variables. Open it, and rename them as follows.
+Save these variables into a new file `original_params.mat`. This file has only three variables. Open it, and rename them as follows.
 
 - `KK ---> KK_1` 
 - `Rc_k ---> Rc_1` 
 - `Tc_k ---> Tc_1`
 
-If the calibration set had 15 images and the 15^th^ was the chosen reference, it would be `Rc_15` in the toolbox workspace. Our reconstruction script assume the reference R and T are subscripted 1 for original view and 2 for mirror view, so we need to rename them. 
+If the calibration set had 15 images and the 15th was the chosen reference, it would be `Rc_15` in the toolbox workspace. Our reconstruction script assume the reference R and T are subscripted 1 for original view and 2 for mirror view, so we need to rename them. 
 
 ##### **Reference Image Assumptions**
 
-For reconstruction on test images later on, we need a reference for the world frame and a pose for the camera relative to that frame. We may assume that the camera does not move between image captures, so that the camera pose relative to the reference world frame remains the same for both the calibration images and the images we take at test time. In our setup, the camera remains fixed and only the chessboard is moved, so we can apply the assumption that the camera does not move between images. 
+For reconstruction on test images later on, we need a reference for the world frame and a pose for the camera relative to that frame. We assure that the **camera does not move between image captures**, so that the camera pose relative to the reference world frame remains the same for both the calibration images and the images we take at test time.
 
-The calibration process estimates the camera pose (rotation R and translation T) for each image in the calibration set. These poses can be viewed in the `Calib_Result.mat` file. In light of this, we capture an image of the chessboard in a flat position to serve as our world reference for the camera's pose during reconstruction of other test objects. During calibration, this image is also included in the calibration set, so we already have access to its pose (R and T).
+The **calibration process estimates** the camera pose (rotation R and translation T) for each image in the **calibration set**. These poses can be viewed in the `Calib_Result.mat` file. In light of this, we capture an image of the chessboard in a **flat position** to serve as our world reference for the **camera's pose** during reconstruction of other test objects. During **calibration**, this image is also included in the **calibration set**, so we already have access to its pose (R and T).
 
-In our work, we add the reference image as the last image of the calibration set for our own ease, but you can just as easily keep the first image as a reference. We prefer a flat position because it makes the most geometrical sense for our setup. 
+In our work, we add the **reference image** as the last image of the **calibration** set for our own ease, but you can just as easily keep the first image as a reference. We prefer a **flat position** because it makes the most geometrical sense for our setup. 
 
 >**NOTE:** In the event the assumption of a fixed camera is violated, the camera's pose must first be estimated using some algorithm like Perspective-n-Point (PnP). If the new position still has a view of the chessboard, the toolbox's `Comp. Extrinsic` function can be used as well.
 
 ## **Calibrating Mirror View**
 ***
 
-This section explains how to calibrate the mirror view using the reflection of the chessboard in the mirrors. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**. 
+This section explains how to **calibrate the mirror** view using the reflection of the **chessboard in the mirrors**. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**. 
 
 ### **1. Gathering Calibration Images**
 
-Just copy the same set of calibration images from the calibration of the original view into a separate folder **calib_data_reflected**. It is important to keep this set in a separate folder. The rest of the procedure for this step remains the same.
+Just copy the same set of *8calibration images** from the calibration of the original view into a separate folder **calib_data_reflected**. It is important to keep this set in a separate folder. The rest of the procedure for this step remains the same.
+
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
 
 ### **2. Extracting the Grid Corners**
@@ -203,19 +223,33 @@ The only change in this step is the **clicking order**, and that the points must
 We visually explain the **reflected clicking order** in the mirror images below. Note that the clicking order here depends on the clicking order from when the original set was calibrated.
 
 - **The 1^st^ point which is the origin in the mirror view is the reflected version of the 1^st^ point clicked in the original view.**
+- 
  ![q1](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
+
 - **The 2^nd^ point in the mirror view is the reflected version of the 2^nd^ point clicked in the original view.**
+- 
 ![q2](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
+
 - **The 3^rd^ point in the mirror view is the reflected version of the 3^rd^ point clicked in the original view.**
+- 
  ![q3](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
+
 - **The 4^th^ point in the mirror view is the reflected version of the 4^th^ point clicked in the original view.**
+- 
  ![q4](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
+
 The planar boundary of the **calibration grid** is then shown below.
+
 ![BBIMAGES](https://user-images.githubusercontent.com/65610334/212285450-3e0ecadc-eb91-4ae3-a029-32efa048535f.jpg)
+
 - After marking the four extreme corners, the toolbox prompts for the dimensions of the squares on the chessboard pattern. Here, you enter the values measured earlier.
+- 
 ![c3](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
+
 - The tooblox first guesses the corner locations, and then refines them to subpixel accuracy.
+- 
 ![casaasaa](https://user-images.githubusercontent.com/65610334/212286733-16bbf630-b0c9-4b64-ad22-22fe9e80503e.jpg)
+
 ![extracted acdcc](https://user-images.githubusercontent.com/65610334/212286285-18da988a-4855-4b63-885e-e1035fa1f071.jpg)
 
 **Follow the same procedure for the rest of images in the dataset.**
@@ -261,6 +295,7 @@ This procedure is also the **same** as in the **original view**.
 
 Again, the process remains the same as discussed in the original view.
 ![3d](https://user-images.githubusercontent.com/65610334/212606407-4e0ecebd-f88a-4601-be5e-90e711b6797d.jpg)
+
 ![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
 ### **6. Saving the Calibration Results**
@@ -305,6 +340,7 @@ Place the object you want to reconstruct in the calibrated region, and make sure
 The **naming** of these image files is important. The basename should be the same (we use 'Image') followed by a natural number. To keep things simple, we use odd numbers for original views and even numbers for the reflected view copies, and assume that the pairs are arranged consecutively i.e., image 1 is paired with image 2, image 3 with image 4, and so on. This provides a quick way of working with any pair of images.
 
 An example test image is given below. Note how all the dots are visible in both the reflection and the original object.
+
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
 ## **2. Corresponding points for desired objects**
@@ -320,9 +356,13 @@ Simply place the script next to the image(s) from the earlier sub-section and pr
 2. Run the script and select the pair of images you want to work with. E.g., `[1 2]` or `[3 4]`. Remember, odd is original, even is reflected, and we arranged pairs as consecutive numbers.
 **NOTE:** The script currently only supports only one pair of images, so `[1 2 3 4]` is not a valid input, and neither is `[1 2 3]`. 
 3. An image will pop up. Here, mark exactly `n` points on the **original view** of the object you want to reconstruct by clicking on them.
-// ADD AN IMAGE OF ORIGINAL VIEW IMAGE AND MAYBE SOMETHING ABOUT THE MARKING.
+
+![py1](https://user-images.githubusercontent.com/65610334/213213561-f5757cc8-46fa-4016-9d2e-0c69e5ac1575.jpg)
+
 3. After marking exactly `n` points, another image window will open. Here, you must again mark `n` corresponding points in the **mirror view**. 
-// ADD AN IMAGE OF THE MIRROR IMAGE AND MAYBE SOMETHING ABOUT THE MARKING.
+
+![py2](https://user-images.githubusercontent.com/65610334/213213952-476fc2f0-96d1-4b48-a57b-4a82aea61f0a.jpg)
+
 **NOTE:** Mark the points in the *same physical order* as in Step 2 and make sure to click on the *reflected* point (i.e., if you marked the top-right corner as the first pixel in Step 2, you must mark the top-left corner in the reflected view).
 4. Once the correspondences are marked, the script will generate a `marked_points.mat` file containing two variables:
     - `npoints`: An integer describing the number of points marked.
@@ -375,8 +415,11 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 **We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
 
 # **Detailed explanation of 3d reconstruction**
+***
+
 
 #### **The Basic Idea**
+
 At its core, our approach to the problem of reconstruction is to think of it as an optimization problem. We presume that a fairly accurate solution for the depth (Z-coordinate) of each 2D point (pixel) on the object exists, given any two views of the object. The two views apply the constraint that the two rays from the camera centers to the object point in 3D space will intersect at that object point, which is at some depth Z.
 
 Now, since there is only one world reference frame, the same 3D world points must project to two different pixel locations on the two cameras. We already know these pixel locations -- we marked them just now! Therefore, all we really need to do is figure out the choice of 3D points for which the forward projection (i.e., pixel projection `x = K * [R T] * X`) of both the views is correct (i.e., the reprojection error in both images is collectively minimized). 
