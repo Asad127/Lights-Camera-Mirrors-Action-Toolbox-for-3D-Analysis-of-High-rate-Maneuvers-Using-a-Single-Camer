@@ -143,7 +143,8 @@ The reprojection error is also shown in the form of **color-coded crosses**, as 
 
 ### **5. Plot the Camera and Chessboards in 3D Space**
 
-Click on Show Extrinsic in the Camera calibration tool. 
+Click on highlighted button of **Show Extrinsic** in the Camera calibration tool. 
+
 ![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
 
 This will plot the camera and chessboards using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane.
