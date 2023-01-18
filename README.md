@@ -124,7 +124,7 @@ The calibration parameters are stored in a number of variables in the workspace.
 
 ### **4. Reprojection Using Estimated Camera Parameters** 
 
-Click on highlighted button of **Reproject on images** in the calibration GUI to show the reprojections of the grids onto the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
+Click on highlighted button of **Reproject on images** in the calibration GUI to show the **reprojections** of the grids onto the **original images**. These projections are computed based on the **estimated intrinsic and extrinsic parameters** from the calibration step.
 
 ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
 
@@ -150,7 +150,8 @@ Click on highlighted button of **Show Extrinsic** in the Camera calibration tool
 This will plot the camera and chessboards using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane.
 ![extrrr](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
- To switch from a "camera-centered" view to a "world-centered" view, just click on the **Switch to world-centered view** button located at the bottom-left corner of the figure.
+ To switch from a **"camera-centered" view to a "world-centered" view**, just click on the **Switch to world-centered view** button located at the bottom-left corner of the figure.
+ 
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
 ### **6. Saving the Calibration Results**
@@ -180,18 +181,18 @@ If the calibration set had 15 images and the 15^th^ was the chosen reference, it
 
 ##### **Reference Image Assumptions**
 
-For reconstruction on test images later on, we need a reference for the world frame and a pose for the camera relative to that frame. We may assume that the camera does not move between image captures, so that the camera pose relative to the reference world frame remains the same for both the calibration images and the images we take at test time. In our setup, the camera remains fixed and only the chessboard is moved, so we can apply the assumption that the camera does not move between images. 
+For **reconstruction** on test images later on, we need a reference for the world frame and a pose for the camera relative to that frame. We may assume that the camera does not move between image captures, so that the **camera pose relative** to the reference world frame remains the same for both the **calibration images** and the images we take at test time. In our setup, the camera remains fixed and only the **chessboard is moved**, so we can apply the assumption that the **camera** does not **move** between images. 
 
-The calibration process estimates the camera pose (rotation R and translation T) for each image in the calibration set. These poses can be viewed in the `Calib_Result.mat` file. In light of this, we capture an image of the chessboard in a flat position to serve as our world reference for the camera's pose during reconstruction of other test objects. During calibration, this image is also included in the calibration set, so we already have access to its pose (R and T).
+The **calibration process** estimates the **camera pose (rotation R and translation T)** for each image in the calibration set. These **poses** can be viewed in the `Calib_Result.mat` file. In light of this, we capture an image of the **chessboard** in a **flat position** to serve as our world reference for the camera's pose during **reconstruction** of other test objects. During **calibration**, this image is also included in the **calibration set**, so we already have access to its **pose (R and T)**.
 
-In our work, we add the reference image as the last image of the calibration set for our own ease, but you can just as easily keep the first image as a reference. We prefer a flat position because it makes the most geometrical sense for our setup. 
+In **our work**, we add the **reference image** as the **last image** of the **calibration set** for our own ease, but you can just as easily keep the first image as a reference. We **prefer** a flat position because it makes the most **geometrical sense** for our setup. 
 
 >**NOTE:** In the event the assumption of a fixed camera is violated, the camera's pose must first be estimated using some algorithm like Perspective-n-Point (PnP). If the new position still has a view of the chessboard, the toolbox's `Comp. Extrinsic` function can be used as well.
 
 ## **Calibrating Mirror View**
 ***
 
-This section explains how to calibrate the mirror view using the reflection of the chessboard in the mirrors. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**. 
+This section explains how to **calibrate the mirror view using the reflection of the chessboard in the mirrors**. The procedure is **exactly** the same as described for the **calibraiton of the original view**. The only thing that is different is the **clicking order** because, in the **mirror**, the points are **reflected**. 
 
 ### **1. Gathering Calibration Images**
 
