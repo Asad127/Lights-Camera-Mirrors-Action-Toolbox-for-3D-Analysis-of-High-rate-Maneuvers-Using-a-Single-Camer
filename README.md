@@ -35,7 +35,7 @@ The following section **explains** how to setup the system for **capturing multi
 ## **Calibrating the Original View**
 ***
 
-This section explains how to use the **Bouguet Calibration Toolbox** to calibrate the original set of images. We go through all the **relevant features** of the toolbox step-by-step for our purposes below.
+This section explains how to use the **Camera Calibration Toolbox for Matlab** to calibrate the original set of images. We go through all the **relevant features** of the toolbox step-by-step for our purposes below.
 
 ### **1. Gathering Calibration Images**
 
