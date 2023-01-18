@@ -16,10 +16,9 @@ If you are new to the **camera calibration toolbox**. Go to the following websit
 
 # **Calibration Dataset Collection**
 ***
-The following section **explains** how to setup the system for **capturing multiple views** using a **single camera fixed** on a tripod. In the figure below, we show the mirror container, the tripod, and the light source we have used to capture our images.
+The following section **explains** how to setup the system for **capturing multiple views** using a **single camera fixed** on a tripod. In the figures below, we show the mirror container, the tripod, and the light source we have used to capture our images.
 
-![add23](https://user-images.githubusercontent.com/65610334/213097555-4f272012-85a5-4f71-96d9-c26bd8629eda.PNG)
-
+![123](https://user-images.githubusercontent.com/65610334/212621713-6e8b4379-a18b-4971-83ee-c91948d93592.jpeg)
 
 - **Print a checker pattern and measure the dimensions (x and y) of any one square on the chessboard.**
   ![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
@@ -27,7 +26,7 @@ The following section **explains** how to setup the system for **capturing multi
 - **Place the chessboard in the mirror container and make sure it can be seen in all three views.i.e original and both the mirror view.** 
 ***Note: Camera stand and mirror setup should not move throughout the process.***
 ![m1](https://user-images.githubusercontent.com/65610334/213096148-a47db345-14b7-4b3e-9a0d-8ad0de3f9e05.PNG)
-- **Change the position of the chessboard in a limited region(represented by white paper tape) to ensure that the pattern can be seen in all views, i.e., the original and both the mirror views, and capture an image.**
+- **Change the position of the chessboard in a limited region to ensure that the pattern can be seen in all views, i.e., the original and both the mirror views, and capture an image.**
 - **Repeat the above steps to capture at least 15-20 images of the checker pattern at different positions.**
  
 ![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
@@ -66,7 +65,7 @@ The first clicked point is selected to be associated to the origin point of the 
 
 We illustrate the clicking order that we followed for our calibration below.
 
-![Corners](https://user-images.githubusercontent.com/65610334/212264385-240dc658-19eb-4212-bf70-1002ec21c2cd.jpg)
+![asddddd](https://user-images.githubusercontent.com/65610334/213100379-beb1dad9-47d7-47b4-bd3b-30200bd67aef.png)
 
 The planar boundary of the calibration grid is then shown below.
 
@@ -199,17 +198,23 @@ The only change in this step is the **clicking order**, and that the points must
 We visually explain the **reflected clicking order** in the mirror images below. Note that the clicking order here depends on the clicking order from when the original set was calibrated.
 
 - **The 1^st^ point which is the origin in the mirror view is the reflected version of the 1^st^ point clicked in the original view.**
+ ![q1](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
 - **The 2^nd^ point in the mirror view is the reflected version of the 2^nd^ point clicked in the original view.**
+![q2](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
 - **The 3^rd^ point in the mirror view is the reflected version of the 3^rd^ point clicked in the original view.**
+ ![q3](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
 - **The 4^th^ point in the mirror view is the reflected version of the 4^th^ point clicked in the original view.**
-
-![asddd](https://user-images.githubusercontent.com/65610334/212284205-98c2ad36-cfc8-4c32-bb10-5470510179c5.jpg)
+ ![q4](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
+The planar boundary of the **calibration grid** is then shown below.
 ![BBIMAGES](https://user-images.githubusercontent.com/65610334/212285450-3e0ecadc-eb91-4ae3-a029-32efa048535f.jpg)
+- After marking the four extreme corners, the toolbox prompts for the dimensions of the squares on the chessboard pattern. Here, you enter the values measured earlier.
+![Capture3](https://user-images.githubusercontent.com/65610334/213087454-6aa5dec0-d1f8-483c-9058-14039278624a.PNG)
+- The tooblox first guesses the corner locations, and then refines them to subpixel accuracy.
 ![casaasaa](https://user-images.githubusercontent.com/65610334/212286733-16bbf630-b0c9-4b64-ad22-22fe9e80503e.jpg)
 ![extracted acdcc](https://user-images.githubusercontent.com/65610334/212286285-18da988a-4855-4b63-885e-e1035fa1f071.jpg)
 
 **Follow the same procedure for the rest of images in the dataset.**
-
+**Rest of procedure is same as described for calibrating the original view**.
 ### **3. Main Calibration Step**
 
 The main calibration step for the mirror view is the **same** as described for the **original view**.
