@@ -16,12 +16,12 @@ If you are new to the camera calibration toolbox. Go to the following website ht
 
 # **Calibration Dataset Collection**
 ***
-The following section explains how to setup the system for capturing multiple views using a single camera fixed on a tripod. In the figures below, we show the mirror container, the tripod, and the light source we have used to capture our images.
+The following section **explains** how to setup the system for **capturing multiple views** using a **single camera fixed** on a tripod. In the figures below, we show the mirror container, the tripod, and the light source we have used to capture our images.
 
 ![123](https://user-images.githubusercontent.com/65610334/212621713-6e8b4379-a18b-4971-83ee-c91948d93592.jpeg)
 
 - **Print a checker pattern and measure the dimensions (x and y) of any one square on the chessboard.**
-// Add an image of the chessboard with length and width dimensions highlighted on one square. 
+  ![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 - **Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.**
 - **Place the chessboard in the mirror container and make sure.** 
 ***Note: Camera stand and mirror setup should not move throughout the process.***
