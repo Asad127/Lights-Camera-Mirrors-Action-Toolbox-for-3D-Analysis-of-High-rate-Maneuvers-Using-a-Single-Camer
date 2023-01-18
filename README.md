@@ -40,17 +40,19 @@ This section explains how to use the **Bouguet Calibration Toolbox** to calibrat
 1. Download the calibration images all at once from the following link https://github.com/Asad127/3D-RECONSTRUCTION/tree/main/Dataset or one by one, and store all the images into a seperate folder named **calib_data**.
 2. From within MATALB, go to the folder **calib_data** containing the images. 
 3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
-// Add image of the MATLAB GUI and highlight the Image Names button.
-// Finally add the output of the command window and workspace after image name inputs.
-
+ ![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
+4. After clicking on the Image names button, the following output will be displayed in the command window in which you have to enter the basename of the image and the type of format.
+![Capture](https://user-images.githubusercontent.com/65610334/213086173-c82bb9b9-902e-400e-982c-94e3ef06b169.PNG)
+5. After completing the above steps, the following **output** will pop up.
 ![Calibration Images](https://user-images.githubusercontent.com/65610334/212247154-20bdaa4c-e473-4a52-afed-8535061711e3.png)
 
 ### **2. Extract the Grid Corners**
-Click on the **Extract Grid Corners** button in the calibration GUI.
+1. Click on the  highlited button of **Extract Grid Corners** in the calibration GUI.
 
 ![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
-
-// ADD IMAGE OF EXTRACT GRID CORNER INPUTS
+2. After clicking on the highlighted button of **Extract grid corners**, it will ask about the window size and automatic square counting mechanism.
+  ![Capture2](https://user-images.githubusercontent.com/65610334/213088149-a2deb372-2c2c-4786-a7bc-c080f88cf40b.PNG)
+3. The accompanying **output** will appear after step 2 is completed. 
 
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
 
@@ -70,9 +72,9 @@ The planar boundary of the calibration grid is then shown below.
 
 After marking the four extreme corners, the toolbox prompts for the dimensions of the squares on the chessboard pattern. Here, you enter the values measured earlier.
 
-// ADD IMAGE OF SIZE AND INITIAL GUESS FOR DISTORTION PARAMETERS
+![Capture3](https://user-images.githubusercontent.com/65610334/213087454-6aa5dec0-d1f8-483c-9058-14039278624a.PNG)
 
-The tooblox first guesses the corner locations, and then refines them to subpixel accuracy.
+The **tooblox** first guesses the **corner locations**, and then refines them to subpixel accuracy.
 
 ![corners11](https://user-images.githubusercontent.com/65610334/212265637-e70c9ba5-b7da-4542-bac6-321273b4a3c2.jpg)
 ![extraxted corners](https://user-images.githubusercontent.com/65610334/212265827-fec020ae-8599-48cf-b542-401dc5c90dc8.jpg)
@@ -81,7 +83,7 @@ The tooblox first guesses the corner locations, and then refines them to subpixe
 
 After corner extraction, the matlab data file `calib_data.mat` is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, etc.). This file is only created in case of emergency when for example matlab is abruptly terminated before saving. Loading this file would prevent you from having to click again on the images.
 
-// ADD IMAGE OF CALIB_DATA.MAT WORKSPACE HERE
+![Capture4](https://user-images.githubusercontent.com/65610334/213088881-593e9b10-5a31-4691-8366-093617c3287c.PNG)
 
 ### **3. Main Calibration Step**
 
@@ -142,9 +144,9 @@ This will plot the camera and chessboards using the estimated extrinsics from th
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
 ### **6. Saving the Calibration Results**
-Click on the **Save** button on the calibration GUI.
+Click on the highlighted button of **Save** on the calibration GUI.
 
-// ADD IMAGE OF THE GUI WITH THE SAVE BUTTON HIGHLIGHTED.
+![W2](https://user-images.githubusercontent.com/65610334/213089098-8d0d4f67-8d9c-44df-b708-bc5984c4499f.png)
 
 The toolbox generates two files:
 - `Calib_Result.mat` : The workspace containing all the calibration variables involved in the process. 
