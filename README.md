@@ -41,8 +41,10 @@ This section explains how to use the **Bouguet Calibration Toolbox** to calibrat
 
 1. Download the calibration images all at once from the following link https://github.com/Asad127/3D-RECONSTRUCTION/tree/main/Dataset or one by one, and store all the images into a seperate folder named **calib_data**.
 2. From within MATALB, go to the folder **calib_data** containing the images. 
-3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
+3. Click on the highlighted button of **Image Names** in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
+
  ![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
+ 
 4. After clicking on the Image names button, the following output will be displayed in the command window in which you have to enter the basename of the image and the type of format.
 ![Capture](https://user-images.githubusercontent.com/65610334/213086173-c82bb9b9-902e-400e-982c-94e3ef06b169.PNG)
 5. After completing the above steps, the following **output** will pop up.
@@ -52,8 +54,11 @@ This section explains how to use the **Bouguet Calibration Toolbox** to calibrat
 1. Click on the  highlited button of **Extract Grid Corners** in the calibration GUI.
 
 ![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
+
 2. After clicking on the highlighted button of **Extract grid corners**, it will ask about the window size and automatic square counting mechanism.
+
   ![Capture2](https://user-images.githubusercontent.com/65610334/213088149-a2deb372-2c2c-4786-a7bc-c080f88cf40b.PNG)
+  
 3. The accompanying **output** will appear after step 2 is completed. 
 
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
@@ -119,8 +124,10 @@ The calibration parameters are stored in a number of variables in the workspace.
 
 ### **4. Reprojection Using Estimated Camera Parameters** 
 
-Click on **Reproject on images** in the calibration GUI to show the reprojections of the grids onto the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
+Click on highlighted button of **Reproject on images** in the calibration GUI to show the reprojections of the grids onto the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
+
 ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
+
   
     Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
     Number(s) of image(s) to show ([] = all images) = []
