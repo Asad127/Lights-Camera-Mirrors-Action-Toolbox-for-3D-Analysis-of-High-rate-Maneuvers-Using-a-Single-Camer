@@ -24,7 +24,7 @@ The following section **explains** how to setup the system for **capturing multi
   ![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 - **Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.**
 - **Place the chessboard in the mirror container and make sure.** 
-- ***Note: Camera stand and mirror setup should not move throughout the process.***
+***Note: Camera stand and mirror setup should not move throughout the process.***
 - **Change the position of the chessboard in a limited region to ensure that the pattern can be seen in all views, i.e., the original and both the mirror views, and capture an image.**
 - **Repeat the above steps to capture at least 15-20 images of the checker pattern at different positions.**
  
