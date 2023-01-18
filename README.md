@@ -7,12 +7,12 @@
 
 # **System Requirements**
 ***
-  This toolbox works on Matlab 5.x and Matlab 6.x (up to Matlab 6.5) on Windows, Unix and Linux systems (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other platform supporting Matlab 5.x and 6.x.
+  This **toolbox works on Matlab 5.x and Matlab 6.x** (up to Matlab 6.5) on **Windows, Unix and Linux systems** (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other **platform supporting Matlab 5.x and 6.x**.
 
 
 # **Getting Started**
 ***
-If you are new to the camera calibration toolbox. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about camera calibration.This  is highly recommended for someone who is just starting using the toolbox. 
+If you are new to the **camera calibration toolbox**. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about **camera calibration**.This  is **highly recommended** for someone who is just starting using the toolbox. 
 
 # **Calibration Dataset Collection**
 ***
@@ -24,7 +24,7 @@ The following section **explains** how to setup the system for **capturing multi
   ![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 - **Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.**
 - **Place the chessboard in the mirror container and make sure.** 
-***Note: Camera stand and mirror setup should not move throughout the process.***
+- ***Note: Camera stand and mirror setup should not move throughout the process.***
 - **Change the position of the chessboard in a limited region to ensure that the pattern can be seen in all views, i.e., the original and both the mirror views, and capture an image.**
 - **Repeat the above steps to capture at least 15-20 images of the checker pattern at different positions.**
  
