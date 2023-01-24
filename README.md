@@ -502,7 +502,10 @@ Then, we **plot the 3D world points** in 3D space to get a sense of whether the 
 Finally, we also calculate and display a few metrics like the **mean reprojection error** over the entire set of `n` points. If we used a regular pattern, we can also plot a histogram of errors. However, this is very situational.
  ![R4_Hist](https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg)
 
+# **3d reconstruction Video**
 
+You can find the complete video of this GitHub page on the following link.
+- https://www.youtube.com/watch?v=8xy7TPd_-OU
 
 
 ## **License**
