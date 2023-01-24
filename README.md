@@ -306,7 +306,7 @@ Repeat the same procedure as in the original view calibration to save the calibr
 
 Again, we only need the intrinsics (`KK`) and the extrinsics (`Rc_k` and `Tc_k`) from the `Calib_Result.mat` file generated from the calibration. We **MUST** use the same image we selected as reference for the original view as the reference image for the mirror view. So, if we selected the 12^th^ image as the world reference for test images from the original view, we will also select the 12^th^ image from here as our world reference for test images in the mirror view. 
 
-Save these variables into a new workspace `reflected_params.mat`. This workspace has only three variables. Open it, and rename them as follows.
+Save these variables into a new file `reflected_params.mat`. This workspace has only three variables. Open it, and rename them as follows.
 
 - `KK ---> KK_2` 
 - `Rc_k ---> Rc_2` 
