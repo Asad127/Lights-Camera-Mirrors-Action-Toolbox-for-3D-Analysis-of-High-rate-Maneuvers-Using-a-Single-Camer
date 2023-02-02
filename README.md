@@ -414,6 +414,16 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 
 **We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
 
+# **Epipolar lines**
+
+## **Marked points**
+![original_view_marks_only](https://user-images.githubusercontent.com/65610334/216245267-e243c06f-6182-48d8-b104-4103b3063814.png)
+
+## **Epipolar lines and Correspondent points**
+
+![original_view_marks_correspondents_epilines](https://user-images.githubusercontent.com/65610334/216245372-008b2beb-33bb-4161-92c0-8a133f8fc4f9.png)
+
+
 # **Detailed explanation of 3d reconstruction**
 ***
 
