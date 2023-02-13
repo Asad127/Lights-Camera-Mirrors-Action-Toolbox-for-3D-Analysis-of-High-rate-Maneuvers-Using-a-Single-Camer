@@ -1,14 +1,15 @@
 # **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
 
 # **High Speed Motion Capture Using High Speed Camera
-## **Butterfly**
-https://user-images.githubusercontent.com/65610334/218388866-6e96d8f0-9e50-4647-bb06-a98c5859d636.mp4
-
 ## **Dragonfly**
-https://user-images.githubusercontent.com/65610334/218388902-1e161699-bd53-4eb4-8f1b-c68180602054.mp4
+https://user-images.githubusercontent.com/65610334/218389751-7817dc8c-9ee5-4609-abdb-94b96eb5bccd.mp4
 
 ## **Housefly**
 https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-885d-7af7965979b4.mp4
+****
+
+## **Butterfly**
+https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-a107-09850fb4c078.mp4
 
 
 ***
