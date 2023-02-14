@@ -15,9 +15,7 @@ https://user-images.githubusercontent.com/65610334/218727506-319f85d8-ba39-4e11-
 
 https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
-# **System 
-
-Requirements**
+# **System Requirements**
 ***
   This **toolbox works on Matlab 5.x and Matlab 6.x** (up to Matlab 6.5) on **Windows, Unix and Linux systems** (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other **platform supporting Matlab 5.x and 6.x**.
 
