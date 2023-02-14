@@ -431,7 +431,6 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 
 # **Epipolar Verification of Poses**
 
-## Directory Structure
 The script requires a proper folder structure. 
 
 ```
