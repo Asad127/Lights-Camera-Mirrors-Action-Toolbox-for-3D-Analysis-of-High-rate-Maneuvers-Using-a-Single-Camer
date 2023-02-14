@@ -476,7 +476,7 @@ After setting up the test set, run the script:
           RELATIVE DIRECTORIES          
 ****************************************
 TEST IMAGES AND POSES	test_sets
-ALL THE RESULTS			results
+ALL THE RESULTS		results
 
 [PROMPT] Enter the directory containing the images folder merged_params.mat file (from calibration): set_1
 ```
