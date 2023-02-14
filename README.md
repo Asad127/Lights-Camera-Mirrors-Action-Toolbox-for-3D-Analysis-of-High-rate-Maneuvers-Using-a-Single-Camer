@@ -1,34 +1,34 @@
-# **Capturing high speed maneuver using a single camera and planar mirrors**
+# **Capturing High Speed Maneuver Using a Single Camera and Planar Mirrors**
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/65610334/218729120-f6942979-18bf-4569-9caf-d46b0e4d97af.gif">
 </p>
 
 ## **Dragonfly**
 https://user-images.githubusercontent.com/65610334/218671910-4910fe86-2c61-4224-9f2b-d1678b5d4f65.mp4
+
 ## **Housefly**
 https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-885d-7af7965979b4.mp4
+
 ## **Butterfly**
 https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-a107-09850fb4c078.mp4
 
-
 # **Calibrating the Single Camera and Planar Mirror Setup** 
 https://user-images.githubusercontent.com/65610334/218727506-319f85d8-ba39-4e11-bd70-6d51133d2fb6.mp4
-***
 
 # **Verifying Poses With Epipolar Geometry** 
 https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
 # **System Requirements**
+
+This **toolbox works on Matlab 5.x and Matlab 6.x** (up to Matlab 6.5) on **Windows, Unix and Linux systems** (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other **platform supporting Matlab 5.x and 6.x**.
 ***
-  This **toolbox works on Matlab 5.x and Matlab 6.x** (up to Matlab 6.5) on **Windows, Unix and Linux systems** (platforms it has been fully tested) and does not require any specific Matlab toolbox (for example, the optimization toolbox is not required). The toolbox should also work on any other **platform supporting Matlab 5.x and 6.x**.
-
-
 # **Getting Started**
-***
+
 If you are new to the **camera calibration toolbox**. Go to the following website http://robots.stanford.edu/cs223b04/JeanYvesCalib/ and try the first few examples to get to know about **camera calibration**.This  is **highly recommended** for someone who is just starting using the toolbox. 
 
-# **Calibration Dataset Collection**
-***
+## **Calibration Dataset Collection**
+
 The following section **explains** how to setup the system for **capturing multiple views** using a **single camera fixed** on a tripod. In the figure below, we show the **mirror container, the tripod, and the light source** we have used to capture our **images**.
 
 ![w11](https://user-images.githubusercontent.com/65610334/213187130-b907fcc0-bced-43c0-99a9-ee44dae10d69.PNG)
@@ -52,7 +52,6 @@ The following section **explains** how to setup the system for **capturing multi
 ![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
 
 ## **Calibrating the Original View**
-***
 
 This section explains how to use the **Camera Calibration Toolbox for Matlab** to calibrate the original set of images. We go through all the relevant features of the toolbox step-by-step for our purposes below.
 
@@ -62,7 +61,7 @@ This section explains how to use the **Camera Calibration Toolbox for Matlab** t
 2. From within MATALB, go to the folder **calib_data** containing the images. 
 3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
 
- ![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
+![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
 
 4. After clicking on the Image names button, the following output will be displayed in the command window in which you have to enter the basename of the image and the type of format.
 
@@ -217,7 +216,6 @@ In our work, we add the **reference image** as the last image of the **calibrati
 >**NOTE:** In the event the assumption of a fixed camera is violated, the camera's pose must first be estimated using some algorithm like Perspective-n-Point (PnP). If the new position still has a view of the chessboard, the toolbox's `Comp. Extrinsic` function can be used as well.
 
 ## **Calibrating Mirror View**
-***
 
 This section explains how to **calibrate the mirror** view using the reflection of the **chessboard in the mirrors**. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**. 
 
@@ -326,7 +324,7 @@ Save these variables into a new file `reflected_params.mat`. This workspace has 
 - `Tc_k ---> Tc_2`
 
 ## **Merging the Original and Mirror Camera Parameters**
-***
+
 For reconstruction, we have separated the pose for the reference image and the intrinsics for each view:
 
 - `original_params.mat` 
@@ -343,8 +341,9 @@ The merged workspace has six variables:
 
 ![merout](https://user-images.githubusercontent.com/65610334/212697559-11b17a6a-50d7-4ae4-ba68-1dae61a465c6.PNG)
 
-# **3D Reconstruction of Different Objects**
 ***
+# **3D Reconstruction of Different Objects**
+
 You can remove the calibration checker pattern at this stage if you want to. It is no longer needed.
 
 ## **1. Gathering Test Images**
@@ -428,9 +427,9 @@ By now, we have the poses, the intrinsics, and the 2D corresponding points for b
 Now you are **done** with your **3d reconstruction**. You can try different objects for yourself for **3d reconstrcution using single camera and mirror setup**.
 
 > **NOTE:** We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to test out the reconstruction.
+***
 
 # **Epipolar Verification of Poses**
-***
 
 ## Directory Structure
 The script requires a proper folder structure. 
@@ -533,10 +532,8 @@ The script works will replace old results for a test set with the same, so eithe
 
 > **NOTE:** Since the corresponding points are marked manually, there is always some **human error** involved. Particularly, if the image resolution is high, even a slight offset can produce a seemingly large point-line distance (2-3 pixel distances even when the reprojection error is extremely low). However, in our experience, descriptor feature extractors like SIFT are not very good for this task of matching corresponding points, so the manual approach remains the most convenient method.
 
-# **Detailed Explanation of 3D Reconstruction**
 ***
-
-#### **The Basic Idea**
+# **Detailed Explanation of 3D Reconstruction**
 
 At its core, our approach to the problem of reconstruction is to think of it as an optimization problem. We presume that a fairly accurate solution for the depth (Z-coordinate) of each 2D point (pixel) on the object exists, given any two views of the object. The two views apply the constraint that the two rays from the camera centers to the object point in 3D space will intersect at that object point, which is at some depth Z.
 
@@ -612,16 +609,17 @@ In simpler words, we are essentially aligning the axes of both the 3D world fram
 First, we **plot the pixel projections** using the estimated world coordinates (red stars) and plot them against the originally marked pixel points (blue circles). This gauges the **reprojection error**. 
 
 Since we swapped the axes of the mirrored frame during the estimation of the world points, we need to swap them back to their original form (Z-axis down convention) before we find their pixel projections. This is because while our trick allowed it to deal with the problem by tricking the extrinsics into thinking it was being multiplied with X instead of Y and Y instead of X (as it should be if the toolbox did not force right-handedness), we have essentially ended up with a swapped version of the world coordinates that the right-handed system of the mirrored image understands. Thus, to plot them correctly, we must swap them back to their original form when plugging them into the forward projection equation.
+
 ![R4](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
 Then, we **plot the 3D world points** in 3D space to get a sense of whether the **actual structure** of the object was recovered, or if the optimizer failed to recover structure even with a small reprojection error. 
+
 ![untitl211221ed](https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg)
 
 Finally, we also calculate and display a few metrics like the **mean reprojection error** over the entire set of `n` points. If we used a regular pattern, we can also plot a histogram of errors. However, this is very situational.
- ![R4_Hist](https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg)
 
-
-
+![R4_Hist](https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg)
+***
 
 ## **License**
 
