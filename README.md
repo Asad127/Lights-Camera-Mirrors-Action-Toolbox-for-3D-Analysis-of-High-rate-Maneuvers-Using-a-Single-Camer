@@ -392,7 +392,7 @@ The pixel location in **column 1** of `xj` (i.e., first marked point in the orig
 
 For the images attached below, we have attached a picture of the generated `marked_points.mat` file (you can view them in `Marked 2D points/P4.mat`):
 - `npoints = 140`
-- `xj = 2x280`
+- `xj = 3 x 280`
  
 ![c6](https://user-images.githubusercontent.com/65610334/213194210-e5b9e24d-f35f-4e42-bc95-9b08ea01684c.jpg)
 
@@ -494,14 +494,14 @@ Entering point-marking mode...
 >> Mark points in original view...1...2...3...4... DONE.
 ```
 
-![marked_points_original](https://user-images.githubusercontent.com/94681976/218796242-7143e797-d420-4ec3-8001-1f7240347a48.png)
+![marked_points_original](https://user-images.githubusercontent.com/94681976/218799351-e5e66615-c10d-4d4b-836f-84cf157b94bb.png)
 
 4. After marking n points, another figure window will pop up named “Reflected View.” Mark the n corresponding points in the reflected view here.
 ```
 >> Mark corresponding points in reflected view...1...2...3...4... DONE.
 ```
-![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218796302-5b639823-a129-4a5e-9b73-0a6e85cc5ddb.png)
 
+![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218799326-cebf85aa-49d0-439a-b45b-2e6e0d4bc17a.png)
 
 5. The script will now plot the resulting epipolar lines and calculate their accuracy in terms of corresponding point to epipolar line distances (in pixels). After saving these outputs inside `results` to a subfolder with the same name as the test set folder, the script terminates after printing the following.
 ```
@@ -517,11 +517,11 @@ Plotting the results and calculating the point-epiline distances...
 You can view the results for the sets at any time: 
 - Image with epipolar lines in the reflected view corresponding to original points (using the fundamental matrix as is)
 
-![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218799326-cebf85aa-49d0-439a-b45b-2e6e0d4bc17a.png)
+![epilines_in_reflected_view](https://user-images.githubusercontent.com/94681976/218801942-22c9af75-1bf4-47e1-be4d-86b7df8375d6.png)
 
 - Image with epipolar lines in the original view corresponding to reflected points (transpose of fundamental matrix)
 
-![marked_points_original](https://user-images.githubusercontent.com/94681976/218799351-e5e66615-c10d-4d4b-836f-84cf157b94bb.png)
+![epilines_in_original_view](https://user-images.githubusercontent.com/94681976/218802025-9e487d3d-4965-4b60-8451-62d7efaaddbc.png)
 
 - A .mat file with the fundamental matrix and point-line distances
 
