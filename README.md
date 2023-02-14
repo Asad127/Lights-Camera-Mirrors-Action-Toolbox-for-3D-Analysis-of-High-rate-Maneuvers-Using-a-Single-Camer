@@ -8,16 +8,12 @@ https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-
 https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-a107-09850fb4c078.mp4
 
 
- **You can find the complete video of this GitHub page on the following link.**
-- https://www.youtube.com/watch?v=8xy7TPd_-OU
-- https://youtu.be/fiQxzO_iNu4
-
-
-***
-***
 # **Calibrating the Single Camera and Planar Mirror Setup** 
+https://user-images.githubusercontent.com/65610334/218727506-319f85d8-ba39-4e11-bd70-6d51133d2fb6.mp4
 ***
 ***
+
+https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
 # **System 
 
