@@ -1,21 +1,15 @@
 # **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
-
-
 ![3d-recon](https://user-images.githubusercontent.com/65610334/218408764-ed2f4d5c-0dc0-49f9-b13a-8c6ee7f4b1da.gif)
-
-
 # **High Speed Motion Capture Using High Speed Camera**
 ## **Dragonfly**
 https://user-images.githubusercontent.com/65610334/218389751-7817dc8c-9ee5-4609-abdb-94b96eb5bccd.mp4
-
 ## **Housefly**
 https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-885d-7af7965979b4.mp4
-****
-
 ## **Butterfly**
 https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-a107-09850fb4c078.mp4
-
-
+ **You can find the complete video of this GitHub page on the following link.**
+- https://www.youtube.com/watch?v=8xy7TPd_-OU
+- https://youtu.be/fiQxzO_iNu4
 ***
 ***
 # **Camera calibration  - Corner extraction-calibration-additional tools** 
@@ -531,10 +525,7 @@ Then, we **plot the 3D world points** in 3D space to get a sense of whether the 
 Finally, we also calculate and display a few metrics like the **mean reprojection error** over the entire set of `n` points. If we used a regular pattern, we can also plot a histogram of errors. However, this is very situational.
  ![R4_Hist](https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg)
 
-# **3d reconstruction Video**
 
-You can find the complete video of this GitHub page on the following link.
-- https://www.youtube.com/watch?v=8xy7TPd_-OU
 
 
 ## **License**
