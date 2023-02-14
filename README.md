@@ -1,8 +1,7 @@
-# **Capturing High Speed mMneuver Using a Single Camera and Planar Mirrors**
+# **Capturing High Speed Maneuver Using a Single Camera and Planar Mirrors**
 ![3d-recon](https://user-images.githubusercontent.com/65610334/218408764-ed2f4d5c-0dc0-49f9-b13a-8c6ee7f4b1da.gif)
-# **High Speed Motion Capture Using High Speed Camera**
 ## **Dragonfly**
-https://user-images.githubusercontent.com/65610334/218389751-7817dc8c-9ee5-4609-abdb-94b96eb5bccd.mp4
+https://user-images.githubusercontent.com/65610334/218671910-4910fe86-2c61-4224-9f2b-d1678b5d4f65.mp4
 ## **Housefly**
 https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-885d-7af7965979b4.mp4
 ## **Butterfly**
