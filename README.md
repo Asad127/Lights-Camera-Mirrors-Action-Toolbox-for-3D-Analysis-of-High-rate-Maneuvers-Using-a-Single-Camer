@@ -1,4 +1,4 @@
-# **3D RECONSTRUCTION USING SINGLE CAMERA AND MIRROR SETUP**
+# **Capturing High Speed mMneuver Using a Single Camera and Planar Mirrors**
 ![3d-recon](https://user-images.githubusercontent.com/65610334/218408764-ed2f4d5c-0dc0-49f9-b13a-8c6ee7f4b1da.gif)
 # **High Speed Motion Capture Using High Speed Camera**
 ## **Dragonfly**
@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-
 
 ***
 ***
-# **Camera calibration  - Corner extraction-calibration-additional tools** 
+# **Calibrating the Single Camera and Planar Mirror Setup** 
 ***
 ***
 
