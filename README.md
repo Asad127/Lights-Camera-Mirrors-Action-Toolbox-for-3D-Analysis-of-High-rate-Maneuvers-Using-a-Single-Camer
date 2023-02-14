@@ -513,7 +513,7 @@ Plotting the results and calculating the point-epiline distances...
 [NOTE] You may view the results in the respective folders. Terminating.
 ```
 
-You can view the results for the sets at any time: 
+You can view the results for the sets at any time within the designated results folder: 
 - Image with epipolar lines in the reflected view corresponding to original points (using the fundamental matrix as is)
 
 ![epilines_in_reflected_view](https://user-images.githubusercontent.com/94681976/218801942-22c9af75-1bf4-47e1-be4d-86b7df8375d6.png)
