@@ -1,5 +1,7 @@
 # **Capturing high speed maneuver using a single camera and planar mirrors**
-![3](https://user-images.githubusercontent.com/65610334/218729120-f6942979-18bf-4569-9caf-d46b0e4d97af.gif)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/65610334/218729120-f6942979-18bf-4569-9caf-d46b0e4d97af.gif">
+</p>
 
 ## **Dragonfly**
 https://user-images.githubusercontent.com/65610334/218671910-4910fe86-2c61-4224-9f2b-d1678b5d4f65.mp4
@@ -12,7 +14,7 @@ https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-
 # **Calibrating the Single Camera and Planar Mirror Setup** 
 https://user-images.githubusercontent.com/65610334/218727506-319f85d8-ba39-4e11-bd70-6d51133d2fb6.mp4
 ***
-***
+
 # **Verifying Poses With Epipolar Geometry** 
 https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
@@ -32,11 +34,11 @@ The following section **explains** how to setup the system for **capturing multi
 ![w11](https://user-images.githubusercontent.com/65610334/213187130-b907fcc0-bced-43c0-99a9-ee44dae10d69.PNG)
 
 - **Print a checker pattern and measure the dimensions (x and y) of any one square on the chessboard.**
-- 
-  ![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
+
+![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 
 - **Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.**
-- 
+
 ![w43](https://user-images.githubusercontent.com/65610334/213187833-99e95ccb-4358-4e17-a54e-be245f93dc82.PNG)
 
 - **Place the chessboard in the mirror container and make sure it can be seen in all three views.i.e original and both the mirror view.** 
@@ -59,15 +61,15 @@ This section explains how to use the **Camera Calibration Toolbox for Matlab** t
 1. Download the calibration images all at once from the following link https://github.com/Asad127/3D-RECONSTRUCTION/tree/main/Dataset or one by one, and store all the images into a seperate folder named **calib_data**.
 2. From within MATALB, go to the folder **calib_data** containing the images. 
 3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
-4. 
+
  ![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
 
 4. After clicking on the Image names button, the following output will be displayed in the command window in which you have to enter the basename of the image and the type of format.
-5. 
+
 ![c1](https://user-images.githubusercontent.com/65610334/213191810-6f565d40-7329-431f-b4e6-2a7110305909.jpg)
 
-5. After completing the above steps, the following **output** will pop up.
-6. 
+5. After completing the above steps, the following **output** (a mosaic of the images) will pop up.
+
 ![Calibration Images](https://user-images.githubusercontent.com/65610334/212247154-20bdaa4c-e473-4a52-afed-8535061711e3.png)
 
 ### **2. Extract the Grid Corners**
@@ -77,7 +79,7 @@ This section explains how to use the **Camera Calibration Toolbox for Matlab** t
 ![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
 
 2. After clicking on the highlighted button of **Extract grid corners**, it will ask about the window size and automatic square counting mechanism.
-3. 
+
 ![c2](https://user-images.githubusercontent.com/65610334/213191980-d15f847a-52db-4f7a-9357-22a4f2dfc577.jpg)
 
 3. The accompanying **output** will appear after step 2 is completed. 
@@ -234,31 +236,31 @@ The only change in this step is the **clicking order**, and that the points must
 We visually explain the **reflected clicking order** in the mirror images below. Note that the clicking order here depends on the clicking order from when the original set was calibrated.
 
 - **The 1^st^ point which is the origin in the mirror view is the reflected version of the 1^st^ point clicked in the original view.**
-- 
+
  ![q1](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
 
 - **The 2^nd^ point in the mirror view is the reflected version of the 2^nd^ point clicked in the original view.**
-- 
+
 ![q2](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
 
 - **The 3^rd^ point in the mirror view is the reflected version of the 3^rd^ point clicked in the original view.**
-- 
+
  ![q3](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
 
 - **The 4^th^ point in the mirror view is the reflected version of the 4^th^ point clicked in the original view.**
-- 
+
  ![q4](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
 
-The planar boundary of the **calibration grid** is then shown below.
+- After the fourth click, the planar boundary of the **calibration grid** is then shown in a separate figure.
 
 ![BBIMAGES](https://user-images.githubusercontent.com/65610334/212285450-3e0ecadc-eb91-4ae3-a029-32efa048535f.jpg)
 
-- After marking the four extreme corners, the toolbox prompts for the dimensions of the squares on the chessboard pattern. Here, you enter the values measured earlier.
-- 
+- After marking the four extreme corners, the toolbox prompts for the dimensions of the squares on the chessboard pattern. Here, you enter the values measured earlier. This is only done for the first image in the calibration set.
+
 ![c3](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
 
 - The tooblox first guesses the corner locations, and then refines them to subpixel accuracy.
-- 
+
 ![casaasaa](https://user-images.githubusercontent.com/65610334/212286733-16bbf630-b0c9-4b64-ad22-22fe9e80503e.jpg)
 
 ![extracted acdcc](https://user-images.githubusercontent.com/65610334/212286285-18da988a-4855-4b63-885e-e1035fa1f071.jpg)
@@ -346,7 +348,7 @@ The merged workspace has six variables:
 You can remove the calibration checker pattern at this stage if you want to. It is no longer needed.
 
 ## **1. Gathering Test Images**
-Place the object you want to reconstruct in the calibrated region, and make sure its features are clearly visible in both the calibrated mirrors. Capture as many images you want with the test object in various positions, making sure the camera remains in the same position as during calibration. Finally, make exactly **one copy** of each captured image, so that there are two images for each scene. The idea is to use the copies for working with the mirrored views later.
+Place the object you want to reconstruct in the calibrated region, and make sure its features are clearly visible in both the calibrated mirrors. Capture as many images as you want with the test object in various positions, making sure the camera remains in the same position as during calibration. Finally, make exactly **one copy** of each captured image, so that there are two images for each scene. The idea is to use the copies for working with the mirrored views later.
 
 The **naming** of these image files is important. The basename should be the same (we use 'Image') followed by a natural number. To keep things simple, we use odd numbers for original views and even numbers for the reflected view copies, and assume that the pairs are arranged consecutively i.e., image 1 is paired with image 2, image 3 with image 4, and so on. This provides a quick way of working with any pair of images.
 
@@ -354,7 +356,7 @@ An example test image is given below. Note how all the dots are visible in both 
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
-## **2. Corresponding points for desired objects**
+## **2. Corresponding Points for Desired Objects**
 
 Now, we need to extract some **corresponding 2D points** (pixels) from the original and reflected view of the object in the test image(s). We have created the script `point_marker.mat` to manually click and store the pixels corresponding to the object's features in any given image pair. 
 
@@ -402,17 +404,20 @@ For the images attached below, we have attached a picture of the generated `mark
 By now, we have the poses, the intrinsics, and the 2D corresponding points for both views. We are finally ready to begin reconstruction of the object's physical points in 3D world coordinates. The script `reconstruction_3d.m` performs the reconstruction process.
 
 1. Open the script `reconstruction_3d.m` in the matlab editor.
- ![ad11](https://user-images.githubusercontent.com/65610334/213199025-5e8f5595-66dd-43ba-9335-c39fd6a8baf6.png)
+ 
+![ad11](https://user-images.githubusercontent.com/65610334/213199025-5e8f5595-66dd-43ba-9335-c39fd6a8baf6.png)
+
 2. Make sure you are in the folder where you have your test images, 2d corresponding points, and merged parameters(Camera matrix for both views).
 3. In our case, the **2d corresponding points** are saved in the `P4.mat` file and the camera matrix for both the original and mirror view is saved in `merged_params.mat` file.
-4. The base name for the test image is Image and the format type is jpg.
+4. The base name for the test image is Image and the format type is .jpg.
+
 ![zxz](https://user-images.githubusercontent.com/65610334/213201137-bab0767b-1e16-4fcd-84e5-54f610a3f22d.PNG)
 
-5. Now **run** the **script** and enter the which **images** to use.
+5. Now run the script and enter the which images to use.
 
 ![cv](https://user-images.githubusercontent.com/65610334/213202476-aafacd94-288b-4258-b422-6c6d12ef0e85.png)
 
-6. After **entering** which images to use, press enter  and the following outputs will pop up.
+6. After entering which images to use, press enter and the following outputs (2D reprojections, 3D reconstruction, and optionally an error histogram) will pop up.
 
  ![R4](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 ***
@@ -421,23 +426,115 @@ By now, we have the poses, the intrinsics, and the 2D corresponding points for b
 ![R4_Hist](https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg)
 
 Now you are **done** with your **3d reconstruction**. You can try different objects for yourself for **3d reconstrcution using single camera and mirror setup**.
-## **Note**
 
-**We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to reconstruct different objects.**
+> **NOTE:** We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to test out the reconstruction.
 
-# **Epipolar lines**
-
-## **Marked points**
-![original_view_marks_only](https://user-images.githubusercontent.com/65610334/216245267-e243c06f-6182-48d8-b104-4103b3063814.png)
-
-## **Epipolar lines and Correspondent points**
-
-![original_view_marks_correspondents_epilines](https://user-images.githubusercontent.com/65610334/216245372-008b2beb-33bb-4161-92c0-8a133f8fc4f9.png)
-
-
-# **Detailed explanation of 3d reconstruction**
+# **Epipolar Verification of Poses**
 ***
 
+## Directory Structure
+The script requires a proper folder structure. 
+
+```
+Epipolar_Verification
+│   epipolar_geometry.m
+│
+├───results
+│   └───set_1
+│           epilines_in_original_view.png
+│           epilines_in_reflected_view.png
+│           fun_and_plds.mat
+│
+└───test_sets
+    └───set_1
+        │   merged_params.mat
+        │
+        └───images
+                1.jpg
+                2.jpg
+```
+
+In the `test_sets` folder, you can place your two test images and their poses (`merged_params.mat`) within subfolders (to facilitate multiple test sets). The test images for each set should be in a folder named “images” and should be named `1.jpg` (**original view**) and `2.jpg` (**reflected view**).
+
+If you only want to test one set, you can directly put the images folder and pose file into the `test_sets` without subfolders and enter a blank (hit enter without typing anything) when prompted by the script. 
+
+```
+...\test_sets
+│   merged_params.mat
+│
+└───images
+        1.jpg
+        2.jpg
+```
+
+### **SCRIPT: `epipolar_geometry.m`**
+
+After setting up the test set, run the script:
+1. In the first prompt, enter the name of the subfolder containing the images folder and the pose file. Leave blank and hit enter if directly placed into the test_sets folder.
+```
+****************************************
+          RELATIVE DIRECTORIES          
+****************************************
+TEST IMAGES AND POSES	test_sets
+ALL THE RESULTS			results
+
+[PROMPT] Enter the directory containing the images folder merged_params.mat file (from calibration): set_1
+```
+
+2. In the second prompt, enter the number of corresponding points you would like to mark. For n points, you will have to mark 2n corresponding point pairs (set of n points in each view).
+```
+[PROMPT] Enter the directory containing the images folder merged_params.mat file (from calibration): set_1
+Calculating fundamental matrix... DONE.
+
+Entering point-marking mode...
+	[PROMPT] Enter the no. of points to mark: 4
+```
+3. A figure window will pop up named “Original View.” Mark n points in the original (non-reflected) view here.
+```
+>> Mark points in original view...1...2...3...4... DONE.
+```
+
+![marked_points_original](https://user-images.githubusercontent.com/94681976/218796242-7143e797-d420-4ec3-8001-1f7240347a48.png)
+
+4. After marking n points, another figure window will pop up named “Reflected View.” Mark the n corresponding points in the reflected view here.
+```
+>> Mark corresponding points in reflected view...1...2...3...4... DONE.
+```
+![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218796302-5b639823-a129-4a5e-9b73-0a6e85cc5ddb.png)
+
+
+5. The script will now plot the resulting epipolar lines and calculate their accuracy in terms of corresponding point to epipolar line distances (in pixels). After saving these outputs inside `results` to a subfolder with the same name as the test set folder, the script terminates after printing the following.
+```
+Exiting point-marking mode.
+
+Calculating the epilines for the marked points... DONE.
+Plotting the results and calculating the point-epiline distances...
+	>> Saving results to "results/set_1"... DONE.
+	>> Average Point-Line Distance Over Both Views: 1.60841911
+[NOTE] You may view the results in the respective folders. Terminating.
+```
+
+You can view the results for the sets at any time: 
+- Image with epipolar lines in the reflected view corresponding to original points (using the fundamental matrix as is)
+
+![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218799326-cebf85aa-49d0-439a-b45b-2e6e0d4bc17a.png)
+
+- Image with epipolar lines in the original view corresponding to reflected points (transpose of fundamental matrix)
+
+![marked_points_original](https://user-images.githubusercontent.com/94681976/218799351-e5e66615-c10d-4d4b-836f-84cf157b94bb.png)
+
+- A .mat file with the fundamental matrix and point-line distances
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/94681976/218797107-ceef1def-4c9d-417f-be16-9cfb4886313b.PNG">
+</p>
+
+The script works will replace old results for a test set with the same, so either name the test sets differently or save separately before running the script again.
+
+> **NOTE:** Since the corresponding points are marked manually, there is always some **human error** involved. Particularly, if the image resolution is high, even a slight offset can produce a seemingly large point-line distance (2-3 pixel distances even when the reprojection error is extremely low). However, in our experience, descriptor feature extractors like SIFT are not very good for this task of matching corresponding points, so the manual approach remains the most convenient method.
+
+# **Detailed Explanation of 3D Reconstruction**
+***
 
 #### **The Basic Idea**
 
@@ -529,7 +626,3 @@ Finally, we also calculate and display a few metrics like the **mean reprojectio
 ## **License**
 
 **MIT**
-
-
-
-  
