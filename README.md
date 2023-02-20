@@ -13,7 +13,7 @@ https://user-images.githubusercontent.com/65610334/220006204-c71db125-1126-49a2-
 **
 **
 
-#  **Capturing multiple views of high rate manervers using a single high speed camera and planar mirrors*8
+#  **Capturing multiple views of high rate manervers using a single high speed camera and planar mirrors**
 
 ## **Dragonfly**
 https://user-images.githubusercontent.com/65610334/218671910-4910fe86-2c61-4224-9f2b-d1678b5d4f65.mp4
