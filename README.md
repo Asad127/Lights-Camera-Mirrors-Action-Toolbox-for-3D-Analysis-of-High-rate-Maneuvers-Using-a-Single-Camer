@@ -8,10 +8,8 @@ https://user-images.githubusercontent.com/65610334/219969936-50a58624-09f1-4622-
 
 
 
-<div>
-    <https://user-images.githubusercontent.com/65610334/219969936-50a58624-09f1-4622-a556-aaebb1ca4a04.mp4 width="400"/>
-    <https://user-images.githubusercontent.com/65610334/220006204-c71db125-1126-49a2-8c42-0c8fd955cb00.mp4 width="400"/>
-</div>
+https://user-images.githubusercontent.com/65610334/220006204-c71db125-1126-49a2-8c42-0c8fd955cb00.mp4 width="400"/
+
 
 ## **3D Trajectory of housefly motion**
 
