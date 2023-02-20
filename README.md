@@ -3,7 +3,7 @@
 <p align="center">
 
 https://user-images.githubusercontent.com/65610334/219969936-50a58624-09f1-4622-a556-aaebb1ca4a04.mp4
->
+
 </p>
 
 ## **3d Tracjectory of Housefly motion**
