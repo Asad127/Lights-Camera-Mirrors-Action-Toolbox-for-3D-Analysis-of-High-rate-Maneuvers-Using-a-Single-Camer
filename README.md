@@ -1,5 +1,5 @@
 # **Capturing High Speed Maneuver Using a Single Camera and Planar Mirrors**
-## **3D trajectory of a house fly**
+## **Motion of house fly using high speed camera**
 <p align="center">
 
 https://user-images.githubusercontent.com/65610334/219969936-50a58624-09f1-4622-a556-aaebb1ca4a04.mp4
