@@ -1,5 +1,5 @@
 # **Capturing High Speed Maneuver Using a Single Camera and Planar Mirrors**
-## **Motion of house fly using high speed camera and its 3D Trajectory of motion**
+## **Reconstructing 3D motion of house fly using single high speed camera and planar mirrors**
 
 https://user-images.githubusercontent.com/65610334/220315653-20889b5b-a8b2-4f5c-9ef9-95332c2fbc30.mp4
 
@@ -16,7 +16,9 @@ https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-
 ## **Butterfly**
 https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-a107-09850fb4c078.mp4
 
-# **Calibrating the Single Camera and Planar Mirror Setup** 
+# **Calibrating the Single Camera and Planar Mirror Setup**
+This short (15 minute) video tutorial demonstrates how to calibrate the high speed camera and mirror setup. Step wise details are also provided below.
+
 https://user-images.githubusercontent.com/65610334/218727506-319f85d8-ba39-4e11-bd70-6d51133d2fb6.mp4
 
 # **Verifying Poses With Epipolar Geometry** 
@@ -433,6 +435,9 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 ***
 
 # **Epipolar Verification of Poses**
+
+# **Verifying Poses With Epipolar Geometry** 
+https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
 The script requires a proper folder structure. 
 
