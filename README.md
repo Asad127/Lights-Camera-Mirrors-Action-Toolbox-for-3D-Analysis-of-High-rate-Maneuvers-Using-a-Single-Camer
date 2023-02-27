@@ -1,9 +1,6 @@
 # **Capturing High Speed Maneuver Using a Single Camera and Planar Mirrors**
 ## **Reconstructing 3D motion of house fly using single high speed camera and planar mirrors**
-
-https://user-images.githubusercontent.com/65610334/220315653-20889b5b-a8b2-4f5c-9ef9-95332c2fbc30.mp4
-
-
+https://user-images.githubusercontent.com/65610334/221478255-8cf1ea76-92bf-4a1c-9693-54b65a3b086c.mp4
 
 #  **Capturing multiple views of high rate manervers using a single high speed camera and planar mirrors**
 
@@ -435,8 +432,7 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 ***
 
 # **Epipolar Verification of Poses**
-
-# **Verifying Poses With Epipolar Geometry** 
+This short  video tutorial demonstrates how to find the epipolar line. Step wise details are also provided below.
 https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
 The script requires a proper folder structure. 
