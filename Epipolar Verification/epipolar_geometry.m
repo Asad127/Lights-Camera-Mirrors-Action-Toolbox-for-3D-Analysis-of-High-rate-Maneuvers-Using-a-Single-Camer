@@ -66,12 +66,14 @@ img_org_view = imread(join([path_images "1.jpg"], filesep));
 img_ref_view = imread(join([path_images "2.jpg"], filesep));
 
 % Resizeing stuff if needed. If not resizing, set s to 1.
-% [img_org_view, s, ~] = fit_img_to_screen(img_org_view, 735, 1632);
-% [img_ref_view, ~, ~] = fit_img_to_screen(img_ref_view, 735, 1632);
+% rsz_w = 1632;
+% rsz_h = 735;
+% [img_org_view, s, ~] = fit_img_to_screen(img_org_view, rsz_h, rsz_w);
+% [img_ref_view, ~, ~] = fit_img_to_screen(img_ref_view, rsz_h, rsz_w);
 s = 1;
 
-[h, w, ~] = size(img_org_view); % used later in plotting epilines
-colors = 'bgrcmy';              % color order used in plotting (cycles)
+[h, w, ~] = size(img_org_view);  % used later in plotting epilines
+colors = 'bgrcmy';               % color order used in plotting (cycles)
 
 %% CORE FUNCTIONALITY %%
 fprintf('Calculating fundamental matrix...')
@@ -161,74 +163,82 @@ fprintf('\t>> Saving results to "%s/%s"...', [dir_results test_set_name]);
 
 saveas(org_fig, join([dir_results test_set_name 'epilines_in_original_view.png'], filesep));
 saveas(ref_fig, join([dir_results test_set_name 'epilines_in_reflected_view.png'], filesep));
-save(join([dir_results test_set_name 'fun_and_plds.mat'], filesep), 'F', 'epipole_org_view', 'epipole_ref_view', 'pts_org_view', 'pts_ref_view', 'epilines_org_view', 'epilines_ref_view', 'pt_line_dists_org', 'pt_line_dists_ref', 'path_test_set')
+save( ...
+    join([dir_results test_set_name 'fun_and_plds.mat'], filesep), ...
+    'F', 'epipole_org_view', 'epipole_ref_view', 'pts_org_view', ...
+    'pts_ref_view', 'epilines_org_view', 'epilines_ref_view', ...
+    'pt_line_dists_org', 'pt_line_dists_ref', 'path_test_set' ...
+)
 
 fprintf(' DONE.\n\t>> Average Point-Line Distance Over Both Views: %6.8f\n', mean([pt_line_dists_org pt_line_dists_ref], 'all'));
 fprintf('[NOTE] You may view the results in the respective folders. Terminating.\n')
 
 %% FUNCTION SPACE %%
 function pld = calc_point_line_distance(point, epiline)
-x = point(1); y = point(2);
-a = epiline(1); b = epiline(2); c = epiline(3);
-pld = abs(a*x + b*y + c) / sqrt(a^2 + b^2);
-return
+    x = point(1); y = point(2);
+    a = epiline(1); b = epiline(2); c = epiline(3);
+    pld = abs(a*x + b*y + c) / sqrt(a^2 + b^2);
+    return
 end
 
 
 function [] = draw_epilines_on_fig(fig, img_size, source_pt, corr_pt, epiline, color, epipole)
-a = epiline(1); b = epiline(2); c = epiline(3);
-h = img_size(1); w = img_size(2);
-
-x_left = 0;
-x_right = w;
-y_left = -(a * x_left + c) / b;
-y_right = -(a * x_right + c) / b;
-
-figure(fig);
-
-plot(source_pt(1), source_pt(2), 'Color', color, 'Marker', '+', 'MarkerSize', 20, 'linewidth', 2);
-plot(corr_pt(1), corr_pt(2), 'Color', color, 'Marker', 'x', 'MarkerSize', 20, 'linewidth', 2);
-line([x_left, x_right], [y_left, y_right], 'Color', color, 'linewidth', 2);
-
-qw{1} = plot(nan, 'k+', 'MarkerSize', 10, 'linewidth', 2);
-qw{2} = plot(nan, 'kx', 'MarkerSize', 10, 'linewidth', 2);
-qw{3} = plot(nan, 'k-', 'linewidth', 2);
-
-if ~isempty(epipole) && all(epipole >= [0, 0]) && all(epipole < [h, w])
-    qw{4} = plot(nan, 'k-o');
-    plot(epipole(1), epipole(2), 'Marker', 'o', 'MarkerSize', 20, 'linewidth', 2)
-    legend([qw{:}], {'marked point', 'corr. point', 'corr. epiline', 'epipole'}, 'location', 'northeast')
-else
-    legend([qw{:}], {'marked point', 'corr. point', 'corr. epiline'}, 'location', 'northeast')
-end
-
-return
+    a = epiline(1); b = epiline(2); c = epiline(3);
+    h = img_size(1); w = img_size(2);
+    
+    x_left = 0;
+    x_right = w;
+    y_left = -(a * x_left + c) / b;
+    y_right = -(a * x_right + c) / b;
+    
+    figure(fig);
+    
+    plot(source_pt(1), source_pt(2), 'Color', color, 'Marker', '+', 'MarkerSize', 20, 'linewidth', 2);
+    plot(corr_pt(1), corr_pt(2), 'Color', color, 'Marker', 'x', 'MarkerSize', 20, 'linewidth', 2);
+    line([x_left, x_right], [y_left, y_right], 'Color', color, 'linewidth', 2);
+    
+    qw{1} = plot(nan, 'k+', 'MarkerSize', 10, 'linewidth', 2);
+    qw{2} = plot(nan, 'kx', 'MarkerSize', 10, 'linewidth', 2);
+    qw{3} = plot(nan, 'k-', 'linewidth', 2);
+    
+    if ~isempty(epipole) && all(epipole >= [0, 0]) && all(epipole < [h, w])
+        qw{4} = plot(nan, 'k-o');
+        plot(epipole(1), epipole(2), 'Marker', 'o', 'MarkerSize', 20, 'linewidth', 2)
+        legend([qw{:}], {'marked point', 'corr. point', 'corr. epiline', 'epipole'}, 'location', 'northeast')
+    else
+        legend([qw{:}], {'marked point', 'corr. point', 'corr. epiline'}, 'location', 'northeast')
+    end
+    
+    return
 end
 
 
 function pts = mark_points(img, view_name, npoints, colors)
-figure('Name', join([view_name ' View']), 'NumberTitle', 'off')
-
-imshow(img); title([view_name ' View - Click on ' num2str(npoints) ' points'])
-hold on;
-
-set(gcf, 'Color', 'w');
-set(findall(gcf,'-property','FontSize'),'FontSize',18)
-
-pts = NaN([3, npoints]);
-for i = 1 : npoints
-    color = colors(mod(i, npoints + 1));
-    [x_click, y_click] = ginput(1);
-    plot(x_click, y_click, 'Color', color, 'Marker', '+', 'MarkerSize', 20, 'linewidth', 2);
-    %text(x_click - 20, y_click - 20, num2str(i), 'Color', color, 'FontSize', 18);
-    pts(:, i) = [x_click y_click 1]';
-    fprintf('%d...', i)
-end
-
-pause(0.2);
-%export_fig(join(['marked_points_' view_name], ''), '-native', '-c0,NaN,NaN,NaN')
-
-return
+    figure('Name', join([view_name ' View']), 'NumberTitle', 'off')
+    
+    imshow(img); title([view_name ' View - Click on ' num2str(npoints) ' points'])
+    hold on;
+    
+    set(gcf, 'Color', 'w');
+    set(findall(gcf,'-property','FontSize'),'FontSize',18)
+    
+    pts = NaN([3, npoints]);
+    for i = 1 : npoints
+        color = colors(mod(i, npoints + 1));
+        [x_click, y_click] = ginput(1);
+        plot(x_click, y_click, 'Color', color, 'Marker', '+', 'MarkerSize', 20, 'linewidth', 2);
+        %text(x_click - 20, y_click - 20, num2str(i), 'Color', color, 'FontSize', 18);
+        pts(:, i) = [x_click y_click 1]';
+        fprintf('%d...', i)
+        if mod(i, 10)
+            fprintf("\n\t")
+        end
+    end
+    
+    pause(0.1);
+    %export_fig(join(['marked_points_' view_name], ''), '-native', '-c0,NaN,NaN,NaN')
+    
+    return
 
 end
 
@@ -237,35 +247,35 @@ end
 function [resized_img, scale_factor, major_scaling_dim] ...
     = fit_img_to_screen(img, max_height, max_width)
 
-[height, width, ~] = size(img);
-scale_height = height / max_height;
-scale_width = width / max_width;
-
-% Does image even need scaling?
-if scale_height <= 1.0 && scale_width <= 1.0
-    resized_img = img;
-    scale_factor = 1;
-    major_scaling_dim = NaN;
-    return
-% Is image height more out of bounds than height?
-elseif scale_height > scale_width
-    target_size = [max_height NaN];
-    scale_factor = 1/scale_height;
-    major_scaling_dim = 1;
-% Is image width more out of bounds than height?
-elseif scale_width > scale_height
-    target_size = [NaN max_width];
-    scale_factor = 1/scale_width;
-    major_scaling_dim = 2;
-% 1:1 aspect ratio, scaling dimension does not matter.
-else
-    target_size = [NaN max_width];
-    scale_factor = 1/scale_width;
-    major_scaling_dim = NaN;
-end
-
-resized_img = imresize(img, target_size);
-return 
+    [height, width, ~] = size(img);
+    scale_height = height / max_height;
+    scale_width = width / max_width;
+    
+    % Does image even need scaling?
+    if scale_height <= 1.0 && scale_width <= 1.0
+        resized_img = img;
+        scale_factor = 1;
+        major_scaling_dim = NaN;
+        return
+    % Is image height more out of bounds than width?
+    elseif scale_height > scale_width
+        target_size = [max_height NaN];
+        scale_factor = 1/scale_height;
+        major_scaling_dim = 1;
+    % Is image width more out of bounds than height?
+    elseif scale_width > scale_height
+        target_size = [NaN max_width];
+        scale_factor = 1/scale_width;
+        major_scaling_dim = 2;
+    % 1:1 aspect ratio, scaling dimension does not matter.
+    else
+        target_size = [NaN max_width];
+        scale_factor = 1/scale_width;
+        major_scaling_dim = NaN;
+    end
+    
+    resized_img = imresize(img, target_size);
+    return 
 
 end
 
@@ -286,40 +296,37 @@ need to do the same permutation here when drawing epilines.
 The determinant of R will be -1 when permuted. It swaps the X and Y axes.
 %}
 
-% Bunch the extrinsics.
-pose1 = [R1 T1];
-pose2 = [R2 T2];
-
-% Rescale intrinsic parameters if images were rescaled. Slice to avoid
-% 1 at position (i, j) = (3, 3).
-if ~isempty(s)
-    K1(1:2, :) = K1(1:2, :) .* s;
-    K2(1:2, :) = K2(1:2, :) .* s;
-end
-perm_transform = [0 1 0 0; 1 0 0 0; 0 0 1 0; 0 0 0 1];
-
-pose2 = [pose2; [0 0 0 1]];      % make 4x4 for permutation
-pose2 = pose2 * perm_transform;  % mirror swap
-pose2 = pose2(1:3, :);           % reset to 3x4 matrix
-
-% Zisserman's multi-view geometry stuff, minus the camera center at first
-% world origin assumption.
-P1 = K1 * pose1;
-P1_inv = pinv(P1);
-
-P2 = K2 * pose2;
-P = P2 * P1_inv;
-
-% Grab the epipoles. We need only e2, but we find e1 as well.
-% -R1'*T1 and -R2'T2 show the cameras' centers in world coordinates.
-e2 = P2 * [-R1'*T1; 1];
-e1 = P1 * [-R2'*T2; 1];
-
-% Normalize the epipoles so they are valid pixel spots.
-e2 = reshape(e2 / e2(3), 3, []);  
-e1 = reshape(e1 / e1(3), 3, []);
-
-F = cross(repmat(e2, 1, 3), P, 1);
-return
-
-end
+    % Bunch the extrinsics.
+    pose1 = [R1 T1];
+    pose2 = [R2 T2];
+    
+    % Rescale intrinsic parameters if images were rescaled. Slice to avoid
+    % 1 at position (i, j) = (3, 3).
+    if ~isempty(s)
+        K1(1:2, :) = K1(1:2, :) .* s;
+        K2(1:2, :) = K2(1:2, :) .* s;
+    end
+    perm_transform = [0 1 0 0; 1 0 0 0; 0 0 1 0; 0 0 0 1];
+    pose2 = pose2 * perm_transform;  % mirror swap
+    
+    % Zisserman's multi-view geometry stuff, minus the camera center at 
+    % first world origin assumption.
+    P1 = K1 * pose1;
+    P1_inv = pinv(P1);
+    
+    P2 = K2 * pose2;
+    P = P2 * P1_inv;
+    
+    % Grab the epipoles. We need only e2, but we find e1 as well.
+    % -R1'*T1 and -R2'T2 show the cameras' centers in world coordinates.
+    e2 = P2 * [-R1'*T1; 1];
+    e1 = P1 * [-R2'*T2; 1];
+    
+    % Normalize the epipoles so they are valid pixel spots.
+    e2 = reshape(e2 / e2(3), 3, []);  
+    e1 = reshape(e1 / e1(3), 3, []);
+    
+    F = cross(repmat(e2, 1, 3), P, 1);
+    return
+    
+    end
