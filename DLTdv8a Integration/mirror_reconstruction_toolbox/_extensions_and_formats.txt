@@ -1,0 +1,2 @@
+Extensions (ext / EXT) indicates the type or format of a file, e.g., JPG, MP4, etc.
+Format (fmt / FMT) indicates text formatting, usually a character vector containing the formatting operators.

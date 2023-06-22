@@ -1,0 +1,18 @@
+Usually, the unique parameters to each view are the calibration file CF, extrinsics Rc_k 
+and Tc_k, the intrinsics KK_k, and distortion coefficients kc. The shared parameters 
+include the img reference suffix for extrinsics and the view labels corresponding to the 
+fixed numbering convention. The suffix indicates which image it was from the calibration 
+set, so for calibration images named as Image1, Image2, ..., the suffixes are 1, 2, and 
+so on. The reference should be visible in all views (cam + mirrors). The view indices are 
+helpful if you have named view conventions. For example, camera is view 1, mirror on left 
+is view 2, and mirror on right is view 3. Then you may have only two views, and if it is 
+the camera and right mirror, view_idxs would be [1 3], which produces a different result 
+than k = 1 : num_views ([1 2]). Thus, it preserves the identity of the view.
+
+However, both the labeled and non-labeled loop numberings are helpful. DLTdv8a requires a 
+DLT coefficients file corresponding exactly to th number of views, where each column 
+corresponds to the 11 DLT coefficients for a view. The columns are all consecutive. Thus,
+when saving DLT params, we need the non-labeled numbering. In fact, during reconstruction,
+we completely disregard the labels and only utilize them in titles and legends as the non-
+labeled numbering offers a natural way of creating static-sized arrays and slicing into 
+them, whereas labeled numbering would require NaN for non-selected views or dynamic sizing.

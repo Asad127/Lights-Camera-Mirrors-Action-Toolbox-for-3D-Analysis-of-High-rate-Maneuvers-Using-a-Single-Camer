@@ -1,0 +1,52 @@
+Pathing Nomenclature used in this toolbox. Path is a bit ambiguous in terms of
+is it a file or a folder, and since this distinction is important in the toolbox,
+we use the following naming conventions. Note that (ABC) means ABC is an abbreviation
+used in the scripts.
+
+DIRPATH / DIRECTORY (DIR): 
+    Absolute path to a directory/folder OR the directory containing a file. 
+    E.g., "D:\Stuff\Awesome" is a dirpath referencing a directory. However,
+    if file "what.jpg" exists in this directory (i.e., filepath is 
+    "D:\Stuff\Awesome\what.jpg"), the same absolute path "D:\Stuff\Awesome" 
+    is considered the directory of that file.
+
+FOLDER / DIRNAME:
+    Relative path to a directory or folder. E.g., if we are in "D:\Stuff", 
+	"Awesome" is a folder or dirname, such that fullfile(pwd, dirname) gets us 
+	the absolute dirpath. Note that dir(dirname).folder also returns the absolute
+	dirpath, but requires that the folder already exists. On the flip side, an 
+	absolute dirpath may be split into its parent and dirname (folder) via 
+	[parent, dirname] = fileparts(dirpath)
+
+FILEPATH: 
+    Abolute path to a file, including the filename. fileparts(filepath) returns 
+	the file's dirpath, the file's basename, and the file's extension separately.
+    E.g., "D:\stuff\what.jpg", where file's dirpath is "D:\Stuff", basename is
+	"what", and "extension" is ".jpg". dir(filepath).name returns the filename,
+	which merges the basename with the extension. dir(filepath).folder returns
+	the file's dirpath. However, dir method requires that the files exist.
+
+FILENAME / FILE: 
+    Full name of file including extension, no parent directories involved. 
+    Generally, defined relative to current working directory such that 
+	fullfile(pwd, filename) would give the filepath. May be considered relative 
+	equivalent for files. NOT defined for directories. E.g., "what.jpg". 
+
+BASENAME (BASE): 
+    Filename excluding extensions. NOT defined for directories. E.g., "what" is 
+	the basename of file "what.jpg".
+
+EXTENSION (EXT): 
+    File extension. NOT defined for directories. E.g., ".jpg" is the extension 
+	of "what.jpg". The extension separator (dot) is included.
+
+PARENT / PARENTS: 
+    The complete parent structure of a directory or file exactly one directory 
+	level above it. In case of a filepath, this means that the parent is the 
+	absolute path up to the directory exactly two file separators behind it. In 
+	case of a dirpath, the parent is one filesep behind it. "D:\Stuff\Awesome"
+	(dirpath) and "D\Stuff\Awesome\what.jpg" (filepath) would, therefore, have 
+	the same parent "D:\Stuff". Recall that "D:\Stuff\Awesome" is considered the 
+	directory of file "what.jpg". Similarly, "D:\Stuff\Awesome" and 
+	"D:\Stuff\Awesome\Amazing\wow.jpg" would have different parents "D:\Stuff" 
+	and "D:\Stuff\Awesome".
