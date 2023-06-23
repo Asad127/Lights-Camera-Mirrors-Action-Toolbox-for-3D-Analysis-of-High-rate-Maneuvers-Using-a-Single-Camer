@@ -1,7 +1,7 @@
 This is practically an indepdenent part of the toolbox. It is inteded for use with DLTdv8a tracking software, which allows working with video data. This is a functional version that, in conjunction with Bouguet Calibration Toolbox (BCT), allows for quickly setting up projects with mirrors. Very few of these functions/scripts are not used in the standard workflow &ndash; they may be removed later. Apart from that, a couple of scripts have untested features (such as mp4 conversion for videos). 
 
-# Tutorial Videos
-You can follow along by downloading the `mirror_reconstruction_toolbox` folder and videos from the `test_videos` folder. 
+# Instructions (download the tutorial videos in this directory)
+You can follow along by downloading the `mirror_reconstruction_toolbox` folder and videos from the `test_videos` folder as well.
 
 ### Step 1: Toolbox Initialization, Project Setup, and Camera + Mirror Calibration
 To add the toolbox to the path and generate a couple of important files, run `setup_mirror_recosntruction_toolbox.m`. After that, create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, which contains the default settings shared between various scripts and functions to ensure smooth functionality. 
