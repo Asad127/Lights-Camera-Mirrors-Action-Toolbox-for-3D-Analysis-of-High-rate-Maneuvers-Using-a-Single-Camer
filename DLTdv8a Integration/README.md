@@ -3,7 +3,7 @@ This is practically an indepdenent part of the toolbox. It is inteded for use wi
 # Instructions (download the tutorial videos in this directory)
 You can follow along by downloading the `mirror_reconstruction_toolbox` folder and videos from the `test_videos` folder as well.
 
-### Step 1: Toolbox Initialization, Project Setup, and Camera + Mirror Calibration
+## Step 1: Toolbox Initialization, Project Setup, and Camera + Mirror Calibration
 To add the toolbox to the path and generate a couple of important files, run `setup_mirror_recosntruction_toolbox.m`. After that, create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, which contains the default settings shared between various scripts and functions to ensure smooth functionality. 
 
 > You may configure the default settings in `defaults.m` within the toolbox path. Any new projects after these changes will use the new settings. To update existing projects' settings, head to the existing project's directory and run `create_defaults_matfile.m`.
@@ -16,7 +16,7 @@ Either way, once you have the calibration images, you can now begin the calibrat
 
 The calibration process itself requires Bouguet Calibration Toolbox, which must also be added to the MATLAB path.
 
-##### Notes On Calibration
+### Notes On Calibration
 Accuracy is heavily dependent upon good calibration, so make sure you cover a variety of poses when taking the calibration images or recording the calibration video. Signs that your calibration is faulty: Extremely awkward undistortions, or maybe reprojections are good at some points and bad at others. 
 
 Remember that you only need one common reference image of the checker which is visible in all views (camera + both mirrors) in case of a 3 view setup. Since each view's calibration is independent, you can select different image subsets for calibrating each view, as long as:
@@ -26,7 +26,7 @@ Remember that you only need one common reference image of the checker which is v
 
 A good choice for point 2 is to leave the checker flat in front of both the mirrors. Usually, we keep this as the first image. After that, you can free yourself of the worry that the checker is visisble in all views and focus only on one particular view at a time. You may also use BCT's Compute Extrinsic function after calibration to generate extrinsics based on a non-calibration image. Again, this image should be visible in all views. 
 
-### Step 2: Calibration Result Consolidation, DLTdv8a Compatible DLT Coefficients Generation, and Video Undistortion
+## Step 2: Calibration Result Consolidation, DLTdv8a Compatible DLT Coefficients Generation, and Video Undistortion
 Once we have the calibration results for each view, we need to merge the necessary variables into one mat-file. The script that performs this in conjunction with generating the 11 DLT coefficients file for DLTdv8a is `calib_process_results.m`. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`. 
 
 After running the script, simply follow the prompts:
@@ -47,7 +47,7 @@ This will generate the consolidated BCT parameters file and the DLT coefficients
 
 > Color is preserved in the undistorted videos and frames, but if you would llike grayscale, you can set the corresponding argument of the function `undistort_imgs.m` true in the script `create_undistorted_vid_and_frames.m`. 
 
-##### Notes On Merged BCT Parameters
+### Notes On Merged BCT Parameters
 
 The merged BCT file contains two shared variables between all views:
 
@@ -70,7 +70,7 @@ Additionally, there are five parameters unique to each view. The unique paramete
 
 These are indexed according to the view label, as `kc_1` (distortion coefficeints for view 1) and Tc_3 (translation vector for view 3). Which view number corresponds to which view is subjective and up to you.
 
-### Step 3: DLTdv8a Execution and Trackfile Generation
+## Step 3: DLTdv8a Execution and Trackfile Generation
 
 This step is fairly straightforward. Extensive video tutorials as well as written manuals on how to work with DLTdv8a are provided by the authors of the software. If you are just starting with the tool, we recommend that you start learning from the [official DLTdv8a online manual](https://biomech.web.unc.edu/dltdv8_manual/). You can also clone their [git repository](https://github.com/tlhedrick/dltdv) which contains additional information and the codebase. 
 
@@ -91,5 +91,5 @@ This step is fairly straightforward. Extensive video tutorials as well as writte
 
 The main trackfile that's relevant to us is `{prefix}xypts.csv`, which contains the framewise tracked 2D point (pixel) information for all views.
 
-### Step 4: Tracked Point Reconstruction, Estimated World Coordinate Export in DLTdv8a Format
+## Step 4: Tracked Point Reconstruction, Estimated World Coordinate Export in DLTdv8a Format
 
