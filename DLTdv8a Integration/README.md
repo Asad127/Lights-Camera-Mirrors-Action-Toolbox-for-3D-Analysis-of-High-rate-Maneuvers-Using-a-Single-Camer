@@ -4,7 +4,7 @@ This is practically an indepdenent part of the toolbox. It is inteded for use wi
 You can follow along by downloading the `mirror_reconstruction_toolbox` folder and videos from the `test_videos` folder. 
 
 ### Step 1: Toolbox Initialization, Project Setup, and Camera + Mirror Calibration
-To add the toolbox to the path, run `setup_mirror_recosntruction_toolbox.m`. After that, create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, which contains the default settings shared between various scripts and functions to ensure smooth functionality. 
+To add the toolbox to the path and generate a couple of important files, run `setup_mirror_recosntruction_toolbox.m`. After that, create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, which contains the default settings shared between various scripts and functions to ensure smooth functionality. 
 
 > You may configure the default settings in `defaults.m` within the toolbox path. Any new projects after these changes will use the new settings. To update existing projects' settings, head to the existing project's directory and run `create_defaults_matfile.m`.
 
@@ -35,8 +35,17 @@ After running the script, simply follow the prompts:
 - Decide where to save the merged BCT parameters and the DLT coefficients file.
 
 This will generate the consolidated BCT parameters file and the DLT coefficients file. Now, if your camera has noticeable distortion or you would just like to work with undistorted videos and images, you can begin the undistortion procedure (otherwise, skip ahead to step 3):
-- Run `vid_import` in the command window from within the project root directory.
-- Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert it to MP4 and place it.
+
+- Run `vid_import.m` in the command window from within the project root directory.
+- Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4 and save it in either the default project directory or to a path of your choosing.
+- When prompted to undistort the video, type 'y' (w/o quotes) to begin the undistortion process described in `create_undistorted_vid_and_frames.m`.
+- When prompted, located and select the merged BCT calibration parameters file from earlier.
+- Choose a directory to extract the video frames into. These frames are then undistorted using the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views, so `cam_rect`, `mir1_rect`, and `mir2_rect`.
+- Wait until the script undistorts frames for each view and then re-creates the videos from these undistorted frames. Thus, you will get as many videos as the number of views, each one using a different distortion profile. The videos are stored in the same directory as the original video wit the same name, but suffixed with `{original-name}_cam_rect.mp4`, `{original-name}_mir1_rect.mp4`, and `{original-name}_mir2_rect.mp4`.
+
+> If you already have the video in your project directory, run `create_undistorted_vid_and_frames.m` instead of `vid_import.m`.
+
+> Color is preserved in the undistorted videos and frames, but if you would llike grayscale, you can set the corresponding argument of the function `undistort_imgs.m` true in the script `create_undistorted_vid_and_frames.m`. 
 
 ##### Notes On Merged BCT Parameters
 
