@@ -56,9 +56,7 @@ if ~isfile('defaults.mat')
 end
 
 % Setup the rest of the folder structure.
-default = load('defaults.mat', 'BCT_CALIB_DIR', 'BCT_CALIB_IMGS_DIR', ...
-    'BCT_CALIB_FRAMES_DIR', 'BCT_CALIB_SUBSET_HIST_DIR', 'DLTDV_TRACKFILES_DIR', ...
-    'DLTDV_VID_DIR', 'DLTDV_VID_FRAMES_DIR', 'CWLINE_STYLE');
+default = load('defaults.mat');
 
 if ~isfolder(default.BCT_CALIB_DIR)
     mkdir(default.BCT_CALIB_DIR);
