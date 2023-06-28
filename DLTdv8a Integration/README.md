@@ -47,29 +47,6 @@ This will generate the consolidated BCT parameters file and the DLT coefficients
 
 > Color is preserved in the undistorted videos and frames, but if you would llike grayscale, you can set the corresponding argument of the function `undistort_imgs.m` true in the script `create_undistorted_vid_and_frames.m`. 
 
-### Notes On Merged BCT Parameters
-
-The merged BCT file contains two shared variables between all views:
-
-1. Extrinsic Reference Image Suffix: This is the image number which we use as our reference for extrinsic parameters. This is just the image no. and not the actual iamge itself. Having a common extrinsic reference for all views is crucial in developing the correct scene pose.
-2. View Labels: If you label your view according to some convention (e.g., camera is view 1, LEFT mirror is view 2, and RIGHT mirror is view 3), then in a 2-view project, you might want to preserve the numbering convention even when views involved are 1 and 3. That's what this variable does.
-
-> Make sure that in the selected extrinsic reference image, the calibration pattern is visible in all views!
-
-View labeling is also helpful if you are testing multiple number of views. However, to set it up correctly, you must carefully select the corresponding calibration result files. Thus, assuming convention mentioned in point 2 just now, if your 2-view setup involved the camera and RIGHT mirror, you would select camera calibration file, SKIP mirror 1 (left mirror) calibration file, and select mirror 2 (right mirror) calibration file.
-
-You might wonder that indexing with 1 and 3 and no 2 in-between would cause problems when dealing with arrays or making loops based on the number of views, and you'd be right. This is why we need the view labels variable in the first place: it allows us to index to the appropriate parameter, but we do not use it for slicing into arrays within the script &ndash; for that, we use the number of views as arrays must always be contiguous. 
-
-Additionally, there are five parameters unique to each view. The unique parameters are:
-
-1. `kc`: Undistortion Coefficients
-2. `KK`: View Intrinsics
-3. `Rc`: Rotation Matrix
-4. `Tc`: Translation Vector
-5. `CF`: Path to the original calibration file &ndash; this is mainly just to keep track of what came from where
-
-These are indexed according to the view label, as `kc_1` (distortion coefficeints for view 1) and Tc_3 (translation vector for view 3). Which view number corresponds to which view is subjective and up to you.
-
 ## Step 3: DLTdv8a Execution and Trackfile Generation
 
 This step is fairly straightforward. Extensive video tutorials as well as written manuals on how to work with DLTdv8a are provided by the authors of the software. If you are just starting with the tool, we recommend that you start learning from the [official DLTdv8a online manual](https://biomech.web.unc.edu/dltdv8_manual/). You can also clone their [git repository](https://github.com/tlhedrick/dltdv) which contains additional information and the codebase. 
