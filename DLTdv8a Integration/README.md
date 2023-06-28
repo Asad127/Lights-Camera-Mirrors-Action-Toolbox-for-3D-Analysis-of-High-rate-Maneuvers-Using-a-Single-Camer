@@ -1,18 +1,39 @@
-This is practically an indepdenent part of the toolbox. It is inteded for use with DLTdv8a tracking software, which allows working with video data. This is a functional version that, in conjunction with Bouguet Calibration Toolbox (BCT), allows for quickly setting up projects with mirrors. Very few of these functions/scripts are not used in the standard workflow &ndash; they may be removed later. Apart from that, a couple of scripts have untested features (such as mp4 conversion for videos). 
+This is practically an indepdenent part of the toolbox. It is inteded for use with DLTdv8a tracking software, which allows working with video data. This is a functional version that, in conjunction with Bouguet Calibration Toolbox (BCT), allows for quickly setting up projects with mirrors. 
+
+> Very few of these functions/scripts are not used in the standard workflow &ndash; they may be removed later. Apart from that, a couple of scripts have untested features (such as mp4 conversion for videos). 
 
 # Instructions (download the tutorial videos in this directory)
 You can follow along by downloading the `mirror_reconstruction_toolbox` folder and videos from the `test_videos` folder as well.
 
+Note that the majority of inputs have a default option. Such prompts are skippable by entering blank for Command Window prompts, and pressing the *Cancel* button for UI prompts. In case of a skip, the default file locations in `defaults.mat` within a project are used. Note that `defaults.mat` is generated in the project root based on the parameters set in `defaults.m` whenever a project is setup using the script `project_setup.m`. Be careful when changing the parameters in `defaults.m`!
+
 ## Step 1: Toolbox Initialization, Project Setup, and Camera + Mirror Calibration
-To add the toolbox to the path and generate a couple of important files, run `setup_mirror_recosntruction_toolbox.m`. After that, create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, which contains the default settings shared between various scripts and functions to ensure smooth functionality. 
+
+1. To add the toolbox to the path and generate a couple of important files to keep track of projects you'll be creating, run `setup_mirror_recosntruction_toolbox.m`.
+2. Create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the default settings shared between various scripts and functions to ensure smooth functionality. 
+3. Begin the calibration process by running `calib_import_media.m` from the created project's root directory (setting up a project automatically changes directory to the project root).
+4. When prompted, enter whether you have calibration images (`i`) or video (`v`).
+
+#### Images Route
+5. In the pop-up UI box, browse and select the calibration images anywhere on your computer.
+6. In the next pop-up UI box, choose the directory to put the images in relative to the project's root directory. The script will automatically rename them in a format optimized for BCT as described in `defaults.m`.
+
+> If you have manually imported the calibration images into the project root, skip Steps 3&ndash;6 and just rename them sequentially using the script `sequential_rename_imgs.m`. This ensures BCT performs optimally and gets rid of any gaps in the image numbers.
+
+#### Video Route
+5. In the pop-up UI box, browse and select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
+6. In the next pop-up UI box, select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
+7. Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (blank inputs) the whole video is used.
+8. Enter the format in which to extract the frames (by default, JPG). The script will now extract the frames as {Frame1.jpg, Frame2.jpg, ..., FrameF.jpg} and auto-run `calib_select_img_subset`.
+9. Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
+
+Ince you have the calibration images, you can now begin the calibration process with BCT by moving to the image directory and calling `calib_gui` (the toolbox will automatically change directory to the calibration images upon reaching this point after running the import script).
+
+### Additional Notes
 
 > You may configure the default settings in `defaults.m` within the toolbox path. Any new projects after these changes will use the new settings. To update existing projects' settings, head to the existing project's directory and run `create_defaults_matfile.m`.
 
-Get started with calibration by running `calib_import_media.m` from the created project's root directory (setting up a project automatically changes directory to the project root). This will ask you to locate the calibration images anywhere on your computer, rename them sequentially in a format acceptable by BCT, and import them either to the default location within the project directory or to any directory of your choosing. 
-
-If you have a video of the checker pattern instead, the script will again import it to a directory of your choosing or within the default location in the project directory, convert it to mp4, and then guide you through process of extracting frames and selecting a subset of candidate images for calibration. 
-
-Either way, once you have the calibration images, you can now begin the calibration process with BCT by moving to the image directory and calling `calib_gui` (the toolbox will automatically change directory to the calibration images upon running the import script). 
+> If you have manually imported the calibration video into the project root and it is already MP4, run `calib_extract_vid_frames.m` instead. If the video is not MP4, run `convert_vid_to_mp4.m` instead.
 
 The calibration process itself requires Bouguet Calibration Toolbox, which must also be added to the MATLAB path.
 
