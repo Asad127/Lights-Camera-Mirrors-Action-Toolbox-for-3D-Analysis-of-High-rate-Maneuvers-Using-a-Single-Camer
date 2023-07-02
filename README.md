@@ -18,7 +18,7 @@ https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-
 This 15 minute video tutorial demonstrates how to calibrate the high speed camera and mirror setup. Step wise details are also provided further below.
 https://user-images.githubusercontent.com/65610334/218727506-319f85d8-ba39-4e11-bd70-6d51133d2fb6.mp4
 
-# **Verifying Poses With Epipolar Geometry** 
+# **Verifying Poses With Epipolar Geometry**
 https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
 # **System Requirements**
@@ -28,7 +28,7 @@ Our toolbox has been tested on MATLAB R2023a on **Windows, Unix and Linux system
 
 # **Getting Started**
 
-If you are new to the MATLAB's Camera Calibration Toolbox (specifically, Bouguet Calibration Toolbox or BCT for short), we recommend downloading the toolbox from the [official webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) and following along with the first few examples on the webpage to familiarize yourself with the general process. Furthermore, add BCT to your MATLAB path as well in order to use it in any directory within your computer. 
+If you are new to the MATLAB's Camera Calibration Toolbox (specifically, Bouguet Calibration Toolbox or BCT for short), we recommend downloading the toolbox from the [official webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) and following along with the first few examples on the webpage to familiarize yourself with the general process. Furthermore, add BCT to your MATLAB path as well in order to use it in any directory within your computer.
 
 > ***Trying out the examples is highly recommended for anyone who is just starting out with camera calibration.***
 
@@ -46,7 +46,7 @@ The following section explains how to setup the system for capturing multiple vi
 
 ![w43](https://user-images.githubusercontent.com/65610334/213187833-99e95ccb-4358-4e17-a54e-be245f93dc82.PNG)
 
-3. Place the checker in the mirror container and make sure it can be seen in all three views.i.e original and both the mirror view. 
+3. Place the checker in the mirror container and make sure it can be seen in all three views.i.e original and both the mirror view.
 
 > ***Camera stand and mirror setup should not move throughout the process.***
 
@@ -54,46 +54,75 @@ The following section explains how to setup the system for capturing multiple vi
 
 4. Change the position of the checker in a limited region to ensure that the pattern can be seen in all views, i.e., the original and both the mirror views, and capture an image.
 5. Repeat Steps 1&ndash;4 to capture at least 15&ndash;20 images of the checker pattern at different positions.
- 
+
 ![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
 
 ## **Calibrating the Original View**
 
 This section explains how to use the **Camera Calibration Toolbox for Matlab**, also called the **Bouguet Calibration Toolbox (BCT)** after the author, to calibrate the original set of images. We go through all the relevant features of the toolbox step-by-step for our purposes below.
 
-### **1. Gathering Calibration Images**
+> For inputs that have `[]` as an option, you can just leave them blank and press enter to provide an 'empty' input, which uses the default value as suggested by the toolbox.
+
+### **1. Loading Calibration Images**
 
 1. Download the calibration images all at once from [here](https://github.com/Asad127/3D-RECONSTRUCTION/tree/main/Dataset) or one by one, and store all the images into a seperate folder named `calib_data` or anything else.
 2. From within MATLAB, go to the folder you just put the images into in Step 1 and type `calib_gui` into the command window (assuming BCT was added to the MATLAB path, this should work in any directory within the computer).
 3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
 
-![W1](https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png)
+<p align="center" width="100%">
+    <img src="https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png">
+</p>
 
-4. You will be prompted to enter the image basenames and their extension identifier (e.g., **j** for .jpg, **p** for .png, etc.). Following a typical naming convention, e.g., {Image1.jpg, Image2.jpg, ..., Image30.jpg}, the basename would be **Image** (i.e., the string part without the integer identifier), and the extension in this case would be **j**.
+4. BCT will display a directory listing (all files and folders in the current MATLAB directory). You will be prompted to enter the image basenames and their extension identifier (e.g., **j** for .jpg, **p** for .png, etc.). Following a typical naming convention, e.g., {Image1.jpg, Image2.jpg, ..., Image12.jpg}, the basename would be **Image** (i.e., the string part without the integer identifier), and the extension in this case would be **j**.
 
-![c1](https://user-images.githubusercontent.com/65610334/213191810-6f565d40-7329-431f-b4e6-2a7110305909.jpg)
+The following snippet of the command window shows the inputs and the output.
 
-5. After completing the above steps, the following output (a mosaic of the images) will pop up.
+```
+>> calib_gui
 
-![Calibration Images](https://user-images.githubusercontent.com/65610334/212247154-20bdaa4c-e473-4a52-afed-8535061711e3.png)
+.            Image1.jpg   Image11.jpg  Image2.jpg   Image4.jpg   Image6.jpg   Image8.jpg
+..           Image10.jpg  Image12.jpg  Image3.jpg   Image5.jpg   Image7.jpg   Image9.jpg
+
+
+Basename camera calibration images (without number nor suffix): Image
+Image format: ([]='r'='ras', 'b'='bmp', 't'='tif', 'p'='pgm', 'j'='jpg', 'm'='ppm') j
+Loading image 1...2...3...4...5...6...7...8...9...10...11...12...
+done
+```
+
+At this point, you should be presented with the following figure (a mosaic of the calibration images):
+
+
+
+This marks the end of the image loading process.
+
+#### ***What if checker is not visible in all views (camera and mirrors)?***
+
+Consider an extreme scenario. Assume you have two mirrors and the checker was not visible in both of them in all calibration images except a single one.  In this case, you need to handle the mirror calibration with care. For example, let Image 1 has the checker present in all views, 2&ndash;15 has the checker visible in only the first mirror, and 16&ndash;30 has checker visible in just the second mirror. In such a scenario, when calibrating the first mirror, use images 1&ndash;15, and when calibrating the second mirror, use images 1 and 16&ndash;30.
+
+Thus, the basic idea is that when selecting images for each view, ensure that the checker is visible within that view in the calibration image before loading it in. A similar approach can be used if the checker is not visible in the original camera's view, and only in the reflected view.
+
+This will usually not be a problem, but if you find that having the checker visible in all views is too restrictive or results in a bad calibration, consider keeping only one image where the checker is visible in all views (e.g., a flat position), and gather different sets of images for each view. However, ensure your camera does not move during the process; only the checker should move.
 
 ### **2. Extract the Grid Corners**
 
 1. Click on the  highlited button of **Extract Grid Corners** in the calibration GUI.
 
-![W1](https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png)
+<p align="center" width="100%">
+    <img src="https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png">
+</p>
 
 2. Enter the global settings in the corresponding prompts: window size for corner finding and whether to auto-count squares along the x and y directions or manually enter them for each image.
 
-> These settinngs are used for all images. Most of the time, auto-counting works fine. In the event it fails for any reason (usually a misclick on the user's end), the toolbox will revert to manual input.
+> ***These global settings are used for extracting corners from all images. Most of the time, auto-counting works fine. In the event it fails for any reason (usually a misclick on the user's end), the toolbox will revert to manual input.***
 
 ![c2](https://user-images.githubusercontent.com/65610334/213191980-d15f847a-52db-4f7a-9357-22a4f2dfc577.jpg)
 
-3. Mark the four extreme internal checker corners on the figure that pops up after Step 2. 
+3. Mark the four extreme internal checker corners on the figure that pops up after Step 2.
 
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
 
-#### **Clicking Order for Extreme Internal Corners** 
+#### **Clicking Order for Extreme Internal Corners**
 
 The **first** clicked point is selected as the **origin** of the world reference frame attached to the checker grid. The **second** click defines the direction of the **Y-axis** of the reference frame from **(1st click &rarr; 2nd click)**. The **third** click defines the direction of the **X-axis** of the reference frame **(2nd click &rarr; 3rd click)**. The fourth click will complete the **plane's definition** as **1st click &rarr; 2nd click &rarr; 3rd click &rarr; 4th click &rarr; 1st click**.
 
@@ -119,8 +148,7 @@ The tooblox will proceed to first guess all the **checker corner locations** wit
 
 ![extraxted corners](https://user-images.githubusercontent.com/65610334/212265827-fec020ae-8599-48cf-b542-401dc5c90dc8.jpg)
 
-6. Repeat steps 1&ndash;5 for the rest of the calibration images.  For each new image, you will only be prompted for the intiial guess for distortion as the toolbox assumes the same checker pattern has been used 
- in each image.**Follow the same procedure for the rest of images in the dataset. For the rest of the images, you will only be prompted for an initial guess for distortion.**
+6. Repeat steps 1&ndash;5 for the rest of the calibration images.  For each new image, you will only be prompted for the initial guess for distortion as the toolbox assumes the same checker pattern has been used in each image.
 
 After **corner extraction**, the matlab data file `calib_data.mat` is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, etc.). Assuming a clear MATLAB worksapce, you can recover all this information by typing `calib_gui` into the command window, and then loading `calib_data.mat` into the workspace. Then, you can proceed directly to the main calibration step.
 
@@ -133,9 +161,9 @@ At this point, we have all the information required to begin calibration.After *
 ![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
 
     Initialization of the intrinsic parameters - Number of images: 12
-    
+
     Calibration parameters after initialization:
-    
+
     Focal Length:          fc = [ 1529.18846   1529.18846 ]
     Principal point:       cc = [ 1631.50000   734.50000 ]
     Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
@@ -146,7 +174,7 @@ At this point, we have all the information required to begin calibration.After *
     Estimation of uncertainties...done
 
     Calibration results after optimization (with uncertainties):
-    
+
     Focal Length:          fc = [ 1507.97898   1496.24779 ] ± [ 26.82888   26.88096 ]
     Principal point:       cc = [ 1536.92900   695.75342 ] ± [ 38.21710   42.19543 ]
     Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
@@ -157,29 +185,29 @@ At this point, we have all the information required to begin calibration.After *
 
 The calibration parameters are stored in a number of variables in the workspace.
 
-### **4. Reprojection Using Estimated Camera Parameters** 
+### **4. Reprojection Using Estimated Camera Parameters**
 
 Click on **Reproject On Images** in the calibration GUI to show the reprojections of the grids onto the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
 
 ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
-  
+
     Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
     Number(s) of image(s) to show ([] = all images) = []
 
-The following figure shows four of the images with the detected corners (red crosses) and the reprojected grid corners (circles). 
+The following figure shows four of the images with the detected corners (red crosses) and the reprojected grid corners (circles).
 
 ![Asad](https://user-images.githubusercontent.com/65610334/212270143-6e7e929a-3dee-4e6a-903a-d3b5ce15f6cf.jpg)
 
     Number(s) of image(s) to show ([] = all images) = []
     Pixel error:      err = [0.23942   0.24756] (all active images)
 
-The reprojection error is also shown in the form of color-coded crosses, as shown in the figure below. 
+The reprojection error is also shown in the form of color-coded crosses, as shown in the figure below.
 
 ![error11](https://user-images.githubusercontent.com/65610334/212270799-077fa4b1-0888-40b4-b471-e7cf41e0760e.jpg)
 
 ### **5. Plot the Camera and Checkers in 3D Space**
 
-Click on **Show Extrinsic** in the Camera calibration tool. 
+Click on **Show Extrinsic** in the Camera calibration tool.
 
 ![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
 
@@ -188,7 +216,7 @@ This will plot the **camera and checkers** using the estimated extrinsics from t
 ![extrrr](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
  To switch from a **"camera-centered" view to a "world-centered"** view, just click on the **Switch to world-centered view** button located at the bottom-left corner of the figure.
- 
+
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
 ### **6. Saving the Calibration Results**
@@ -198,7 +226,7 @@ Click on the highlighted button of **Save** on the calibration GUI.
 
 BCT generates two files in the current directory in MATLAB:
 
-- `Calib_Result.mat` : The workspace containing all the calibration variables involved in the process. 
+- `Calib_Result.mat` : The workspace containing all the calibration variables involved in the process.
 - `Calib_Result.m` : A script containing just the estimated intrinsics of the camera and extrinsics of each image in the calibration set.
 
 We only require the matfile, so rename `Calib_Results.mat` to `Calib_Result_cam.mat` to indicate that this is the actual camera's calibration. Additionally, renaming allows us to avoid replacing this set of calibration results with the ones from the mirror views. Now, we are done calibrating the first view (the actual camera)!
@@ -207,19 +235,31 @@ We only require the matfile, so rename `Calib_Results.mat` to `Calib_Result_cam.
 
 Before we move on to the mirror view calibration, we must make an important note on the world reference image. For reconstruction on test images later on, we need a common image reference for the world frame and a pose for each view relative to the checker in that image. We assure that the **camera does not move between image captures**, so that the camera pose relative to the reference world frame remains the same for both the calibration images and the images we take at test time.
 
-The **calibration process estimates** the camera pose (rotation R and translation T) for each image in the **calibration set**. These poses can be viewed in the `Calib_Result.mat` file, as `Rc_<image suffix>` and `Tc_<image suffix>`. So, if we had the images {Image1.jpg, ..., Image30.jpg}, then Tc_15 and Rc_15 correspond to the extrinsics for Image15.jpg. In light of this, we capture an image of the checker in a **flat position** visible in all views to serve as our world reference for the **camera's pose** during reconstruction of other test objects. During **calibration**, this image is also included in the **calibration set**, so we already have access to its pose (R and T).
+The **calibration process estimates** the camera pose (rotation R and translation T) for each image in the **calibration set**. These poses can be viewed in the `Calib_Result.mat` file, as `Rc_{image suffix}` and `Tc_{image suffix}`. So, if we had the images {Image1.jpg, ..., Image30.jpg}, then Tc_15 and Rc_15 correspond to the extrinsics for Image15.jpg. In light of this, we capture an image of the checker in a **flat position** visible in all views to serve as our world reference for the **camera's pose** during reconstruction of other test objects. During **calibration**, this image is also included in the **calibration set**, so we already have access to its pose (R and T).
 
-It is also possible to use a non-calibration image as the extrinsics reference. If this image contains a non-checker, some algorithm such as Perspective-n-Point (PnP) must be applied, but if the new image contains a checker, BCT's `Comp Extrinsic` function may be used to computer the extrinsics corresponding to this image. These extrinsics are no longer indexed by the image number; they appear as `Rc_ext` and `Tc_ext` instead. This will also work if the stationary camera and mirror assumption is violated (e.g., you move the setup around after calibration, so now the calibration images cannot be used as extrinsic reference. B, though the results might not be as accurate.
+In our work, we add the **reference image** as either the last or first image of the **calibration** set for our own ease, but you can just as easily use any of the images in-between. We prefer a **flat position** because it is both intuitive and geometrically easy to verify.
 
-In our work, we add the **reference image** as either the last or first image of the **calibration** set for our own ease, but you can just as easily use any of the images in-between. We prefer a **flat position** because it is both intuitive and geometrically easy to verify. 
+#### ***Can a non-calibration image be used to compute the extrinsics?***
+
+Yes, but only after calibration is done!
+
+If this image contains a non-checker, some algorithm such as Perspective-n-Point (PnP) must be applied, but if the new image contains a checker, BCT's `Comp Extrinsic` function may be used to computer the extrinsics corresponding to this image. These extrinsics are no longer indexed by the image number; they appear as `Rc_ext` and `Tc_ext` instead.
+
+The `Comp. Extrinsic` function of BCT is, theoretically speaking, also useful if the stationary camera and mirror assumption is violated, e.g., you move the setup around after calibration, or you calibrated the cameras in a larger space and are now moving to a more restricted/expansive space where the original checker is either too big or too small and you need to change the checker grid or square size. However, be cautioned that this remains largely untested on our end and the results might not be as accurate or unpredicatable in some cases.
+
+#### ***Can BCT's `Comp. Extrinsic` be used in conjunction with the camera's calculated intrinsics to compute the mirror view extrinsics and skip their calibration?***
+
+This is something we have slightly tested as it greatly reduces user input, but in certain cases, the results were unpredictable and BCT would sometimes fail to compute extrinsics correctly in the mirror view (the reprojections would be erroneous in some cases). This might have to do with the fact that mirrors introduce some level of distortion themselves, and that the nature of this distortion changes between mirrors. However, it might be possible with further testing.
 
 ## **Calibrating Mirror View**
 
-This section explains how to **calibrate the mirror** view using the reflection of the **checker in the mirrors**. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**. 
+This section explains how to **calibrate the mirror** view using the reflection of the **checker in the mirrors**. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**.
 
-### **1. Gathering Calibration Images**
+This process must be repeated separately for each mirror.
 
-The procedure remains exactly the same, and we can use the same images (assuming the checker was visisble in the mirrors). If the checker was not visisble in all mirrors, that is fine, just keep the common reference image and get all the images where it was present in the corresponding mirror.
+### **1. Loading Calibration Images**
+
+The procedure remains exactly the same as in the camera's calibration, and we can use the same images (assuming the checker was visisble in the mirrors).
 
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
 
@@ -227,7 +267,7 @@ The procedure remains exactly the same, and we can use the same images (assuming
 
 The only change in this step is the **clicking order**, and that the points must be marked in the mirror reflections of the checker. Everything else remains the same.
 
-#### **Clicking Order for Extreme Internal Corners** 
+#### **Clicking Order for Extreme Internal Corners**
 
 We visually explain the **reflected clicking order** in the mirror images below. Note that the clicking order here depends on the clicking order from when the original set was calibrated.
 
@@ -268,26 +308,26 @@ We visually explain the **reflected clicking order** in the mirror images below.
 The main calibration step for the mirror view is the **same** as described for the **original view**.
 
     Initialization of the intrinsic parameters - Number of images: 12
-    
+
     Calibration parameters after initialization:
-    
+
     Focal Length:          fc = [ 1439.23693   1439.23693 ]
     Principal point:       cc = [ 1631.50000   734.50000 ]
     Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
     Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
-    
+
     Main calibration optimization procedure - Number of images: 12
     Gradient descent iterations: 1...2...3...4...5...6...7...8...9...10...11...12...13...done
     Estimation of uncertainties...done
-    
+
     Calibration results after optimization (with uncertainties):
-    
+
     Focal Length:          fc = [ 1450.42395   1449.67211 ] ± [ 44.81565   36.31254 ]
     Principal point:       cc = [ 1570.68503   759.76341 ] ± [ 52.54308   54.49669 ]
     Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
     Distortion:            kc = [ -0.24718   0.51654   0.01726   -0.01352  0.00000 ] ± [ 0.12459   0.34828   0.00662   0.01536  0.00000 ]
     Pixel error:          err = [ 0.29234   0.26648 ]
-    
+
     Note: The numerical errors are approximately three times the standard deviations (for reference).
 
 ### **4. Reprojection Using Estimated Camera Parameters**
@@ -311,36 +351,51 @@ Again, the process remains the same as discussed in the original view.
 
 Repeat the same procedure as in the original view calibration to save the calibration results.
 
-### **7. Extracting the Parameters Required for 3D Reconstructions**
-
-Again, we only need the intrinsics (`KK`) and the extrinsics (`Rc_k` and `Tc_k`) from the `Calib_Result.mat` file generated from the calibration. We **MUST** use the same image we selected as reference for the original view as the reference image for the mirror view. So, if we selected the 12^th^ image as the world reference for test images from the original view, we will also select the 12^th^ image from here as our world reference for test images in the mirror view. 
-
-Save these variables into a new file `reflected_params.mat`. This workspace has only three variables. Open it, and rename them as follows.
-
-- `KK ---> KK_2` 
-- `Rc_k ---> Rc_2` 
-- `Tc_k ---> Tc_2`
+Rename the resulting `Calib_Result.mat` to `Calib_Result_mir1.mat` if this is for the first mirror, and to `Calib_Result_mir2.mat` if this is for the second mirror. The mirror numbering convention is subjective and up to you, e.g., left mirror is mirror 1, and right mirror is mirror 2, etc.
 
 ## **Merging the Original and Mirror Camera Parameters**
 
-For reconstruction, we have separated the pose for the reference image and the intrinsics for each view:
+In order to use the reconstruction script, we need to merge the camera parameters from the original and mirror views. To do so, run the script `calib_process_results.m` located in this repository at `DLTdv8a Integration/mirror_reconstruction_toolbox`. This script takes the BCT calibration results `Calib_Result_{view-identifier}.mat` for the original and mirror views, extracts the necessary variables for reconstruction as well as a few secondary variables, and merges them into a single matfile named, by default, `bct_params.mat`.
 
-- `original_params.mat` 
-- `reflected_params.mat`
+The script additionally generates the 11 DLT coefficients describing the camera parameters for use within DLTdv8a (without the secondary information).
 
-Now, we need to merge them into one file for the reconstruction script:
+### **Details On Merged BCT Parameters**
 
-1. Open both the original and reflected .mat files to load them both into the MATLAB workspace
-2. Save the workspace as `merged_params.mat`
+The merged BCT file contains two shared variables between all views:
 
-The merged workspace has six variables:
-- `KK_1`, `Rc_1`, `Tc_1` corresponding to the original view intrinsics and world reference pose
-- `KK_2`, `Rc_2`, `Tc_2` corresponding to the mirror view intrinsics and world reference pose
+1. `ext_ref_suffix` = Extrinsic Reference Image Suffix: This is the image number which we use as our reference for extrinsic parameters. This is just the image no. and not the actual iamge itself. Having a common extrinsic reference for all views is crucial in developing the correct scene pose.
+2. `view_labels` = View Labels: If you label your view according to some convention (e.g., camera is view 1, LEFT mirror is view 2, and RIGHT mirror is view 3), then in a 2-view project, you might want to preserve the numbering convention even when views involved are 1 and 3. That's what this variable does.
 
-![merout](https://user-images.githubusercontent.com/65610334/212697559-11b17a6a-50d7-4ae4-ba68-1dae61a465c6.PNG)
+> Make sure that in the selected extrinsic reference image, the calibration pattern is visible in all views!
 
-***
+View labeling is also helpful if you are testing multiple number of views. However, to set it up correctly, you must carefully select the corresponding calibration result files. Thus, assuming convention mentioned in point 2 just now, if your 2-view setup involved the camera and RIGHT mirror, you would select camera calibration file, SKIP mirror 1 (left mirror) calibration file, and select mirror 2 (right mirror) calibration file.
+
+You might wonder that indexing with 1 and 3 and no 2 in-between would cause problems when dealing with arrays or making loops based on the number of views, and you'd be right. This is why we need the view labels variable in the first place: it allows us to index to the appropriate parameter, but we do not use it for slicing into arrays within the script &ndash; for that, we use the number of views as arrays must always be contiguous.
+
+Additionally, there are five parameters unique to each view. The unique parameters are:
+
+1. `kc`: Undistortion Coefficients
+2. `KK`: View Intrinsics
+3. `Rc`: Rotation Matrix
+4. `Tc`: Translation Vector
+5. `CF`: Path to the original calibration file &ndash; this is mainly just to keep track of what came from where
+
+These are indexed according to the view label, as `kc_1` (distortion coefficeints for view 1) and Tc_3 (translation vector for view 3). Which view number corresponds to which view is subjective and up to you.
+
+We classify `CF` (unique), `view_labels` (shared), and `ext_ref_suffix` (shared) as secondary variables that are not directly associated with calibration results. On the other hand, the remaining variables including distortion coefficients `kc` (unique), intrinsics `KK` (unique), and extrinsics `Rc` and `Tc` (unique) are primary results.
+
 # **3D Reconstruction of Different Objects**
+
+Reconstruction may be performed using either the DLT file or the merged BCT calibration file, but currently our toolbox only supports the BCT variant as that preserves the view labels (i.e., the index of a variable corresponds exactly to mirror view it belongs to regardless of the total number of views) as a secondary variable.
+
+> *In order to accomodate DLT reconstruction, a later update might change this so that the secondary information is stored separately from the camera parameters (i.e., in a different matfile).*
+
+At this point, you have two options to proceed:
+
+1. Manually mark points in still images of the object(s) you want to reconstruct
+2. Track points in a video of the object(s) you want to reconstruct (requires DLTdv8a)
+
+Option 2 is covered in detail within `README.md` inside the `DLTdv8a Integration` folder, so here, we will focus on Option 1.
 
 You can remove the calibration checker pattern at this stage if you want to. It is no longer needed.
 
@@ -355,21 +410,21 @@ An example test image is given below. Note how all the dots are visible in both 
 
 ## **2. Corresponding Points for Desired Objects**
 
-Now, we need to extract some **corresponding 2D points** (pixels) from the original and reflected view of the object in the test image(s). We have created the script `point_marker.mat` to manually click and store the pixels corresponding to the object's features in any given image pair. 
+Now, we need to extract some **corresponding 2D points** (pixels) from the original and reflected view of the object in the test image(s). We have created the script `point_marker.mat` to manually click and store the pixels corresponding to the object's features in any given image pair.
 
-Simply place the script next to the image(s) from the earlier sub-section and proceed with the steps below. 
+Simply place the script next to the image(s) from the earlier sub-section and proceed with the steps below.
 
 >**NOTE:** We will be reconstructing the 3D coordinates using these 2D points, so it is important to ***mark them accurately.***
 
 ### **SCRIPT: `point_marker.mat`**
 1. Open the script and check the value of `npoints`. This is a user parameter - set its value to however many points you want to mark in the image.
 2. Run the script and select the pair of images you want to work with. E.g., `[1 2]` or `[3 4]`. Remember, odd is original, even is reflected, and we arranged pairs as consecutive numbers.
-**NOTE:** The script currently only supports only one pair of images, so `[1 2 3 4]` is not a valid input, and neither is `[1 2 3]`. 
+**NOTE:** The script currently only supports only one pair of images, so `[1 2 3 4]` is not a valid input, and neither is `[1 2 3]`.
 3. An image will pop up. Here, mark exactly `n` points on the **original view** of the object you want to reconstruct by clicking on them.
 
 ![py1](https://user-images.githubusercontent.com/65610334/213213561-f5757cc8-46fa-4016-9d2e-0c69e5ac1575.jpg)
 
-3. After marking exactly `n` points, another image window will open. Here, you must again mark `n` corresponding points in the **mirror view**. 
+3. After marking exactly `n` points, another image window will open. Here, you must again mark `n` corresponding points in the **mirror view**.
 
 ![py2](https://user-images.githubusercontent.com/65610334/213213952-476fc2f0-96d1-4b48-a57b-4a82aea61f0a.jpg)
 
@@ -390,7 +445,7 @@ The pixel location in **column 1** of `xj` (i.e., first marked point in the orig
 For the images attached below, we have attached a picture of the generated `marked_points.mat` file (you can view them in `Marked 2D points/P4.mat`):
 - `npoints = 140`
 - `xj = 3 x 280`
- 
+
 ![c6](https://user-images.githubusercontent.com/65610334/213194210-e5b9e24d-f35f-4e42-bc95-9b08ea01684c.jpg)
 
 > **NOTE 1:** `xj` is named so after the variable names in the projection equation `x = K * [R T] * X`, where `x` is the pixel projection of `X`. The `j` is to indicate that it contains the pixel locations over all the different views.
@@ -401,7 +456,7 @@ For the images attached below, we have attached a picture of the generated `mark
 By now, we have the poses, the intrinsics, and the 2D corresponding points for both views. We are finally ready to begin reconstruction of the object's physical points in 3D world coordinates. The script `reconstruction_3d.m` performs the reconstruction process.
 
 1. Open the script `reconstruction_3d.m` in the matlab editor.
- 
+
 ![ad11](https://user-images.githubusercontent.com/65610334/213199025-5e8f5595-66dd-43ba-9335-c39fd6a8baf6.png)
 
 2. Make sure you are in the folder where you have your test images, 2d corresponding points, and merged parameters(Camera matrix for both views).
@@ -431,7 +486,7 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 This short  video tutorial demonstrates how to find the epipolar line. Step wise details are also provided below.
 https://user-images.githubusercontent.com/65610334/218727782-d6a6874e-0c80-4d60-8977-12ac89a087ab.mp4
 
-The script requires a proper folder structure. 
+The script requires a proper folder structure.
 
 ```
 Epipolar_Verification
@@ -454,7 +509,7 @@ Epipolar_Verification
 
 In the `test_sets` folder, you can place your two test images and their poses (`merged_params.mat`) within subfolders (to facilitate multiple test sets). The test images for each set should be in a folder named “images” and should be named `1.jpg` (**original view**) and `2.jpg` (**reflected view**).
 
-If you only want to test one set, you can directly put the images folder and pose file into the `test_sets` without subfolders and enter a blank (hit enter without typing anything) when prompted by the script. 
+If you only want to test one set, you can directly put the images folder and pose file into the `test_sets` without subfolders and enter a blank (hit enter without typing anything) when prompted by the script.
 
 ```
 ...\test_sets
@@ -471,7 +526,7 @@ After setting up the test set, run the script:
 1. In the first prompt, enter the name of the subfolder containing the images folder and the pose file. Leave blank and hit enter if directly placed into the test_sets folder.
 ```
 ****************************************
-          RELATIVE DIRECTORIES          
+          RELATIVE DIRECTORIES
 ****************************************
 TEST IMAGES AND POSES	test_sets
 ALL THE RESULTS		results
@@ -512,7 +567,7 @@ Plotting the results and calculating the point-epiline distances...
 [NOTE] You may view the results in the respective folders. Terminating.
 ```
 
-You can view the results for the sets at any time within the designated results folder: 
+You can view the results for the sets at any time within the designated results folder:
 - Image with epipolar lines in the reflected view corresponding to original points (using the fundamental matrix as is)
 
 ![epilines_in_reflected_view](https://user-images.githubusercontent.com/94681976/218801942-22c9af75-1bf4-47e1-be4d-86b7df8375d6.png)
@@ -536,7 +591,7 @@ The script works will replace old results for a test set with the same, so eithe
 
 At its core, our approach to the problem of reconstruction is to think of it as an optimization problem. We presume that a fairly accurate solution for the depth (Z-coordinate) of each 2D point (pixel) on the object exists, given any two views of the object. The two views apply the constraint that the two rays from the camera centers to the object point in 3D space will intersect at that object point, which is at some depth Z.
 
-Now, since there is only one world reference frame, the same 3D world points must project to two different pixel locations on the two cameras. We already know these pixel locations -- we marked them just now! Therefore, all we really need to do is figure out the choice of 3D points for which the forward projection (i.e., pixel projection `x = K * [R T] * X`) of both the views is correct (i.e., the reprojection error in both images is collectively minimized). 
+Now, since there is only one world reference frame, the same 3D world points must project to two different pixel locations on the two cameras. We already know these pixel locations -- we marked them just now! Therefore, all we really need to do is figure out the choice of 3D points for which the forward projection (i.e., pixel projection `x = K * [R T] * X`) of both the views is correct (i.e., the reprojection error in both images is collectively minimized).
 
 Like with other optimization problems, we start with a wild guess for the world coordinates `X`, calculate the reprojection error, and update our guess accordingly. We settled on the mean squared per-pixel reprojection error.
 
@@ -558,7 +613,7 @@ Now, run the script. The script's execution can be divided into three main parts
 #### **1. Initialization**
 
 1. Load the following .mat files created earlier:
-    - `merged_params.mat` 
+    - `merged_params.mat`
     - `points_x_nimo_column.mat`
 2. Input which pair of images you want to work with e.g., `[1 2]`, etc.
 3. Define the total number of views and number of images based on user input.
@@ -568,7 +623,7 @@ Now, run the script. The script's execution can be divided into three main parts
 The optimization is done on a per-pixel basis. Note 2D points and pixels are used interchangeably.
 
 1. Initialize:
-    - Initial guess for 3D world points as a homogenous vector of ones `X_init = ones(4, 1)` 
+    - Initial guess for 3D world points as a homogenous vector of ones `X_init = ones(4, 1)`
     - Array of zeros to store estimated homogenous 3D coordinates against each pixel `X = zeros(4, npoints)`. For each estimated 3D point in the optimize step, the corresponding column of this matrix is updated.
     - Array of zeros to store the pixel projection of the same physical point in each of the two views `xpp = zeros(3, n_views)`. We will fill this during the optimization loop over all the pixels
 2. Optimize over all pixels such that for each pixel `i`:
@@ -588,12 +643,12 @@ The vectored error function takes the following as its input:
 6. Rotation Matrix (`R`)
 7. Translation Vector (`T`)
 
-Here, `xpp` shows the **true pixel projections** for each view since it was assigned values from `xj`, the 2D points marked earlier. Then, using a for loop, we can slice into the relevant view's pose, intrinsics, and use the current guess for `X` to get some **predicted pixel projection** for that view. Subtracting the results from the actual pixel projection in the j^th^ column of `xpp` (the marked point in the j^th^ view), we get the reprojection error. The loop does the same thing for the other view. 
+Here, `xpp` shows the **true pixel projections** for each view since it was assigned values from `xj`, the 2D points marked earlier. Then, using a for loop, we can slice into the relevant view's pose, intrinsics, and use the current guess for `X` to get some **predicted pixel projection** for that view. Subtracting the results from the actual pixel projection in the j^th^ column of `xpp` (the marked point in the j^th^ view), we get the reprojection error. The loop does the same thing for the other view.
 
 At the end, we have a vector error of just 2 elements (1 error against 1 pixel for the 2 views). The function then recurses as per the implementation of `lsqnonlin` until a threshold of error is reached or until the gradient sizes become too small (the error function plateaus).
 
 ##### **Correcting the Toolbox's Forced Right-Handedness in the Mirror Image**
-Within the vectored error function, for the mirrored view (`j = 2`), we need to make sure we swap the x and y axes (the first two rows) of the world frame. This is because, as explained earlier, the calibration toolbox forces right-handedness of frames which causes the mirrored corresponding point to have a Z-axis pointing **down** instead of **up** like in the original view. This causes the x and y axes in the original view to become the y and x axes in the reflected view for the toolbox. This is clearly wrong for our correspondence, so we **must swap the axes** for the world frame of the mirrored view ourselves to ensure their swapped nature does not cause errors in the optimization against the correct framing of the original view. 
+Within the vectored error function, for the mirrored view (`j = 2`), we need to make sure we swap the x and y axes (the first two rows) of the world frame. This is because, as explained earlier, the calibration toolbox forces right-handedness of frames which causes the mirrored corresponding point to have a Z-axis pointing **down** instead of **up** like in the original view. This causes the x and y axes in the original view to become the y and x axes in the reflected view for the toolbox. This is clearly wrong for our correspondence, so we **must swap the axes** for the world frame of the mirrored view ourselves to ensure their swapped nature does not cause errors in the optimization against the correct framing of the original view.
 
 In simpler words, we are essentially aligning the axes of both the 3D world frames, so that the resulting estimation is correct. The following code snippet performs the swap for the mirrow view, given a loop over `j`.
 
@@ -605,13 +660,13 @@ In simpler words, we are essentially aligning the axes of both the 3D world fram
 
 #### **3. Result Visualization and Accuracy**
 
-First, we **plot the pixel projections** using the estimated world coordinates (red stars) and plot them against the originally marked pixel points (blue circles). This gauges the **reprojection error**. 
+First, we **plot the pixel projections** using the estimated world coordinates (red stars) and plot them against the originally marked pixel points (blue circles). This gauges the **reprojection error**.
 
 Since we swapped the axes of the mirrored frame during the estimation of the world points, we need to swap them back to their original form (Z-axis down convention) before we find their pixel projections. This is because while our trick allowed it to deal with the problem by tricking the extrinsics into thinking it was being multiplied with X instead of Y and Y instead of X (as it should be if the toolbox did not force right-handedness), we have essentially ended up with a swapped version of the world coordinates that the right-handed system of the mirrored image understands. Thus, to plot them correctly, we must swap them back to their original form when plugging them into the forward projection equation.
 
 ![R4](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
-Then, we **plot the 3D world points** in 3D space to get a sense of whether the **actual structure** of the object was recovered, or if the optimizer failed to recover structure even with a small reprojection error. 
+Then, we **plot the 3D world points** in 3D space to get a sense of whether the **actual structure** of the object was recovered, or if the optimizer failed to recover structure even with a small reprojection error.
 
 ![untitl211221ed](https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg)
 

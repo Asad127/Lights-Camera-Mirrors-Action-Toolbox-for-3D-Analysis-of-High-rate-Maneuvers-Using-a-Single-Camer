@@ -1,0 +1,83 @@
+Notes on frame/image filename formats and file sorting
+===========================================================================
+These notes correspond to BCT_CALIB_IMGNAME_FMT and VID_FRAMENAME_FMT in
+`defaults.m`. If you need to change these, be very careful and read through 
+this. MATLAB sort won't fix any problems related to filename sorting by 
+itself, we need to use a proper sorting algorithm. Note that for scripts 
+that use uigetfile with MultiSelect, sorting is not required since it 
+automatically sorts the way you'd naturally expect.
+
+The toolbox offers a simple sorting approach based on certain assumptions.
+If your naming requirements break these assumptions or are too complex to
+handle using your own sorting function, the toolbox allows using Stephen 
+Cobeldick's natsort from MATLAB File Exchange for sorting instead. Assuming 
+it is setup properly and added to path, enable FEX_USE_NATSORT in 
+`defaults.m`, then run `create_defaults_matfile` to update `default.mat`, 
+and natsorting will be used wherever needed.
+
+Finally, note that extensions are discarded from filenames when sorting 
+files, so just leave %s at the end of whatever format you need in 
+BCT_CALIB_IMGNAME_FMT and VID_FRAMENAME_FMT and it will work fine.
+
+Filename Assumptions and Toolbox's Sorting Approach
+---------------------------------------------------------------------------
+For the first approach, extracted frame formats MUST HAVE ONLY 2 formatting
+identifiers in the final character vector: One for the numeric part 
+corresponding to the frame number (helps when sorting), the other for the 
+image extension which may or may not be the default extension based on 
+input. 
+
+Further, there should be ONLY ONE NUMERIC PART in the basename, and it
+should be the one indicated by the formatting operator. Thus, if your
+images contain timestamps, for example, this assumption is broken.
+
+Valid filenames are thus: "frame_%d%s", "%d_frame%s", "frame%d%s", 
+"%dframe%s", etc.
+
+Still, this supports multiple numeric parts, but you will be asked to 
+identify exactly which numeric part you want to use for sorting the files.
+
+The assumption sounds a little restrictive, but remains the most convenient 
+one, as you only need video frames for calibration, and their timestamps 
+etc. are likely not important in most contexts. Infact, MATLAB's 
+VideoReader is used to extract the frames sequentially, so the frames are
+already numbered in sequence and timestamps are redundant, especially since
+we are using mirrors and no other cameras that might cause desync issues 
+are involved. The same holds for directly importing calibration images; at 
+the end, we are going to have to rename them so BCT can import them 
+effectively, so there's really no need to have a different filename format.
+
+The sorting method is a simple regex scan of the list of calibration img
+names to extract the numeric part of each file into a vector, and then 
+create a sorting key based on the MATLAB sort of that vector (which works
+just fine), and apply the sorting key to the original lsit of filenames.
+
+Using Stephen Cobeldick's natsort from MATLAB File Exchange (FEX)
+---------------------------------------------------------------------------
+Very simple. Just use `natsortfiles(list_of_files)` and watch the magic
+happen! It deals with extensive scenarios, and is honestly the ultimate
+solution if you have a complex file naming convention. Get it here:
+
+https://www.mathworks.com/matlabcentral/fileexchange/47434-natural-order-filename-sort
+
+Assuming it is setup and properly added to path, simply set FEX_USE_NATSORT
+in `defaults.m` to true, recreate the defaults.mat file if it was already
+created (via `create_defaults_matfile.m` in existing projects, or
+`project_setup.m` in new projects).
+
+Adding variable info within `defaults.m` to image/frame name format
+---------------------------------------------------------------------------
+If you need to add more variable info to these formats, define those 
+variables within this file, use double percents on the frame number and 
+extension to prevent them from getting formatted, use sprintf to add the 
+variable info as usual, and then clear the defined variables to ensure they
+don't get saved into the defaults file.
+
+An example:
+  timenow = datetime('now', 'Format', 'yyyy-MM-dd-HH-mm')
+  VID_FRAMENAME_FMT = sprintf('%s_frame_%%d%%s', timenow)
+  clear timenow
+
+VID_FRAMENAME_FMT now evaluates to '2023-06-15-09-30_frame_%d%s', which
+evidently adds the variable info while preserving the requried formatting
+operators for frame number and image extension.
