@@ -183,7 +183,9 @@ Thus, when estimating world coordinates via some optimization technique, **the o
 
 1. In each optimization iteration, only for the reflected views, swap the XY coordinates of the current state of the world points vector. This tricks the optimization into thinking the world coordinates are in the same frame convention as the original camera view, and it proceeds smoothly.
 
-$$\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} \rightarrow \begin{bmatrix} Y \\ X \\ Z \end{bmatrix}$$
+```math
+\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} \rightarrow \begin{bmatrix} Y \\ X \\ Z \end{bmatrix}
+```
 
 2. Apply a permutation transformation to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
 
@@ -193,9 +195,10 @@ On the other hand, method 2 is much more permanent as it addresses the root caus
 
 Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the required permutation matrix $T_\text{permutation}$ is:
 
-$$T_\text{permutation} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
-
-$$R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{zX} & r_{zY} & r_{zZ} \end{bmatrix} \cdot \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{xY} & r_{xX} & r_{xZ} \\ r_{yY} & r_{yX} & r_{yZ} \\ r_{zY} & r_{zX} & r_{zZ} \end{bmatrix}$$
+```math
+T_\text{permutation} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{zX} & r_{zY} & r_{zZ} \end{bmatrix} \cdot \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{xY} & r_{xX} & r_{xZ} \\ r_{yY} & r_{yX} & r_{yZ} \\ r_{zY} & r_{zX} & r_{zZ} \end{bmatrix}
+```
 
 In effect, the permutation operation essentially makes the rotation matrix as if the world's X was its Y, and Y was X, and so it is now defined w.r.t. the world frame in the original camera view.
 
@@ -393,6 +396,10 @@ That is all. The script will proceed to perform the world point estimation, comp
     <img src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg" alt="Error Histogram">
 </p>
 
+Now you are done with your 3D reconstruction. You can try different objects for yourself for **3d reconstrcution using single camera and mirror setup**.
+
+> *We have provided the marked 2D points of different objects for 3D reconstruction in the `Marked 2D Points` folder. You can use them to test out the reconstruction, or you can mark your own points and use them for reconstruction.*
+
 ### ***Details On Estimation of 3D World Points (`lsqnonlin`)***
 
 The script that performs reconstruction for marked points in a single image is `reconstruct_marked_pts_bct.m`, and over video data assuming tracked points in each frame with DLTdv8a is `reconstruct_tracked_pts_bct.m`. Both of them use the same process for estimating the 3D world coordinates, defined in the internal optimization target function `reconst_coords_per_px`.
@@ -405,7 +412,9 @@ Now, since there is only one world reference frame, the same 3D world points mus
 
 Like with other optimization problems, we start with a wild guess for the world coordinates of a physical point `X`, calculate the reprojection error in each view w.r.t. the marked point, i.e., `x_marked - x_reproj`, vectorize the result as `[xcam_reproj, xmir1_reproj, xmir2_reproj]`, compute the mean squared reprojection error (loss function), and update our guess accordingly. Assuming we have $J$ views and the vector of reprojection errors is $\boldsymbol{E}$, then the loss function is:
 
-$$ loss = \sum_{j=1}^{J} E_j $$
+```math
+loss = \sum_{j=1}^{J} E_j
+```
 
 We repeat this for all the points we marked, and we have the 3D world coordinates for all the points.
 
@@ -416,10 +425,6 @@ We repeat this for all the points we marked, and we have the 3D world coordinate
 Reconstruction may be performed using either the merged BCT calibration file, which contains intrinsics `K` and extrinsics `R` and `T`, or the DLT coefficients file, either by `DLT = P = K * [R | T]` in projection equations within reconstruction, or by converting from DLT to KRT form as described in `dlt_to_krt.m`, and then computing like we would with BCT.
 
 However, the toolbox currently only supports the BCT variant as that preserves the view labels/identity/integrity (i.e., the index `x` of the camera parameters `KK_x` corresponds exactly to the label of the view it belongs to, REGARDLESS of the total number of views).
-
-Now you are **done** with your **3d reconstruction**. You can try different objects for yourself for **3d reconstrcution using single camera and mirror setup**.
-
-> **NOTE:** We have provided the marked 2d points of different objects for 3d reconstruction in the marked points folder. You can use them to test out the reconstruction, or you can mark your own points and use them for reconstruction.
 
 ## **(OPTIONAL) Step VI: Extrinsics Verification With Epipolar Geometry**
 
@@ -481,7 +486,9 @@ Since the corresponding points are marked manually, there is always some **human
 
 Thus, in addition to the point-line distances in pixel units, the script additionally computes the point-line distance in normalized units. This is computed as:
 
-$$ PLD_{normalized} = \frac{PLD_{pixels}}{\sqrt[]{ \left( width_{img} \right)^2 + \left( height_{img} \right)^2 }}$$
+```math
+\text{PLD}_\text{normalized} = \frac{\text{PLD}_\text{pixels}}{\sqrt[]{ \left( \text{width}_\text{img} \right)^2 + \left( \text{height}_\text{img} \right)^2 }}
+```
 
 Thus, a 2-pixel distance in a 1000-pixel wide image is equivalent to a 0.002 normalized distance, which provides another perspective on the error.
 
