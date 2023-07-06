@@ -1,5 +1,3 @@
-TODO: Add license file. (MIT)
-
 Developed and intended for use with [Bouguet Calibration Toolbox (BCT)](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) [[1]](#1) and [DLTdv8a](https://biomech.web.unc.edu/dltdv/) [[2]](#2) (app version).
 
 # **Capturing High Speed Maneuvers Using a Single Camera and Planar Mirrors**
