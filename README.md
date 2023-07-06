@@ -50,7 +50,7 @@ Before we start, we need to initialize the toolbox and set up a project director
 3. Create a project in any directory by navigating to it inside MATLAB and running the following in the command window:
 
     ```
-    project_setup
+    >> project_setup
     ```
 
     This will create a 'skeleton' of the project, with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the project-specific default settings (described in Mirror Reconstruction Toolbox's `defaults.m`). The default settings are used when executing the toolbox's various scripts and functions to ensure smooth behavior within the project.
@@ -60,7 +60,7 @@ Before we start, we need to initialize the toolbox and set up a project director
 5. Begin the preliminary calibration preparation process from the project's root directory by running the following in the command window:
 
     ```
-    calib_import_media
+    >> calib_import_media
     ```
 
     Setting up a project with `project_setup` automatically changes directory to the project's root directory.
@@ -80,8 +80,10 @@ Before we start, we need to initialize the toolbox and set up a project director
 A mock set of 11 calibration images is provided in the repo's `Calibration` directory. If you have manually imported the calibration images into the project root instead, skip Steps 3&ndash;4, and the two above. Instead, rename them sequentially by directly running the following in the command window from the project root:
 
 ```
-imgs_sequential_rename
+>> imgs_sequential_rename
 ```
+
+Note that `imgs_sequential_rename.m` will rename the files without making copies of the original. If this is not acceptable, make a backup of the original iamges.
 
 ### **Video Route**
 - In the pop-up UI box, browse and select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
@@ -89,12 +91,14 @@ imgs_sequential_rename
 - In the next pop-up UI box, select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
 
 - Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (blank inputs) the whole video is used.
+
     ```
     [PROMPT] Enter start timestamp in H:M:S format (blank = from video start):
     [PROMPT] Enter stop timestamp in H:M:S format (blank = until video end):
     ```
 
 - Enter the format in which to extract the frames (by default, JPG).
+
     ```
     [PROMPT] Enter image extension for extracted calibration frames (blank = default image extension): j
     ```
@@ -125,11 +129,11 @@ To change the defaults, you may do so globally or locally by editing `defaults.m
 In order to generate a new `defaults.mat` with edited settings,head to the project root and run `create_defaults_matfile` in the command window. If you want to replace the local defaults mfile with a fresh copy of the global defaults mfile, head to the project root, run `recover_defaults_mfile` in the command window, and then run `create_defaults_matfile`.
 
 ```
-recover_defaults_mfile   % if replacing `defaults.m` with global version
-create_defaults_matfile  % generate new `defaults.mat` using local `defaults.m`
+>> recover_defaults_mfile   % if replacing `defaults.m` with global version
+>> create_defaults_matfile  % generate new `defaults.mat` using local `defaults.m`
 ```
 
-## **Step II: Merging BCT Result and Coverting to DLTdv8a Format**
+## **Step II: Merging BCT Result and Converting to DLTdv8a Format**
 
 Once we have the calibration results for each view (as many `.mat` files as no, of views), we need to merge the variables necessary for reconstruction into one mat-file. We also need to convert the BCT results from KRT form to the normalized 11-DLT coefficients form in order to use the calibration result when working with videos in DLTdv8a (otherwise, epipolar lines won't show).
 
@@ -142,13 +146,15 @@ Moving back to the scripts, the step-wise process is described below:
 2. Run the script `calib_process_results.m` from the command window:
 
     ```
-    calib_process_results
+    >> calib_process_results
     ```
 
 3. Enter the extrinsic reference image suffix. E.g., if calibration set was labeled {*Image1, Image2, ..., Image15.jpg*}, the suffixes are {*1, 2, ..., 15*}. This picks the corresponding extrinsics `Rc_{suffix}` and `Tc_{suffix}`, e.g., `Rc_1`, `Rc_ext`<sup>+</sup> , etc.
+
     ```
     [PROMPT] Enter calibration image suffix to use as world reference image for extrinsics (blank = default): 5
     ```
+    
     The default value is 1. Needless to say, extrinsics corresponding to this suffix must exist in the calibration results, otherwise an error is thrown.
 
 > <sup>+</sup> If the extrinsic reference is not part of the calibration set (meaning extrinsics were computed via **Comp. Extrinsic** function of BCT), you would enter `ext` here (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
@@ -233,7 +239,7 @@ Step-wise, the process is described below:
 1. Run `import_media.m` in the command window from within the project root directory.
 
     ```
-    import_media
+    >> import_media
     ```
 
 2. When prompted, enter whether you want import images or a video file in the command window:
@@ -295,7 +301,7 @@ Before we can reconstruct the object, we first need to manually mark correspondi
 1. Run `point_marker.m` from the project root in the command window.
 
     ```
-    point_marker
+    >> point_marker
     ```
 
 2. In the UI file browser that pops up, locate the test image containing the object of interest (to be reconstructed).
@@ -328,7 +334,6 @@ Before we can reconstruct the object, we first need to manually mark correspondi
 7. A new UI browser will open up. Here, choose the path to the save the results, or click **Cancel** to use the default location, i.e., `reconstruction/marked_points.mat` in the project root. The saved variables are:
 
     - `x`: A 2D array containing the marked pixel locations of all physical points in all views
-
     - `num_points`: An integer describing the total number of physical points marked (i.e., the input in Step 3)
 
 The correspondence between physical points in different views is visualized below.
@@ -343,7 +348,6 @@ Simultaneously, assuming the user marked the points in the same physical order, 
 Below, we have attached a picture of an included `marked_points.mat` file (you can find it at `Marked 2D Points/P4.mat`):
 
 - `num_points = 140`
-
 - `x = 3 x 280`
 
 <p align="center" width="100%">
@@ -359,7 +363,7 @@ By now, we have the poses, the intrinsics, and the 2D corresponding points for b
 1. From the project's root directory, run the reconstruction script from the command window:
 
     ```
-    reconstruct_marked_pts_bct
+    >> reconstruct_marked_pts_bct
     ```
 
 2. In the first UI browser, locate the image on which you marked the points in Step IV.
@@ -422,7 +426,7 @@ Now you are **done** with your **3d reconstruction**. You can try different obje
 1. Run `epipolar_geometry.m` from the project root in the command window:
 
     ```
-    epipolar_geometry
+    >> epipolar_geometry
     ```
 
 2. Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image:
@@ -477,11 +481,9 @@ Since the corresponding points are marked manually, there is always some **human
 
 Thus, in addition to the point-line distances in pixel units, the script additionally computes the point-line distance in normalized units. This is computed as:
 
-$$\text{PLD}_{\text{normalized}} = \frac{\text{PLD}_{\text{pixels}}}{\sqrt[]{(\text{width}_{\text{img}})^2 + (\text{height}_{\text{img}})^2}}$$
+$$ PLD_{normalized} = \frac{PLD_{pixels}}{\sqrt[]{ \left( width_{img} \right)^2 + \left( height_{img} \right)^2 }}$$
 
 Thus, a 2-pixel distance in a 1000-pixel wide image is equivalent to a 0.002 normalized distance, which provides another perspective on the error.
-
-***
 
 ## **Final Notes**
 If you come across any issues or bugs, please feel free to open an issue on this repository. We will try to address it as soon as possible.
