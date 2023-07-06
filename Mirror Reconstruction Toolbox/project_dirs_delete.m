@@ -33,8 +33,8 @@ switch nargin
 end
 
 % Assumed in toolbox path, this contains the MATLAB path of the toolbox. It
-% is auto generated upon running `setup_mirror_reconstruction_roolbox.m`.
-toolbox = load('toolbox_dir.mat');  
+% is auto generated upon running `setup_mirror_reconstruction_toolbox.m`.
+toolbox = load('toolbox.mat');  
 
 % project_dirs_match.m internally calls `project_dirs_read.m` and returns
 % its output as well (to avoid potential misinputs/desyncs).

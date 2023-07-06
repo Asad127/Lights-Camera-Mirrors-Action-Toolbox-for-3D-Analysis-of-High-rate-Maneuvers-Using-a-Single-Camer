@@ -58,7 +58,7 @@ end
 % useer enters a blank, that view is discarded. However, at least two
 % filepaths must be entered.
 
-calib_files = {};
+calib_filepaths = {};
 view_labels = [];
 ui_prompt_count = 1;
 ui_total_prompts = default.MAX_VIEWS + 2;  % +2 as we have two prompts after the 3 calibration inputs
@@ -68,51 +68,39 @@ for k = 1 : default.MAX_VIEWS
     while true 
         % Camera view
         if k == 1
-            [file, dir] = uigetfile( ...
+            [calib_file, calib_dir] = uigetfile( ...
                 ['*' default.BCT_EXT], ...
                 sprintf(['PROMPT %d/%d: Select BCT camera calibration results file (cancel = skip ' ...
                 'this view): '], ui_prompt_count, ui_total_prompts), ...
                 default.BCT_CALIB_DIR ...
             );
             
-            if ~file
+            if ~calib_file
                 skip_this_view = true;
                 break
             end
 
-            calib_file = fullfile(dir, file);
-                        
-            % Check if file exists.
-            if ~isfile(calib_file)
-                fprintf('File "%s" does not exist. Double-check path and try again.\n', calib_file)
-                continue
-            end
+            calib_filepath = fullfile(calib_dir, calib_file);
 
         % Mirror view(s)
         else
-            [file, dir] = uigetfile( ...
+            [calib_file, calib_dir] = uigetfile( ...
                 ['*' default.BCT_EXT], ...
                 sprintf(['PROMPT %d/%d: Select BCT mirror %d calibration results file (cancel = ' ...
                 'skip this view): '], ui_prompt_count, ui_total_prompts, k - 1), ...
                 default.BCT_CALIB_DIR ...
             );
 
-            if ~file
+            if ~calib_file
                 skip_this_view = true;
                 break
             end
 
-            calib_file = fullfile(dir, file);
-
-            % Check if file exists.
-            if ~isfile(calib_file)
-                fprintf('File "%s" does not exist. Double-check path and try again.\n', calib_file)
-                continue
-            end
+            calib_filepath = fullfile(calib_dir, calib_file);
         end
         
         % Duplicate file check
-        if ismember(calib_file, calib_files)
+        if ismember(calib_filepath, calib_filepaths)
             fprintf(['Duplicate calibration filepath encountered. Please make sure each calibration ' ...
                 'file is distinct and try again.\n'] ...
             )
@@ -133,10 +121,10 @@ for k = 1 : default.MAX_VIEWS
     view_labels(end + 1) = k;
 
     % Fill the k'th cell with the path to the file.
-    calib_files{end + 1} = calib_file;
+    calib_filepaths{end + 1} = calib_filepath;
 end
 
-num_views = numel(calib_files);  % or view_labels, both have same dimensions
+num_views = numel(calib_filepaths);  % or view_labels, both have same dimensions
 
 if num_views < default.MIN_VIEWS || num_views > default.MAX_VIEWS
     error(['Number of views (selected files: %d) disagrees with the maximum and minimum number of views.\n' ...
@@ -160,8 +148,8 @@ for j = 1 : num_views
 
     k = view_labels(j);  % j doesn't preserve view identity, k does
 
-    calib_file = calib_files{j};
-    view_params = load(calib_file);
+    calib_filepath = calib_filepaths{j};
+    view_params = load(calib_filepath);
 
     % These are the fieldnames in the saved file. They are numbered
     % according to the current view/file.
@@ -178,7 +166,7 @@ for j = 1 : num_views
     % and `reconstruct_tracked_pts_dltdv8a.m` for more details.
     if k == 1
         values_calib = {
-            calib_file ...
+            calib_filepath ...
             view_params.kc ...
             view_params.KK ...
             view_params.(sprintf('Rc_%s', extrinsics_reference_img_suffix)) ...
@@ -186,7 +174,7 @@ for j = 1 : num_views
         };
     else
         values_calib = {
-            calib_file ...
+            calib_filepath ...
             view_params.kc ...
             view_params.KK ...
             view_params.(sprintf('Rc_%s', extrinsics_reference_img_suffix)) * default.PERM_TRANSFORM ...
@@ -194,8 +182,8 @@ for j = 1 : num_views
         };
     end
     
-    start_row_idx = j * 2 - 1;        % j * 2 -1
-    end_row_idx = start_row_idx + 1;  % j * 2
+    start_row_idx = j * 2 - 1;        % j * 2 - 1: 1, 3, 5, ...
+    end_row_idx = start_row_idx + 1;  % simplifies to j * 2: 2, 4, 6, ...
 
     % Per iteration, first row = fields, second row = values.
     merged_bct(start_row_idx : end_row_idx, :) = [fields_save; values_calib];
@@ -244,9 +232,25 @@ end
 
 ui_prompt_count = ui_prompt_count + 1;
 
-fprintf('\nGenerating files...\n')
+fprintf('\nGenerating files...\n\n')
 save(saveloc_bct, '-struct', 'merged_struct')
 writematrix(dlts, saveloc_dlt, 'Delimiter', ',')
-fprintf('\tMerged BCT params saved to: "%s"\n\tDLT coefficients saved to: "%s"\n', saveloc_bct, saveloc_dlt);
-fprintf(['All done! You may now consider undistorting the test video frames via script ' ...
-    '`create_undistorted_vid_and_frames.m`\nBEFORE running DLTDV8a.\n'])
+
+fprintf('\t%-26s: %s\n\t%-26s: %s\n\n', ...
+    'Merged BCT params saved to', abspath(saveloc_bct), ...
+    'DLT coefficients saved to', abspath(saveloc_dlt) ...
+);
+
+fprintf(['Done merging BCT calibration results and creating DLT coefs file.' ...
+    '\n\nNEXT STEPS: Test Media Import and Undistortion (Optional)\n\n' ...
+    '- Run "import_media.m" from the command window to begin working on target objects in images or ' ...
+    'videos for\n  reconstruction. Undistort the corresponding images/video if needed by entering "y" ' ...
+    'when prompted.\n\n\to If you already have target images/video in project directory (video must be ' ...
+    'MP4; convert if needed with\n\t  "convert_vid_to_mp4.m"), skip "import_media.m" and undistort by ' ...
+    'running "create_undistorted_imgs.m" or\n\t  "create_undistorted_vid_and_frames.m" respectively in ' ...
+    'the command window.\n\n\to If target images/video (video must be MP4) already in project directory ' ...
+    'and undistortion not required,\n\t  extract frames (if video) with "vid_extract_frames.m", ' ...
+    'then proceed to manual point marking on image\n\t  (run "point_marker.m") or DLTdv8a (for ' ...
+    'video tracking) and follow the respective reconstruction steps.\n\nNOTE: If you want to undistort, ' ...
+    'do so BEFORE you mark points or track them in DLTdv8a!\n\n'] ...
+)

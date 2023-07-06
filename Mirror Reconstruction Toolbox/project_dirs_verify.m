@@ -18,7 +18,7 @@ for i = 1 : numel(project_dirs)
 end
 
 if ~isempty(missing_dirs)
-    fmt = ['The following project paths do not exist:\n\t' repmat('%s\n\t', 1, numel(missing_dirs) - 1), '%s\n\n'];
+    fmt = ['The following project paths do not exist:\n\n\t' repmat('o %s\n\t', 1, numel(missing_dirs) - 1), 'o %s\n\n'];
     fprintf(fmt, missing_dirs{:});
 end
 

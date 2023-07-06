@@ -25,7 +25,18 @@ function [projects_file_lines, project_vars, project_dirs] = project_dirs_read()
 %   The absolute paths to the project directories.
 
 % Read the file and get each line.
-projects_file_lines = textscan(fopen('project_dirs.m', 'r'), '%s', 'Delimiter', '\n');
+% Assumed in toolbox path, this contains the MATLAB path of the toolbox. It
+% is auto generated upon running `setup_mirror_reconstruction_toolbox.m`.
+toolbox = load('toolbox.mat'); 
+
+projects_file_lines = textscan(fopen(fullfile( ...
+            toolbox.TOOLBOX_MATLAB_PATH, 'project_dirs.m' ...
+        ), ...
+        'r' ...
+    ), ...
+    '%s', 'Delimiter', '\n' ...
+);
+
 projects_file_lines = projects_file_lines{1};
 projects_file_num_lines = numel(projects_file_lines);
 

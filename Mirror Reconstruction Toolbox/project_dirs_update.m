@@ -39,7 +39,7 @@ end
 
 % Assumed in toolbox path, this contains the MATLAB path of the toolbox. It
 % is auto generated upon running `setup_mirror_reconstruction_roolbox.m`.
-toolbox = load('toolbox_dir.mat');
+toolbox = load('toolbox.mat');
 
 % Get project name from new project directory's last part.
 [~, new_project_name] = fileparts(new_project_dir);

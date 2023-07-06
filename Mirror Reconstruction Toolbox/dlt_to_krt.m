@@ -7,11 +7,15 @@ conventions in the Bouguet Calibration Toolbox are the same as MATLAB's.
 Otherwise, some transformation would be required to ensure proper results.
 Refer to algorithm explanation below for more detail on the conventions.
 
-This would allow reconstructing with DLT coefficients. However, since we
-cannot embed view labels into the DLT file due to the specific format
-required by DLTdv8a, we cannot maintain view integrity in reconstruction.
-If view integrity is not of interest, however, it's fine to reconstruct
-with DLT coefficients.
+This would allow reconstructing with DLT coefficients with practically no
+changes to the BCT script, although it's also perfectly plausible to edit
+the forward projection equations and replace K * [R T] with P = DLT. 
+
+However, since we cannot embed view labels into the DLT file due to the 
+specific format required by DLTdv8a, we cannot maintain view integrity in 
+reconstruction. If view integrity is not of interest, or it is otherwise 
+supplied by the user as an input, however, it's fine to reconstruct with 
+DLT coefficients.
 
 To understand what we mean by view integrity, consider that you have just
 two views. The first view is from the camera, and the second is from the

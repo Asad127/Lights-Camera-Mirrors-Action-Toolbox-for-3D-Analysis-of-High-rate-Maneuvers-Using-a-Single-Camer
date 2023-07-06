@@ -4,7 +4,7 @@ function project_dirs_append(project_dir)
 
 % Assumed in toolbox path, this contains the MATLAB path of the toolbox. It
 % is auto generated upon running `setup_mirror_reconstruction_roolbox.m`.
-toolbox = load('toolbox_dir.mat');
+toolbox = load('toolbox.mat');
 
 projects_file = fopen(fullfile(toolbox.TOOLBOX_MATLAB_PATH, 'project_dirs.m'), 'a');
 [~, project_name] = fileparts(project_dir);

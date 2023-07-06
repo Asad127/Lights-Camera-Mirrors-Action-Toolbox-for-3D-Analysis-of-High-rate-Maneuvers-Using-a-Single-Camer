@@ -64,13 +64,13 @@ project_setup.m:
 
 default = load('defaults.mat');
 
-fprintf('Beginning calibration media import...\n')
+fprintf('Importing calibration media...\n')
 
 while true
     calib_img_or_vid = input( ...
         '[PROMPT] Do you have calibration images or video? ("i" = imgs, "v" = vid): ', 's');
     if ~ismember(calib_img_or_vid, {'i', 'v'})
-        fprintf('[BAD INPUT] Only "i" and "v" (no quotes) are accepted. Please try again.\n')
+        fprintf('\n[BAD INPUT] Only "i" and "v" (no quotes) are accepted. Please try again.\n')
         continue
     end
     break
@@ -82,20 +82,35 @@ if calib_img_or_vid == 'i'
     % needed by UI filters.
     img_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_IMG_EXTS, 'UniformOutput', false)';
 
-    % Get the source images. Their names may be in ANY text format.
-    [src_files, src_dir] = uigetfile( ...
-        img_filter, ...
-        'Select all calibration images to import (extension dropdown on bottom-right)', ...
-        'MultiSelect', 'on' ...
-    );
-
-    if ~isa(src_files, 'cell')
-        error('Operation canceled by user.')
+    while true
+        fprintf('\nChoosing images to import...')
+        % Get the source images. Their names may be in ANY text format.
+        [src_files, src_dir] = uigetfile( ...
+            img_filter, ...
+            'Select all calibration images to import (extension dropdown on bottom-right)', ...
+            'MultiSelect', 'on' ...
+        );
+    
+        if ~isa(src_files, 'cell')
+            if ~src_files
+                error('Operation canceled by user.')
+            end
+            src_files = cellstr(src_files);  % force convert single selection to cell
+    
+        elseif numel(src_files) < default.MIN_CALIB_IMGS
+            fprintf('\n[BAD INPUT] Please provide a minimum of %d images for calibration.\n', ...
+                default.MIN_CALIB_IMGS ...
+            )
+            continue
+        end
+    
+        src_filepaths = fullfile(src_dir, src_files);
+        fprintf('done.\n')
+        break
     end
-
-    src_filepaths = fullfile(src_dir, src_files);
     
     % Get the directory to copy images to.
+    fprintf('Choosing directory to import the images into...')
     calib_imgs_dir = uigetdir( ...
         '', ...
         'Choose directory to save the calibration images in (cancel = use default directory)' ...
@@ -104,15 +119,17 @@ if calib_img_or_vid == 'i'
     if ~calib_imgs_dir
         calib_imgs_dir = default.BCT_CALIB_IMGS_DIR;
         if ~isfolder(calib_imgs_dir)
-            fprintf( ...
+            warn_msg = sprintf( ...
                 ['[WARNING] The default directory for calibration images was not found and had to be ' ...
                 'created. This likely\nmeans that the project structure was not setup correctly. Please ' ...
-                'run `project_setup.m` and\nensure that the relevant default folder is being created.\n'] ...
-            )
+                'run "project_setup.m" and\nensure that the relevant default folder is being created.\n'] ...
+            );
+            warning(warn_msg);
             mkdir(calib_imgs_dir)
             
         end
     end
+    fprintf('done.\n')
 
     calib_imgs_dir = dir(calib_imgs_dir).folder;
 
@@ -130,29 +147,32 @@ if calib_img_or_vid == 'i'
         if isnan(src_first_img_ext)
             src_first_img_ext = src_ext;
         elseif src_ext ~= src_first_img_ext
-            error('Multiple image extensions encountered. Make sure all selected images have the same extension.');
+            error(['Multiple image extensions encountered. Make sure all selected images have the ' ...
+                'same extension.'] ...
+            );
         end 
     end
-    fprintf('done.\nCopying images to selected directory...')
+    fprintf('all good.\n')
 
     % Now, we know all images are the same format, so copy them over.
+    fprintf('Copying images to selected directory...')
     for i = 1 : numel(src_filepaths)
         src_filepath = src_filepaths{i};
         [~, ~, src_ext] = fileparts(src_filepath);
 
-        calib_img_file = sprintf(default.BCT_CALIB_IMGNAME_FMT, i, src_ext);
-        calib_imgs_filepath = fullfile(calib_imgs_dir, calib_img_file);
-        copyfile(src_filepath, calib_imgs_filepath);
+        calib_img_file = sprintf(default.IMGNAME_FMT, i, src_ext);
+        calib_img_filepath = fullfile(calib_imgs_dir, calib_img_file);
+        copyfile(src_filepath, calib_img_filepath);
     end
     
-    fprintf('done.\n\t%15s: %s\n\t%15s: %s\n', 'Source Dir', src_dir, 'Destination Dir', calib_imgs_dir)
-    fprintf('[FINISH] Images are ready for BCT calibration.\n')
-    fprintf('\n...changing CWD to directory with calibration images...\n')
+    fprintf('done.\n\n\t%-17s: %s\n\t%-17s: %s\n\n', 'Source Imgs Dir', src_dir, 'Imported Imgs Dir', calib_imgs_dir)
+    fprintf('Images are ready for BCT calibration.\n')
+    fprintf('...changing CWD to directory with calibration images...\n\n')
 
     cd(calib_imgs_dir);
     
-    fprintf(['Next Steps: Assuming you have Bouguet Calibration Toolbox (BCT) on MATLAB path, run ' ...
-        '"calib_gui.m" from command window.\n'] ...
+    fprintf(['NEXT STEPS: Calibration\n\n- Assuming you have Bouguet Calibration Toolbox (BCT) on MATLAB path, run ' ...
+        '"calib_gui.m" from command window.\n\n'] ...
     )
 
 elseif calib_img_or_vid == 'v'
@@ -202,10 +222,17 @@ elseif calib_img_or_vid == 'v'
 
     if mp4_conversion_applied
         movefile(src_filepath, calib_vid_filepath);  % move the converted source file and rename it
+        fprintf(['Imported MP4-converted copy of original video to project directory.' ...
+            '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
+            'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
+        )
     else
         copyfile(src_filepath, calib_vid_filepath);  % copy the original source file and rename it
+        fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
+            'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
+        )
     end
     
-    fprintf('...launching "calib_extract_vid_frames.m" for calibration video frame extraction...\n')
+    fprintf('...launching "calib_extract_vid_frames.m" (calibration video frame extraction)...\n\n')
     run('calib_extract_vid_frames.m');
 end

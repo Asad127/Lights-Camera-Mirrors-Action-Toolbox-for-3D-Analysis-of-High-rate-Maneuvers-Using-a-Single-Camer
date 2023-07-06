@@ -3,10 +3,10 @@
 % Several of these are safely configurable. but be careful with the first
 % section marked "DON'T EDIT THESE".
 
+% If anything gets messed up, delete this file, make a copy of
+% backup_defaults.m, and rename the copy to defaults.m.
+
 %% !! DON'T EDIT THESE UNLESS YOU KNOW WHAT YOU ARE DOING !!
-
-% Toolbox Absolute Path (HEADER FOR PATH INSERTION - DO NOT REMOVE)
-
 
 % Changing these might cause certain parts of the toolbox to stop working
 % correctly as they indicate some core design assumptions. However, if the
@@ -19,6 +19,9 @@
 % minimum of 2 views are supported. 
 MAX_VIEWS = 3;
 MIN_VIEWS = 2;
+
+VIEW_NAMES_LONG = {'Camera', 'Mirror 1', 'Mirror 2'};
+VIEW_NAMES_SHORT = {'C', 'M1', 'M2'};
 
 % Supported image and video extensions
 % =========================================================================
@@ -37,26 +40,28 @@ SUPPORTED_IMG_EXTS = {'.jpg' '.png' '.tif' '.bmp'};
 % happend with the renamed files!
 
 % Format for calibration images (BCT).
-BCT_CALIB_IMGNAME_FMT = 'Image%d%s';
+IMGNAME_FMT = 'Image%d%s';
 
 % Format for frames extracted from videos. 
-VID_FRAMENAME_FMT = 'frame_%d%s';
+VID_FRAMENAME_FMT = 'Frame%d%s';
+
+% Epipolar results folder containing the 
+EPIPOLAR_RESULTS_FOLDER_FMT = 'set_%d';
 
 % Minimum images required for a barely passable calibration.
 MIN_CALIB_IMGS = 10;
 
 % Number of variables extracted from each BCT calibration output file
-% Calib_Results.mat. Usually, this will be a reference image x's extrinsics
-% Rc_x and Tc_x, the intrinsics KK, and the distortion coefficients Kc.
+% Calib_Results.mat. For details, look at _saved_bct_params.txt.
 NUM_UNIQUE_VARS_PER_CAM = 5;
-NUM_SHARED_VARS_CAMS = 1;
+NUM_SHARED_VARS_CAMS = 2;
 
 % Mirror view starts at curr_idx + MIRROR_OFFSET. This is because we assume
 % the actual camera occupies index 1 wherever pertinent.
 MIRROR_OFFSET = 1;
 
 % Offset due to header row for when saving 3D points in DLTdv8a format.
-HEADER_OFFSET = 1;
+DLTDV_TRACKFILE_HEADER_OFFSET = 1;
 
 % Permutation transform swaps X and Y (first 2 cols) of rotation matrix to 
 % force mirror view to be left-handed despite BCT forcing right-handedness. 
@@ -72,8 +77,8 @@ DLTDV_EXT = '.csv';
 VID_EXT = '.mp4';  
 
 % Default software filenames.
-DLT_TRACKFILE_2D_BASE = 'xypts';
-DLT_TRACKFILE_3D_BASE = 'xyzpts';
+DLTDV_TRACKFILE_2D_BASE = 'xypts';
+DLTDV_TRACKFILE_3D_BASE = 'xyzpts';
 
 %% SAFE TO EDIT %%
 
@@ -115,19 +120,23 @@ VID_STOP_TIME_SECONDS = Inf;
 
 % Command Window QoL
 % =========================================================================
-% Setting this to 1 will hide help text above prompts. Useful if you like
-% to save space on CW and are familiar with the workflow/toolbox.
-HIDE_PROMPT_HELP = false;
 CWLINE_WIDTH = 90;
 CWLINE_STYLE = repmat('=', 1, CWLINE_WIDTH);
- 
+
+% General QoL
+% =========================================================================
+GUESS_IMG_EXT_WHEN_POSSIBLE = true;
+
 % Directories
 % =========================================================================
 % Store all PROJECT videos
-PROJECT_VIDS_DIR = 'videos';
+DLTDV_VID_DIR = 'videos';
 
 % Store all frames from PROJECT videos
-PROJECT_FRAMES_DIR = 'videoframes';
+DLTDV_VID_FRAMES_DIR = 'videoframes';
+
+% Store imported test images.
+IMGS_DIR = 'images';
 
 % DLTdv8a exported trackfiles xypts.csv and xyzpts.csv
 DLTDV_TRACKFILES_DIR = 'trackfiles';
@@ -144,10 +153,24 @@ BCT_CALIB_FRAMES_DIR = fullfile(BCT_CALIB_DIR, 'frames');
 % Store previous seected subsets for calibration.
 BCT_CALIB_SUBSET_HIST_DIR = fullfile(BCT_CALIB_DIR, 'subset_selection_history');
 
+% Directory where results of reconstruction script are stored.
+RECONSTRUCTION_DIR = 'reconstruction';
+
+% Epipolar results go here under subfolders with an integer suffix
+EPIPOLAR_DIR = 'epipolar';
+
+EPIPOLAR_RESULTS_DIR = fullfile(EPIPOLAR_DIR, EPIPOLAR_RESULTS_FOLDER_FMT);
+
+% Undistortion output frame folder names
+UNDISTORTED_FRAME_FOLDERS = {'cam_rect', 'mir1_rect', 'mir2_rect'};
+
 % File Basenames
 % =========================================================================
 % Calibration video name
-BCT_CALIB_VID_BASE = 'calib';  
+BCT_CALIB_VID_BASE = 'calib';
+
+% DLTdv8a video name
+DLTDV_VID_BASE = 'projvid';
 
 % Merged BCT parameters (all views in one)
 BCT_MERGED_CALIB_BASE = 'bct_params';
@@ -163,6 +186,9 @@ BCT_MIR_CALIB_BASE_FMT = 'Calib_Results_mir%d';
 % view separately and then merged into one csv file.
 DLT_COEFS_BASE = 'dlt_coefs';
 
+% Manually marked points with `point_marker.m`
+MARKED_POINTS_BASE = 'marked_points';
+
 % File Extensions
 % =========================================================================
 IMG_EXT = '.jpg';
@@ -173,22 +199,33 @@ IMG_EXT = '.jpg';
 
 % Path to the merged BCT calibration parameters file, combining only the
 % needed parts of the camera and mirror calibrations into one file.
-BCT_MERGED_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
-    [BCT_MERGED_CALIB_BASE BCT_EXT]),  '\', '\\');
+% BCT_MERGED_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
+% [BCT_MERGED_CALIB_BASE BCT_EXT]),  '\', '\\');
+BCT_MERGED_CALIB_PATH = fullfile(BCT_CALIB_DIR, [BCT_MERGED_CALIB_BASE BCT_EXT]);
 
+%  !!! THE FOLLOWING 2 ARE UNUSED!!! Part of an older design philosophy
+%  that did not support view identities. Might be a way to incorporate them
+%  later though.
+% -------------------------------------------------------------------------
 % Path to the camera's calibration result files.
-BCT_CAM_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
-    [BCT_CAM_CALIB_BASE BCT_EXT]),  '\', '\\');
+% BCT_CAM_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
+% [BCT_CAM_CALIB_BASE BCT_EXT]),  '\', '\\');
+BCT_CAM_CALIB_PATH = fullfile(BCT_CALIB_DIR, [BCT_CAM_CALIB_BASE BCT_EXT]);
 
 % Path to the mirror's calibration result files (must be sprintf'd since
 % BCT_MIR_CALIB_BASE_FMT contains formatting identifiers.
-BCT_MIR_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
-    [BCT_MIR_CALIB_BASE_FMT BCT_EXT]),  '\', '\\');
+% BCT_MIR_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
+% [BCT_MIR_CALIB_BASE_FMT BCT_EXT]),  '\', '\\');
+BCT_MIR_CALIB_PATH = fullfile(BCT_CALIB_DIR, [BCT_MIR_CALIB_BASE_FMT BCT_EXT]);
+% -------------------------------------------------------------------------
+
+% Calibration video import path.
+BCT_CALIB_VID_PATH = fullfile(BCT_CALIB_DIR, [BCT_CALIB_VID_BASE, VID_EXT]);
 
 % Path to the saved 11 DLT Coefficients file (Dltdv8a ready).
-DLT_COEFS_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
-    [DLT_COEFS_BASE DLTDV_EXT]),  '\', '\\');
+% DLT_COEFS_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
+% [DLT_COEFS_BASE DLTDV_EXT]),  '\', '\\');
+DLT_COEFS_PATH = fullfile(BCT_CALIB_DIR, [DLT_COEFS_BASE DLTDV_EXT]);
 
-% Calibration video name when imported into project.
-BCT_CALIB_VID_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
-    [BCT_CALIB_VID_BASE, VID_EXT]),  '\', '\\');
+% Path to the video that's going to be used in DLTdv8a.
+DLTDV_VID_PATH = fullfile(DLTDV_VID_DIR, [DLTDV_VID_BASE VID_EXT]);

@@ -22,8 +22,12 @@ if isfolder(input_frame_filepaths_or_dir)
     
     % Either ask the user to input image extension, or guess it based on
     % directory contents.
-    img_extension = guess_img_extension(input_dir, default.SUPPORTED_IMG_EXTS);
-    fprintf('Guessed Image Extension: %s\n', img_extension)
+    if default.GUESS_IMG_EXT_WHEN_POSSIBLE
+        img_extension = guess_img_extension(input_dir, default.SUPPORTED_IMG_EXTS);
+        fprintf('Guessed Image Extension: %s\n', img_extension)
+    else
+        img_extension = prompt_img_extension('[PROMPT] Enter the extension of images to undistort: ');
+    end
     
     % Read all image files from the directory.
     img_filepaths = dir(fullfile(input_dir, ['*' img_extension]));
@@ -55,8 +59,6 @@ output_video = VideoWriter( ...
 
 output_video.FrameRate = 30;
 open(output_video);
-
-
 
 st = dbstack;
 bar = waitbar( ...

@@ -1,7 +1,7 @@
-function undistorted_img = undistort_img_gray(img, dist_coefs, intrinsics)
-% Undistorts and returns a single undistorted image. This is mainly just 
+function undistorted_img_gray = undistort_img_gray(img, dist_coefs, intrinsics)
+% Undistorts and returns a single undistorted image. This is mainly just
 % the geometrical transformation part, doesn't require MATLAB toolboxes.
-% Use it in conjunction with other scripts and functions to save the image, 
+% Use it in conjunction with other scripts and functions to save the image,
 % or undistort and save multiple images, or even videos.
 % See here for math: https://www.mathworks.com/help/visionhdl/ug/image-undistort.html
 
@@ -36,8 +36,8 @@ undistorted_Yc = Yc_norm .* radial_distortion + tangential_distortion_Yc;
 undistorted_U = undistorted_Xc .* focal_length(1) + principal_point(1);
 undistorted_V = undistorted_Yc .* focal_length(2) + principal_point(2);
 
-% 5. Interpolate the img using the undistorted pixel coordinates. 
-% This accounts for the floating values that appear post-undistortion. 
+% 5. Interpolate the img using the undistorted pixel coordinates.
+% This accounts for the floating values that appear post-undistortion.
 % interp2 requires either single or double precision floats for operation,
 % so we temporarily convert type of the img.
 undistorted_img_gray = interp2(double(img(:, :)), undistorted_U, undistorted_V, 'cubic');
@@ -50,10 +50,10 @@ undistorted_img_gray = interp2(double(img(:, :)), undistorted_U, undistorted_V, 
 undistorted_img_gray = uint8(undistorted_img_gray);
 
 % =========================================================================
-% NOTE:  We don't need the 5 argument variant of interp2 since our sample 
-% and query grids are the same and we are undistorting the whole image. We 
-% can use the 5 argument variant with required adjustments if we need to 
-% undistort only part of the image. Don't crop the image to the region you 
+% NOTE:  We don't need the 5 argument variant of interp2 since our sample
+% and query grids are the same and we are undistorting the whole image. We
+% can use the 5 argument variant with required adjustments if we need to
+% undistort only part of the image. Don't crop the image to the region you
 % want to undistort first, that would result in the wrong image.
 
 end
