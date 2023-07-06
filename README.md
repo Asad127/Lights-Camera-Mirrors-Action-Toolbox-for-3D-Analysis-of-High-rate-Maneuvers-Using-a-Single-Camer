@@ -197,6 +197,8 @@ Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the requi
 
 ```math
 T_\text{permutation} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+```
+```math
 R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{zX} & r_{zY} & r_{zZ} \end{bmatrix} \cdot \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{xY} & r_{xX} & r_{xZ} \\ r_{yY} & r_{yX} & r_{yZ} \\ r_{zY} & r_{zX} & r_{zZ} \end{bmatrix}
 ```
 
