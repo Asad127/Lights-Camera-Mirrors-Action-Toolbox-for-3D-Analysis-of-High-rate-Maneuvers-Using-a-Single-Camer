@@ -24,15 +24,15 @@ As noted by the developers of DLTdv8a, some optional (but exciting) features req
 # **Instructions and Tutorials**
 There are two other READMEs, one in the repo's `Calibration` folder and the other in `DLTdv8a Integration` folder. The former contains instructions on how to calibrate the camera and mirrors using BCT and notes on some special cases, while the latter contains instructions on how to use the mirror reconstruction toolbox with DLTdv8a to reconstruct tracked points in a video.
 
-This README contains instructions on how to use the mirror reconstruction toolbox to reconstruct manually marked points in a single image.
+This README contains instructions on how to use the mirror reconstruction toolbox for manually marked points in a single image.
 
 Given below is a list of video tutorials that cover the entire process of reconstructing single images from scratch (apart from Epipolar Geometry, they are all part of a playlist):
 
-1. [Toolbox Initailization + Project Setup + Calibrating Setup With BCT](youtube.com)
-2. [Merging BCT Result + DLTdv8a Format Conversion + Image Undistortion](youtube.com)
-3. [Manually Marking Corresponding Points In Views](youtube.com)
-4. [Estimating 3D World Points + Reconstructing + Exporting Marked Points](youtube.com)
-5. [Verifying Extrinsics With Epipolar Geometry](youtube.com)
+1. [Toolbox Initailization + Project Setup + Calibrating Setup With BCT](https://youtu.be/jj8qtrYcpmg)
+2. [Merging BCT Result + DLTdv8a Format Conversion + Image Undistortion](https://youtu.be/m7j7KHaHQjQ)
+3. [Manually Marking Corresponding Points In Views](https://youtu.be/KPzqxeG_P4Q)
+4. [Estimating 3D World Points + Reconstructing + Exporting Marked Points](https://youtu.be/MqHf93R815U)
+5. [Verifying Extrinsics With Epipolar Geometry](https://youtu.be/clQF8QTfbyg)
 
 Note that there are two reconstruction scripts that differ with regards to type of test media, i.e., whether you are reconstructing a still image or multiple images/videoframes:
 
@@ -57,9 +57,11 @@ Before we start, we need to initialize the toolbox and set up a project director
 
     This will create a 'skeleton' of the project, with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the project-specific default settings (described in Mirror Reconstruction Toolbox's `defaults.m`). The default settings are used when executing the toolbox's various scripts and functions to ensure smooth behavior within the project.
 
-4. Gather the calibration images as described in this repo's `Calibration/README.md`.
+   > From here on out, before executing any of the mirror reconstruction toolbox's scripts, move to the project's root directory from within MATLAB, otherwise the missing `defaults.mat` will throw errors.
 
-5. Begin the preliminary calibration preparation process from the project's root directory by running the following in the command window:
+5. Gather the calibration images as described in this repo's `Calibration/README.md`.
+
+6. Begin the preliminary calibration preparation by moving to the project's root directory and running (in command window):
 
     ```
     >> calib_import_media
@@ -67,13 +69,11 @@ Before we start, we need to initialize the toolbox and set up a project director
 
     Setting up a project with `project_setup` automatically changes directory to the project's root directory.
 
-6. When prompted, enter whether you have calibration images (`i`) or video (`v`).
+7. When prompted, enter whether you have calibration images (`i`) or video (`v`).
 
     ```
     [PROMPT] Do you have calibration images or video? ("i" = imgs, "v" = vid): i
     ```
-
-***
 
 ### **Images Route**
 
@@ -116,9 +116,7 @@ Note that if you have manually imported the calibration video into the project r
 
 If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_extract_vid_frames`.
 
-***
-
-7. **CALIBRATION STEP:** Move to the image directory and call `calib_gui` to begin the **BCT calibration process**. Note that the mirror reconstruction toolbox will automatically change directory to the calibration images once they are ready.
+7. **CALIBRATION STEP:** Move to the calibration images directory and call `calib_gui` to begin the **BCT calibration process**. Note that the mirror reconstruction toolbox will automatically change directory to the calibration images once they are ready.
 
 ***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`.*** It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.
 
@@ -170,13 +168,13 @@ Moving back to the scripts, the step-wise process is described below:
 
     > <sup>+</sup>If the extrinsic reference is not part of the calibration set (meaning extrinsics were computed via **Comp. Extrinsic** function of BCT), you would enter `ext` here (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
 
-4. Locate each view's calibration file using the UI file browser. These are the files from each view's calibration, that you would normally rename in the default expected format `Calib_Results_{view-identifier}.mat`, thought it could be anything. Clicking **Cancel** will skip that view (it won't be used in reconstruction). At least 2 views are required for this to work.
+4. (UI Browser) Locate each view's calibration file. These would normally be manually renamed in the default expected format `Calib_Results_{view-identifier}.mat`, though it could be any name. Clicking **Cancel** will skip that view (it won't be used in reconstruction). At least 2 views are required for this to work.
 
-    > `{view-identifier}` could be anything, but we prefer using {`cam`, `mir1`, `mir2`} for each view.
+    > For `{view-identifier}`, we prefer using {`cam`, `mir1`, `mir2`} for each view.
 
-5. Choose path to save the merged calibration result in the UI browser, or use the default location by pressing the **Cancel** button.
+5. (UI Browser) Choose path to save the merged calibration result in the UI browser, or use the default location by pressing the **Cancel** button.
 
-6. Choose path to save the 11 DLT coefficients for DLTdv8a that are also computed in this step, or use the default location by pressing the **Cancel** button.
+6. (UI Browser) Choose path to save the 11 DLT coefficients for DLTdv8a that are also computed in this step, or use the default location by pressing the **Cancel** button.
 
 This will generate the consolidated BCT parameters file and the DLT coefficients file. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`, and both of them are stored in the `calibration` folder within the project root.
 
