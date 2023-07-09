@@ -1,93 +1,86 @@
-This is practically an indepdenent part of the toolbox. It is inteded for use with DLTdv8a tracking software, which allows working with video data. This is a functional version that, in conjunction with Bouguet Calibration Toolbox (BCT), allows for quickly setting up projects with mirrors. 
+This functionality of the mirror reconstruction toolbox requires [DLTdv8a](https://biomech.web.unc.edu/dltdv/) tracking software, which allows working with moving objects by tracking them in recorded video data.
 
-> Very few of these functions/scripts are not used in the standard workflow &ndash; they may be removed later. Apart from that, a couple of scripts have untested features (such as mp4 conversion for videos). 
+In conjunction with [Bouguet Calibration Toolbox (BCT)](http://robots.stanford.edu/cs223b04/JeanYvesCalib/), the toolbox allows for quickly setting up DLTdv8a-compatible projects with a camera and two-mirror setup.
 
-# Instructions (download the tutorial videos in this directory)
-You can follow along by downloading the `mirror_reconstruction_toolbox` folder and videos from the `test_videos` folder as well.
+> *This is different from the repo's root `README.md` file, which only shares Steps I&ndash;III with this and describes the general process for reconstructing an object in a single image with manually marked points (i.e., DLTdv8a is not involved, while it is involved here).*
 
-Note that the majority of inputs have a default option. Such prompts are skippable by entering blank for Command Window prompts, and pressing the *Cancel* button for UI prompts. In case of a skip, the default file locations in `defaults.mat` within a project are used. Note that `defaults.mat` is generated in the project root based on the parameters set in `defaults.m` whenever a project is setup using the script `project_setup.m`. Be careful when changing the parameters in `defaults.m`!
+# **Instructions and Tutorials**
+Given below is a list of video tutorials that cover the entire process of working with video data from scratch:
 
-## Step 1: Toolbox Initialization, Project Setup, and Camera + Mirror Calibration
+1. [Toolbox Initailization + Project Setup + Calibrating Setup With Videos and BCT](https://youtu.be/S_DW808hsZs)
+2. [BCT Result Merging + DLTdv8a Format Conversion + Video Undistortion](https://youtu.be/-hg2HE2-30c)
+3. [DLTdv8a Execution + Trackfile Generation](https://youtu.be/f6k406cfXcA)
+4. [Estimating 3D World Points + Reconstructing Frame-by-Frame + Exporting World Points in DLTdv8a Format](https://youtu.be/x22F_YB5RK0)
 
-1. To add the toolbox to the path and generate a couple of important files to keep track of projects you'll be creating, run `setup_mirror_recosntruction_toolbox.m`.
-2. Create a project in any directory using `project_setup.m`. This will create a 'skeleton' of the project, with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the default settings shared between various scripts and functions to ensure smooth functionality. 
-3. Begin the calibration process by running `calib_import_media.m` from the created project's root directory (setting up a project automatically changes directory to the project root).
-4. When prompted, enter whether you have calibration images (`i`) or video (`v`).
+Given below is a comprehensive step-by-step guide towards the workflow as well.
 
-#### Images Route
-5. In the pop-up UI box, browse and select the calibration images anywhere on your computer.
-6. In the next pop-up UI box, choose the directory to put the images in relative to the project's root directory. The script will automatically rename them in a format optimized for BCT as described in `defaults.m`.
+## **Step I: Toolbox Initialization + Project Setup + Calibrating Setup With BCT**
 
-> If you have manually imported the calibration images into the project root, skip Steps 3&ndash;6 and just rename them sequentially using the script `sequential_rename_imgs.m`. This ensures BCT performs optimally and gets rid of any gaps in the image numbers.
+Exactly the same as in the repo root `README.md` file. Please refer to that for details.
 
-#### Video Route
-5. In the pop-up UI box, browse and select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
-6. In the next pop-up UI box, select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
-7. Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (blank inputs) the whole video is used.
-8. Enter the format in which to extract the frames (by default, JPG). The script will now extract the frames as {Frame1.jpg, Frame2.jpg, ..., FrameF.jpg} and auto-run `calib_select_img_subset`.
-9. Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
+## **Step II: Merging BCT Result and Coverting to DLTdv8a Format**
 
-Ince you have the calibration images, you can now begin the calibration process with BCT by moving to the image directory and calling `calib_gui` (the toolbox will automatically change directory to the calibration images upon reaching this point after running the import script).
+Exactly the same as in the repo root `README.md` file. Please refer to that for details.
 
-### Additional Notes
+## **Step III: Creating Test Images/Frames/Video + Importing + Undistortion**
 
-> You may configure the default settings in `defaults.m` within the toolbox path. Any new projects after these changes will use the new settings. To update existing projects' settings, head to the existing project's directory and run `create_defaults_matfile.m`.
+Exactly the same as in the repo root `README.md` file. Please refer to that for details. We will take the video route in this case.
 
-> If you have manually imported the calibration video into the project root and it is already MP4, run `calib_extract_vid_frames.m` instead. If the video is not MP4, run `convert_vid_to_mp4.m` instead.
+## **Step IV: DLTdv8a Execution and Trackfile Generation**
 
-The calibration process itself requires Bouguet Calibration Toolbox, which must also be added to the MATLAB path.
+This step is fairly straightforward. Extensive video tutorials as well as written manuals on how to work with DLTdv8a are provided by the authors of the software. If you are just starting with the tool, we recommend that you start learning from the [official DLTdv8a online manual](https://biomech.web.unc.edu/dltdv8_manual/). You can also clone their [git repository](https://github.com/tlhedrick/dltdv) which contains additional information and the codebase.
 
-### Notes On Calibration
-Accuracy is heavily dependent upon good calibration, so make sure you cover a variety of poses when taking the calibration images or recording the calibration video. Signs that your calibration is faulty: Extremely awkward undistortions, or maybe reprojections are good at some points and bad at others. 
+> ***The toolbox has only been tested with the app version of DLTdv8a.***
 
-Remember that you only need one common reference image of the checker which is visible in all views (camera + both mirrors) in case of a 3 view setup. Since each view's calibration is independent, you can select different image subsets for calibrating each view, as long as:
+1. Open up the DLTdv8a app in the project root.
 
-1. You ensure that neither the camera, nor the mirrors, move.
-2. You ensure that at least one image is commonly visible in all views.
+2. Create a new project within DLTdv8a and load in the same video 2&ndash;3 times (for 2&ndash;3 views) *UNLESS* videos were undistorted in Step III, in which case load the differently undistorted videos.
 
-A good choice for point 2 is to leave the checker flat in front of both the mirrors. Usually, we keep this as the first image. After that, you can free yourself of the worry that the checker is visisble in all views and focus only on one particular view at a time. You may also use BCT's Compute Extrinsic function after calibration to generate extrinsics based on a non-calibration image. Again, this image should be visible in all views. 
+    > Generally, load order is important as it must correspond to the order of DLT coefficients (1st video uses 11 DLT coefficients in the first column of the csv file, and so on). However, we have only one video, and the mirrors serve as our other two views in the same video. So, unless we undistorted the videos, we can load the same file in twice or thrice for 2 or 3 views.
 
-## Step 2: Calibration Result Consolidation, DLTdv8a Compatible DLT Coefficients Generation, and Video Undistortion
-Once we have the calibration results for each view, we need to merge the necessary variables into one mat-file. The script that performs this in conjunction with generating the 11 DLT coefficients file for DLTdv8a is `calib_process_results.m`. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`. 
+3. When prompted, add the DLT coefficients file generated in Step II.
 
-After running the script, simply follow the prompts:
-- Choose the extrinsic reference image via its suffix (e.g., if calibration set was labeled [Image1, Image2, ..., Image15.jpg}, the suffixes are {1, 2, ..., 15}. If the extrinsic reference is not part of the calibration set (meaning extrinsics were computed via Compute Extrinsic function of BCT, you would enter 'ext' here without the quotes.
-- Choose the camera, mirror 1, and mirror 2 calibration result files one by one. If not using a particular view, cancel its selection and it will be skipped. However, you need a minimum of 2 views for this to work.
-- Decide where to save the merged BCT parameters and the DLT coefficients file.
+4. Create as many points as you want to track, and mark each one in the first video on the actual physical object.
 
-This will generate the consolidated BCT parameters file and the DLT coefficients file. Now, if your camera has noticeable distortion or you would just like to work with undistorted videos and images, you can begin the undistortion procedure (otherwise, skip ahead to step 3):
+5. Each marked point generates an epipolar line in the other video frames. Assuming well-calibrated cameras, these are good hints for where the corresponding point is on the mirror views.
 
-- Run `vid_import.m` in the command window from within the project root directory.
-- Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4 and save it in either the default project directory or to a path of your choosing.
-- When prompted to undistort the video, type 'y' (w/o quotes) to begin the undistortion process described in `create_undistorted_vid_and_frames.m`.
-- When prompted, located and select the merged BCT calibration parameters file from earlier.
-- Choose a directory to extract the video frames into. These frames are then undistorted using the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views, so `cam_rect`, `mir1_rect`, and `mir2_rect`.
-- Wait until the script undistorts frames for each view and then re-creates the videos from these undistorted frames. Thus, you will get as many videos as the number of views, each one using a different distortion profile. The videos are stored in the same directory as the original video wit the same name, but suffixed with `{original-name}_cam_rect.mp4`, `{original-name}_mir1_rect.mp4`, and `{original-name}_mir2_rect.mp4`.
+6. Mark the corresponding points ON THE REFLECTIONS of the object in the second and third videos. If a point is not visible in any view, skip marking it for that view and it will become NaN, which is expected and handled by the toolbox's reconstruction scripts.
 
-> If you already have the video in your project directory, run `create_undistorted_vid_and_frames.m` instead of `vid_import.m`.
+7. Once the points are marked in all relevant views, set the tracking settings in the DLTdv8a interface according to your project's needs and begin tracking.
 
-> Color is preserved in the undistorted videos and frames, but if you would llike grayscale, you can set the corresponding argument of the function `undistort_imgs.m` true in the script `create_undistorted_vid_and_frames.m`. 
+8. Once you have a suitable tracked result, head to the directory where you would like to export the trackfiles, click on the Points tab in the main DLTdv8a dialog box, and export points to begin generating the trackfiles.
 
-## Step 3: DLTdv8a Execution and Trackfile Generation
+9. This will bring up a few confirmation boxes&mdash;the important one is that you export the points in "flat" format as the sparse format is currently not supported.
 
-This step is fairly straightforward. Extensive video tutorials as well as written manuals on how to work with DLTdv8a are provided by the authors of the software. If you are just starting with the tool, we recommend that you start learning from the [official DLTdv8a online manual](https://biomech.web.unc.edu/dltdv8_manual/). You can also clone their [git repository](https://github.com/tlhedrick/dltdv) which contains additional information and the codebase. 
+    DLTdv8a will generate around 4&ndash;5 files in the current directory. The main trackfile that's relevant to us is `{prefix}xypts.csv`, which contains the framewise tracked 2D point (pixel) information for all views.
 
-> The toolbox has only been tested with the app version of DLTdv8a.
+    > Note that you may export the trackfiles anywhere on your device, but for convenience, it would be best to place them in the `trackfiles` folder from the project root directory. You can also add a prefix to the trackfiles when exporting them.
 
-- Open up the DLTdv8a app in the project root.
-- Create a new project within DLTdv8a and load the videos. Generally, load order is important as it must correspond to the order of DLT coefficients (1st video uses 11 DLT coefficients in the first column of the csv file, 2nd video uses the 2nd column and so on). However, we have only one video, and the mirrors serve as our other two videos, so we can load the same file in twice or thrice for 2 or 3 views.
-- When prompted, add the DLT coefficients file generated in the previous step.
-- Create as many points as you want to track, and mark each one in the first video on the actual physical object.
-- Each marked point generates an epipolar line in the other video frames. Assuming well-calibrated cameras, these are good hints for where the corresponding point is on the mirror views.
-- Mark the corresponding points ON THE REFLECTIONS of the object in the second and third videos. If a point is not visible in any view, skip marking it for that view and it will become NaN, which is expected and handled by the toolbox's reconstruction scripts.
-- Once the points are marked in all relevant views, set the tracking settings in the DLTdv8a interface according to your project's needs and begin tracking.
-- Once you have a suitable tracked result, head to the Points tab in the main DLTdv8a dialog box and export points to begin generating the trackfiles.
-- This will pop up a few confirmation boxes &ndash; the important one is that you export the points in "flat" format as sparse is not currently supported.
-- Save the entire project DLTdv8a project as a matfile if you wish to do more work later or keep the full state of the project.
+10. (OPTIONAL) Save the entire project DLTdv8a project as a matfile if you wish to do more work later or keep the full state of the project.
 
-> Note that you may export the trackfiles anywhere on your device, but for your convenience, it would be best to place them in the trackfiles folder from the project root directory. You can also add any prefix when DLTdv8a asks you to.
+## **Step V: Tracked Point Reconstruction and DLTdv8a-Compatible Estimated World Coordinates Export**
 
-The main trackfile that's relevant to us is `{prefix}xypts.csv`, which contains the framewise tracked 2D point (pixel) information for all views.
+Reconstruction may be performed using either the DLT file or the merged BCT calibration file, but currently the toolbox only supports the BCT variant as that preserves the view labels/identity (i.e., the index of the camera parameters corresponds exactly to the label of the view it belongs to regardless of the total number of views) as a secondary variable.
 
-## Step 4: Tracked Point Reconstruction, Estimated World Coordinate Export in DLTdv8a Format
+1. Run `reconstruct_tracked_pts_bct.m` inside the MATLAB command window from the project root directory. You will be prompted for a total of 4 things:
 
+    - The merged BCT calibration results file (default: `bct_params.mat`) generated in Step II
+
+    - The DLTdv8a 2D points trackfile (default: `{prefix}xypts.csv`) generated in Step V
+
+    - Path to save the estimated 3D world points to (default: `reconstruction/{prefix}xyzpts.csv`)
+
+        > The prefix is determined automatically from the 2D trackfile name `{prefix}xypts.csv`.
+
+    - Whether to use undistorted video frames or not (only valid if the optional Step III was completed)
+
+And that's it. The script will then estimate the 3D world coordinates for each tracked point in each view using non-linear least squares (`lsqnonlin`) with the **Levenberg-Marquardt** optimization algorithm. It will then reproject pixels on to the images using these estimated coordinates, reconstruct them in 3D, plot the cameras alongside the reconstructed points, and finally export them in DLTdv8a format.
+
+#### ***Frame Mismatch Warning***
+
+When selecting the 2D trackfile created in Step V, the script might produce a warning that the number of frames in the trackfile does not agree with the number of extracted frames. This generally happens when MATLAB's VideoReader (which we use to read frames) does not identify the same number of total frames as DLTdv8a. Usually, it's a matter of 1&ndash;2 frames near the end of the video.
+
+This is usually not a problem if the last couple of frames are not important to you. the number of extracted frames is less than or equal to the number of frames detected by DLTdv8a. To be completely safe from indexing errors, however, you can manually delete the extra rows or extra frames from the trackfile or video frames directory, respectively (depending on which is greater).
+
+# **(OPTIONAL) Step VI: Extrinsics Verification With Epipolar Geometry**
+Exactly the same as in the repo root `README.md` file. Please refer to that for details.
