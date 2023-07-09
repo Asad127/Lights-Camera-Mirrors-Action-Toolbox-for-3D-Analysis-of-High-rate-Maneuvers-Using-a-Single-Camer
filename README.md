@@ -110,7 +110,7 @@ A mock set of 11 calibration images is provided in the repo's `Calibration` dire
 
     The script will now extract the frames as {Frame1.jpg, Frame2.jpg, ..., FrameF.jpg} and auto-run `calib_select_img_subset.m`.
 
-- Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {*Frame40*, *Frame80*, *Frame100*, *Frame180*}, these would be renamed to {*Image1*, *Image2*, *Image3*, *Image4*} respectively.
+- Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
 
 Note that if you have manually imported the calibration video into the project root and it is already MP4, skip steps 5&ndash;6 and directly run `calib_extract_vid_frames.m` instead, which will again auto-run `calib_select_img_subset.m`.
 
@@ -196,11 +196,11 @@ Thus, when estimating world coordinates via some optimization technique, **the o
 \begin{bmatrix} X \\ Y \\ Z \end{bmatrix} \rightarrow \begin{bmatrix} Y \\ X \\ Z \end{bmatrix}
 ```
 
-2. Apply a permutation transformation to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
+2. Apply a **permutation transformation** to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
 
 We have tested both approaches, and both work. However, **approach 1** is cumbersome in that **(a)** it requires the swap operation in every step of the optimization, and **(b)** when reprojecting points to the reflected views, we need to re-swap the estimated world coordinates back to the original form.
 
-On the other hand, **method 2** is much more permanent as it addresses the root cause of the issue, i.e., the misalignment of coordinates in the rotation matrix. Note that we do not need to permute translation vector $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to rotation matrix $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
+On the other hand, **method 2** is much more permanent as it addresses the root cause of the issue, i.e., the **misalignment of coordinates in the rotation matrix**. Note that we do not need to permute translation vector $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to rotation matrix $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
 
 Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the required permutation matrix $T_\text{permutation}$ is:
 
@@ -213,7 +213,7 @@ R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{z
 
 In effect, the permutation operation essentially makes the rotation matrix as if the world's X was its Y, and Y was X, and so it is now defined w.r.t. the world frame in the original camera view.
 
-#### **Details On Merged BCT Parameters**
+### **Details On Merged BCT Parameters**
 
 The merged BCT file contains two shared variables between all views:
 
@@ -247,7 +247,7 @@ Place the object you want to reconstruct in the calibrated region, and make sure
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
-If your camera has noticeable distortion or you would just like to work with undistorted videos/images, you can begin the undistortion procedure by pressing 'y' when prompted. Otherwise, type 'n' to skip undistortion.
+If your camera has noticeable distortion or you would just like to work with undistorted videos/images, you can begin the undistortion procedure by pressing `y` when prompted. Otherwise, type `n` to skip undistortion.
 
 Step-wise, the process is described below:
 
@@ -265,11 +265,11 @@ Step-wise, the process is described below:
 
 ### **Video Route**
 
-> ***If you enter this route, follow instructions in `DLTdv8a Integration/README.md` after this step. You can still follow the steps listed here if you want to reconstruct a single frame of the video, but that's likely not your intention with video data.***
+> **If you enter this route, follow instructions in `DLTdv8a Integration/README.md` after this step. You can still follow the steps listed here if you want to reconstruct a single frame of the video, but that's likely not your intention with video data.**
 
-- In the UI prompt, locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4 and save it in either the default project directory or to a path of your choosing.
+- (UI Browser) Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4 and save it in either the default project directory or to a path of your choosing.
 
-- When prompted to undistort the video, type `y` in the command window to begin the undistortion process described in `create_undistorted_vid_and_frames.m`.
+- When prompted to undistort the video, type `y` in the command window to begin the undistortion process described in `create_undistorted_vid_and_frames.m`. Otherwise, type `n` to skip directly to frame extraction without undistortion.
 
     ```
     NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
@@ -278,17 +278,17 @@ Step-wise, the process is described below:
 
     > If you already have the video in your project directory and it is MP4, directly run `create_undistorted_vid_and_frames` in the command window instead of `import_media`. If the video is not MP4, use `convert_vid_to_mp4.m` to convert it to MP4 first.
 
-- In the UI prompt, located and select the merged BCT calibration parameters file from Step II.
+- (UI Browser) Locate and select the merged BCT calibration parameters file from Step II.
 
-- Choose a directory to extract the video frames into, and the extension of the frames. These frames are then undistorted using the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views: `cam_rect`, `mir1_rect`, and `mir2_rect`.
+- Choose a directory to extract the video frames into, and the extension of the frames. These frames are then undistorted (if user entered `y` when promtped earlier) with the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views: `cam_rect`, `mir1_rect`, and `mir2_rect`.
 
 Wait until the script finishes undistorting frames and re-creating the videos from them for each view. It will produce as many videos as the number of views, each one using a different distortion profile. The videos are stored in the same directory as the original video with the same name, but suffixed with `{original-name}_cam_rect.mp4`, `{original-name}_mir1_rect.mp4`, and `{original-name}_mir2_rect.mp4`.
 
 ### **Image Route**
 
-- Locate the images containing the object of interest anywhere on your computer.
+- (UI Browser) Locate the images containing the object of interest anywhere on your computer.
 
-- Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the `images` folder by default.
+- (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the `images` folder by default.
 
 - When prompted to undistort the images, type `y` to auto-run `create_undistorted_imgs.m` and begin the  undistortion procedure for the imported images.
 
@@ -299,15 +299,15 @@ Wait until the script finishes undistorting frames and re-creating the videos fr
 
     > `create_undistorted_imgs.m` can be run standalone. In that case, the user is asked for an additional input to a directory containing images or a set of image files to undistort.
 
-- Locate the merged BCT calibration parameters file from Step II.
+- (UI Browser) Locate the merged BCT calibration parameters file from Step II.
 
 Wait until all the images are undistorted w.r.t. the distortion coefficients from each view. The results are stored in subfolders named `cam_rect`, `mir1_rect`, and `mir2_rect` in the same directory as the original images. Each folder contains the undistorted images corresponding to the distortion coefficients for that view. The image names are not changed within the folders, but you can edit the script to add suffixes which are supported by the undistortion functions/scripts.
 
-#### ***Undistortion: Grayscale or RGB?***
+### **Undistortion: Grayscale or RGB?**
 
 Note that color is preserved in the undistorted videos and frames or images by default, if the video/frame is RGB (see `undistort_img.m`). If images are grayscale, then a grayscale variant of the function is used (see `undistort_img_gray.m`).
 
-> ***From this point on, if you are working with images, continue reading this document. Otherwise for instructions related to video data and DLTdv8a, head to `DLTdv8a Integration/README.md` and follow the instructions from Step IV there.***
+> **From this point on, if you are working with images, continue reading this document. Otherwise for instructions related to video data and DLTdv8a, head to `DLTdv8a Integration/README.md` and follow the instructions from Step IV there.**
 
 # **Step IV: Manually Marking Corresponding Points On Test Image**
 
@@ -319,17 +319,17 @@ Before we can reconstruct the object, we first need to manually mark correspondi
     >> point_marker
     ```
 
-2. In the UI file browser that pops up, locate the test image containing the object of interest (to be reconstructed).
+2. (UI Browser) Locate the test image containing the object of interest (to be reconstructed).
 
-3. In the second UI file browser, locate the merged BCT calibration file created in Step II.
+3. (UI Browser) Locate the merged BCT calibration file created in Step II.
 
-4. Enter the number of points to mark in the image. For example, if you want to mark five points in each view, enter `5` in the command window:
+4. Enter the number of points to mark in the image. For example, if you want to mark four points in each view, enter `4` in the command window:
 
     ```
-    [PROMPT] Enter the no. of points to mark: 5
+    [PROMPT] Enter the no. of points to mark: 4
     ```
 
-5. When prompted to use undistorted images to mark points in the command window, enter 'y' to do so, and 'n' otherwise. Only enter 'y' if you undistorted images in Step III, otherwise an error is thrown.
+5. When prompted to use undistorted images to mark points in the command window, enter `y` to do so, and `n` otherwise. Only enter `y` if you undistorted images in Step III, otherwise an error is thrown.
 
     ```
     HELP: Only enter "y" if you have the undistorted images/video frames.
@@ -342,16 +342,17 @@ Before we can reconstruct the object, we first need to manually mark correspondi
 
 ![py1](https://user-images.githubusercontent.com/65610334/213213561-f5757cc8-46fa-4016-9d2e-0c69e5ac1575.jpg)
 
-7. Repeat Step 5 until the remaining views are exhausted, taking care to mark points in the ***same physical order*** in each successive view as in the first view. Like in epipolar verification, the script keeps track of the marked points' history, so when marking the i<sup>th</sup> point in the second view and onwards, its pixel location in all the previously marked views will be shown on the image as a crossed square with the corresponding color.
+7. Repeat Step 6 until the remaining views are exhausted, taking care to mark points in the ***same physical order*** in each successive view as in the first view. Like in epipolar verification, the script keeps track of the marked points' history, so when marking the i<sup>th</sup> point in the second view and onwards, its pixel location in all the previously marked views will be shown on the image as a crossed square with the corresponding color.
 
 ![py2](https://user-images.githubusercontent.com/65610334/213213952-476fc2f0-96d1-4b48-a57b-4a82aea61f0a.jpg)
 
-7. A new UI browser will open up. Here, choose the path to the save the results, or click **Cancel** to use the default location, i.e., `reconstruction/marked_points.mat` in the project root. The saved variables are:
+7. (UI Browser) will open up. Here, choose the path to the save the results, or click **Cancel** to use the default location, i.e., `reconstruction/marked_points.mat` in the project root. The saved variables are:
 
     - `x`: A 2D array containing the marked pixel locations of all physical points in all views
     - `num_points`: An integer describing the total number of physical points marked (i.e., the input in Step 3)
 
 The correspondence between physical points in different views is visualized below.
+
 ![Point Correspondence Between Two Views](https://user-images.githubusercontent.com/65610334/212617135-aa878f26-fa2d-4e7f-841a-9f663eefbc5b.jpg)
 
 #### **Output Details**
@@ -369,7 +370,7 @@ Below, we have attached a picture of an included `marked_points.mat` file (you c
     <img src="https://user-images.githubusercontent.com/65610334/213194210-e5b9e24d-f35f-4e42-bc95-9b08ea01684c.jpg">
 </p>
 
-> In the above figure, while we mark a total of `2n` pixels over two images , we are actually only dealing with `n` real-world points. They are just projected to two views. If we had k views, we would have a total of `k * n` points.
+> In the above figure, while we mark a total of `2n` pixels over two images, we are actually only dealing with `n` real-world points. They are just projected to two views. If we had k views, we would have a total of `k * n` points.
 
 ## **Step V: 3D Reconstruction of Different Objects In Single Test Image**
 
@@ -381,22 +382,22 @@ By now, we have the poses, the intrinsics, and the 2D corresponding points for b
     >> reconstruct_marked_pts_bct
     ```
 
-2. In the first UI browser, locate the image on which you marked the points in Step IV.
+2. (UI Browser) Locate the image on which you marked the points in Step IV.
 
-3. In the second UI browser, locate the file containing the marked points created in Step IV. Click **Cancel** to use the default save location, i.e., `reconstruction/marked_points.mat` in the project root.
+3. (UI Browser) Locate the file containing the marked points created in Step IV. Click **Cancel** to use the default save location, i.e., `reconstruction/marked_points.mat` in the project root.
 
-4. In the third UI browser, locate the merged BCT calibration file created in Step II. Click **Cancel** to use the default save location, i.e., `calibration/bct_params.mat` in the project root.
+4. (UI Browser) Locate the merged BCT calibration file created in Step II. Click **Cancel** to use the default save location, i.e., `calibration/bct_params.mat` in the project root.
 
-5. In the fourth (final) UI browser, choose the directory where you want to save the results of the reconstruction. Clicking **Cancel** will use the default location, i.e., `reconstruction/{1}.mat` in the project root, where `{1}` is the basename of the image in Step 2 (w/o extension).
+5. (UI Browser) Choose the directory where you want to save the results of the reconstruction. Clicking **Cancel** will use the default location, i.e., `reconstruction/{1}.mat` in the project root, where `{1}` is the basename of the image in Step 2 (w/o extension).
 
-6. When prompted to use undistorted images to mark points in the command window, enter 'y' to do so, and 'n' otherwise. Only enter 'y' if you undistorted images in Step III, otherwise an error is thrown.
+6. When prompted to use undistorted images to mark points in the command window, enter `y` to do so, and `n` otherwise. Only enter `y` if you undistorted images in Step III, otherwise an error is thrown.
 
     ```
     HELP: Only enter "y" if you have the undistorted images/video frames.
     [PROMPT] Mark points on undistorted images? (y/n): n
     ```
 
-That is all. The script will proceed to perform the world point estimation, compute the average reprojection error, plot the error hsitogram if the distances are provided, and save the results in the directory specified in Step 5.
+That is all. The script will proceed to perform the world point estimation, compute the average reprojection error, plot the 3D error hsitogram if the distances are provided (though this is not fully supported as it is very siutational), and save the results in the directory specified in Step 5.
 
 ![Pixel Reprojections With Estimated World Coordinates](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
@@ -408,11 +409,11 @@ That is all. The script will proceed to perform the world point estimation, comp
     <img src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg" alt="Error Histogram">
 </p>
 
-Now you are done with your 3D reconstruction. You can try different objects for yourself for **3d reconstrcution using single camera and mirror setup**.
+That's it! Feel free to test out the toolbox on other images included in this repo (see `Marked 2D Points`, `Results` (also has a README explaining what is what), and `Test Images` folder), or setup your own camera + mirrors and take your own images.
 
-> *We have provided the marked 2D points of different objects for 3D reconstruction in the `Marked 2D Points` folder. You can use them to test out the reconstruction, or you can mark your own points and use them for reconstruction.*
+At this point, we recommend viewing Optional Step VI (extrinsics verification with epipolar geometry) and learning how to work with video data by checking out `DLTdv8a Integration/README.md` in this repo. You may also test different calibration scenarios, especially the ones near the end of `Calibration/README.md`. 
 
-### ***Details On Estimation of 3D World Points (`lsqnonlin`)***
+### **Details On Estimation of 3D World Points (`lsqnonlin`)**
 
 The script that performs reconstruction for marked points in a single image is `reconstruct_marked_pts_bct.m`, and over video data assuming tracked points in each frame with DLTdv8a is `reconstruct_tracked_pts_bct.m`. Both of them use the same process for estimating the 3D world coordinates, defined in the internal optimization target function `reconst_coords_per_px`.
 
