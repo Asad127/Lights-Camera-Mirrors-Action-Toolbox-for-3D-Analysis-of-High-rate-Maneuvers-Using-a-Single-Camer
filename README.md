@@ -435,9 +435,9 @@ We repeat this for all the points we marked, and we have the 3D world coordinate
 
 #### ***Merged BCT Parameters vs. DLT Coefficients for Reconstruction***
 
-Reconstruction may be performed using either the merged BCT calibration file, which contains intrinsics `K` and extrinsics `R` and `T`, or the DLT coefficients file, either by `DLT = P = K * [R | T]` in projection equations within reconstruction, or by converting from DLT to KRT form as described in `dlt_to_krt.m`, and then computing like we would with BCT.
+Reconstruction may be performed using either the merged BCT calibration file, which contains intrinsics `K` and extrinsics `R` and `T`, or the DLT coefficients file, either by `DLT = P = K * [R | T]` in projection equations within reconstruction, or by converting from DLT to KRT form as described in `dlt_to_krt.m`, and then the rest of the process remains the same as with the standard merged BCT file.
 
-However, the toolbox currently only supports the BCT variant as that preserves the view labels/identity/integrity (i.e., the index `x` of the camera parameters `KK_x` corresponds exactly to the label of the view it belongs to, REGARDLESS of the total number of views).
+However, the toolbox currently only supports the BCT variant since that preserves the view labels/identity/integrity as a secondary variable in the merged result. For DLT parameters, we would need to save a separate matfile containing the view labels or ask the user about them, as there is no way to embed that information in the 11 DLT coefficients file.
 
 ## **(OPTIONAL) Step VI: Extrinsics Verification With Epipolar Geometry**
 
@@ -447,29 +447,26 @@ However, the toolbox currently only supports the BCT variant as that preserves t
     >> epipolar_geometry
     ```
 
-2. Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image is visible in 2 views (camera and mirror 1).
+2. (UI Browser) Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image is visible in 2 views (camera and mirror 1).
 
     ```
-    % UI-based input
     Locating the image to mark points and plot epilines on...done.
     ```
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
-3. Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
+3. (UI Browser) Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
 
     ```
-    % UI-based input
     Locating the merged BCT calibration file...done.
 
     Created total of 1 view pair(s) based on the merged calibration file:
     	Camera --> Mirror 1
     ```
 
-4. Choose a directory to save the results to (point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them to: `epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
+4. (UI Browser) Choose a directory to save the results to (point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them to: `epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
 
     ```
-    % UI-based input
     Choosing directory to store results in...done.
     ```
 
