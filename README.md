@@ -22,12 +22,14 @@ As noted by the developers of DLTdv8a, some optional (but exciting) features req
 > The dependency on the Computer Vision Toolbox will likely be removed in the future.
 
 # **Instructions and Tutorials**
-There are two other READMEs, one in the repo's `Calibration` directory and the other in `DLTdv8a Integration`. The former contains instructions on how to calibrate the camera and mirrors using BCT and notes on some special cases, while the latter contains instructions on how to use the mirror reconstruction toolbox with DLTdv8a to reconstruct tracked points in a video. This README contains instructions on how to use the mirror reconstruction toolbox to reconstruct manually marked points in a single image.
+There are two other READMEs, one in the repo's `Calibration` folder and the other in `DLTdv8a Integration` folder. The former contains instructions on how to calibrate the camera and mirrors using BCT and notes on some special cases, while the latter contains instructions on how to use the mirror reconstruction toolbox with DLTdv8a to reconstruct tracked points in a video.
 
-Given below is a list of video tutorials that cover the entire process from scratch:
+This README contains instructions on how to use the mirror reconstruction toolbox to reconstruct manually marked points in a single image.
+
+Given below is a list of video tutorials that cover the entire process of reconstructing single images from scratch (apart from Epipolar Geometry, they are all part of a playlist):
 
 1. [Toolbox Initailization + Project Setup + Calibrating Setup With BCT](youtube.com)
-2. [BCT Result Merging + DLTdv8a Format Conversion + Image Undistortion](youtube.com)
+2. [Merging BCT Result + DLTdv8a Format Conversion + Image Undistortion](youtube.com)
 3. [Manually Marking Corresponding Points In Views](youtube.com)
 4. [Estimating 3D World Points + Reconstructing + Exporting Marked Points](youtube.com)
 5. [Verifying Extrinsics With Epipolar Geometry](youtube.com)
@@ -37,7 +39,7 @@ Note that there are two reconstruction scripts that differ with regards to type 
 1. `reconstruct_marked_pts_bct.m`: Reconstruct manually marked points in still image(s) of the object(s) you want to reconstruct
 2. `reconstruct_tracked_pts_bct.m`: Reconstruct tracked points in a video of the object(s) you want to reconstruct (requires DLTdv8a)
 
-Both options have some shared steps, and some unique steps. Option 2's unique steps are covered in detail within `DLTdv8a Integration/README.md`. Here, we focus on Option 1, i.e., **Single Image Reconstruction**. The following also details the common steps (I&ndash;III) between both approaches.
+Both options have some shared steps, and some unique steps. Option 2's unique steps are covered in detail within `DLTdv8a Integration/README.md`, and the tutorial videos listed there. Here, we focus on Option 1, i.e., **Single Image Reconstruction**. The following also details the common steps (I&ndash;III) between both approaches.
 
 ## **Step I: Toolbox Initialization + Project Setup + Calibrating Setup With BCT**
 
@@ -71,21 +73,24 @@ Before we start, we need to initialize the toolbox and set up a project director
     [PROMPT] Do you have calibration images or video? ("i" = imgs, "v" = vid): i
     ```
 
+***
+
 ### **Images Route**
 
 - In the pop-up UI box, browse and select the calibration images anywhere on your computer.
 
 - In the next pop-up UI box, choose the directory to put the images in, relative to the project's root directory. The script will automatically rename them in a format optimized for BCT as described in `defaults.m`, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
 
-A mock set of 11 calibration images is provided in the repo's `Calibration` directory. If you have manually imported the calibration images into the project root instead, skip Steps 3&ndash;4, and the two above. Instead, rename them sequentially by directly running the following in the command window from the project root:
+A mock set of 11 calibration images is provided in the repo's `Calibration` directory. If you have manually imported the calibration images into the project root instead, skip Steps 5&ndash;6, and the two above. Instead, rename them sequentially by directly running the following in the command window from the project root:
 
 ```
 >> imgs_sequential_rename
 ```
 
-Note that `imgs_sequential_rename.m` will rename the files without making copies of the original. If this is not acceptable, make a backup of the original iamges.
+> WARNING: `imgs_sequential_rename.m` will rename the files without making copies of the original. Make a backup of the original images before you run it!
 
 ### **Video Route**
+
 - In the pop-up UI box, browse and select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
 
 - In the next pop-up UI box, select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
@@ -107,35 +112,41 @@ Note that `imgs_sequential_rename.m` will rename the files without making copies
 
 - Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {*Frame40*, *Frame80*, *Frame100*, *Frame180*}, these would be renamed to {*Image1*, *Image2*, *Image3*, *Image4*} respectively.
 
-    > If you have manually imported the calibration video into the project root and it is already MP4, run `calib_extract_vid_frames.m` instead. If the video is not MP4, run `convert_vid_to_mp4.m` instead.
+Note that if you have manually imported the calibration video into the project root and it is already MP4, skip steps 5&ndash;6 and directly run `calib_extract_vid_frames.m` instead, which will again auto-run `calib_select_img_subset.m`.
+
+If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_extract_vid_frames`.
+
+***
 
 7. **CALIBRATION STEP:** Move to the image directory and call `calib_gui` to begin the **BCT calibration process**. Note that the mirror reconstruction toolbox will automatically change directory to the calibration images once they are ready.
 
-***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`. It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.***
+***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`.*** It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.
 
-> Once you have setup the camera and mirrors for calibration, ensure they remain stationary for the remaining steps. If they do move, you will need to recompute the reference extrinsics with BCT's **Comp. Extrinsic** function, which is a little tricky to setup (see ***Special Scenarios*** section, iterm no. 1 at the end of `Calibration/README.md`).
+Once you have setup the camera and mirrors for calibration, ensure they remain stationary for the remaining steps. If they do move, you will need to recompute the reference extrinsics with BCT's **Comp. Extrinsic** function, which is a little tricky to setup, but potentially quite useful (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
 
-#### ***Editing Default Configuration: `defaults.m`, `defaults.mat`, `create_defaults_matfile.m`***
+### **Editing Default Configuration: `defaults.m`, `defaults.mat`, `create_defaults_matfile.m`**
 
-Most of the inputs/prompts in the codebase have a default fallback option. These prompts are skippable (as indicated in the prompt message) by entering a blank for Command Window prompts, and pressing the **Cancel** button for UI prompts. For thusly skipped inputs, the default file locations/settings are defined in `defaults.mat` (located in project root directory).
+Most of the inputs/prompts in the codebase have a default fallback option. These prompts are skippable (as indicated in the prompt message) by entering a blank for Command Window prompts, or pressing the **Cancel** button for UI prompts. For inputs skipped as such, the default file locations/settings are defined in `defaults.mat` (located in project root directory).
 
 To change the defaults, you may do so globally or locally by editing `defaults.m` in the MATLAB path of the toolbox or the version stored in the project directory when creating a project with `project_setup.m`. The `defaults.m` file is used to generate `defaults.mat`.
 
 - If the global version of `defaults.m` is changed, all new projects after these changes will use the new settings.
 - If the local version of `defaults.m` is changed, only the corresponding project will use the new settings.
 
-    > WARNING: When editing the local version, DO NOT EDIT anything related to paths (directories, basenames, extensions)! Other settings you may edit.
+> WARNING: When editing the local version, DO NOT EDIT anything related to paths (directories, basenames, extensions)! This can potentially lead to I/O problems.
 
-In order to generate a new `defaults.mat` with edited settings,head to the project root and run `create_defaults_matfile` in the command window. If you want to replace the local defaults mfile with a fresh copy of the global defaults mfile, head to the project root, run `recover_defaults_mfile` in the command window, and then run `create_defaults_matfile`.
+In order to generate a new `defaults.mat` with edited settings within a project folder, head to the project root and run `create_defaults_matfile` in the command window, which will create a fresh copy of `defaults.mat` using the local `defaults.m`.
 
-```
+On the other hand, if you want to replace a project's local `defaults.m` with a fresh copy of the global `defaults.m` in the toolbox path, head to the project root and run `recover_defaults_mfile` in the command window. This will create a fresh copy of `defaults.m` using the version stored at the toolbox path.
+
+```matlab
 >> recover_defaults_mfile   % if replacing `defaults.m` with global version
 >> create_defaults_matfile  % generate new `defaults.mat` using local `defaults.m`
 ```
 
 ## **Step II: Merging BCT Result and Converting to DLTdv8a Format**
 
-Once we have the calibration results for each view (as many `.mat` files as no, of views), we need to merge the variables necessary for reconstruction into one mat-file. We also need to convert the BCT results from KRT form to the normalized 11-DLT coefficients form in order to use the calibration result when working with videos in DLTdv8a (otherwise, epipolar lines won't show).
+Once we have the calibration results for each view (as many `.mat` files as the no. of views), we need to merge the variables necessary for reconstruction into one mat-file. We also need to convert the BCT results from KRT form to the normalized 11-DLT coefficients form &ndash; this is to use the calibration result when working with videos in DLTdv8a (otherwise, the epipolar lines won't show).
 
 > You can remove the calibration checker pattern at this stage if you want to. It is no longer needed.
 
@@ -149,17 +160,17 @@ Moving back to the scripts, the step-wise process is described below:
     >> calib_process_results
     ```
 
-3. Enter the extrinsic reference image suffix. E.g., if calibration set was labeled {*Image1, Image2, ..., Image15.jpg*}, the suffixes are {*1, 2, ..., 15*}. This picks the corresponding extrinsics `Rc_{suffix}` and `Tc_{suffix}`, e.g., `Rc_1`, `Rc_ext`<sup>+</sup> , etc.
+3. Enter the extrinsic reference image suffix. E.g., if calibration set was labeled {Image1, Image2, ..., Image15.jpg}, the suffixes are {1, 2, ..., 15}. This picks the corresponding extrinsics `Rc_{suffix}` and `Tc_{suffix}`, e.g., `Rc_1`, `Rc_ext`<sup>+</sup> , etc.
 
     ```
-    [PROMPT] Enter calibration image suffix to use as world reference image for extrinsics (blank = default): 5
+    [PROMPT] Enter calibration image suffix to use as world reference image for extrinsics (blank = default): 3
     ```
-    
-    The default value is 1. Needless to say, extrinsics corresponding to this suffix must exist in the calibration results, otherwise an error is thrown.
 
-> <sup>+</sup> If the extrinsic reference is not part of the calibration set (meaning extrinsics were computed via **Comp. Extrinsic** function of BCT), you would enter `ext` here (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
+    The default value is 1. Needless to say, extrinsics `Rc_x` and `Tc_x` corresponding to suffix `x` must exist in the calibration results, otherwise an error is thrown.
 
-4. Locate each view's calibration file using the UI file browser. These are the files from each view's calibration, saved in the format: `Calib_Results_{view-identifier}.mat`. Clicking **Cancel** will skip that view (it won't be used in reconstruction). At least 2 views are required for this to work.
+    > <sup>+</sup>If the extrinsic reference is not part of the calibration set (meaning extrinsics were computed via **Comp. Extrinsic** function of BCT), you would enter `ext` here (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
+
+4. Locate each view's calibration file using the UI file browser. These are the files from each view's calibration, that you would normally rename in the default expected format `Calib_Results_{view-identifier}.mat`, thought it could be anything. Clicking **Cancel** will skip that view (it won't be used in reconstruction). At least 2 views are required for this to work.
 
     > `{view-identifier}` could be anything, but we prefer using {`cam`, `mir1`, `mir2`} for each view.
 
@@ -169,9 +180,9 @@ Moving back to the scripts, the step-wise process is described below:
 
 This will generate the consolidated BCT parameters file and the DLT coefficients file. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`, and both of them are stored in the `calibration` folder within the project root.
 
-***Following are a few important notes for this step to understand what's happening in more detail. Feel free to skip to Step III directly.***
+> **Following are a few important notes on this step to helpunderstand what's happening in more detail. Skip to Step III if uninterested.**
 
-#### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
+### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
 
 A very important step `calib_process_results.m` performs internally is a permutation transform to correctly convert the mirror view world frames to left-handed convention, as is the case with mirror reflections.
 
@@ -189,9 +200,9 @@ Thus, when estimating world coordinates via some optimization technique, **the o
 
 2. Apply a permutation transformation to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
 
-We have tested both approaches, and both work. However, approach 1 is cumbersome in that **(a)** it requires the swap operation in every step of the optimization, and **(b)** when reprojecting points to the reflected views, we need to re-swap the estimated world coordinates back to the original form.
+We have tested both approaches, and both work. However, **approach 1** is cumbersome in that **(a)** it requires the swap operation in every step of the optimization, and **(b)** when reprojecting points to the reflected views, we need to re-swap the estimated world coordinates back to the original form.
 
-On the other hand, method 2 is much more permanent as it addresses the root cause of the issue, i.e., the misalignment of coordinates in the rotation matrix. Note that we do not need to permute $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
+On the other hand, **method 2** is much more permanent as it addresses the root cause of the issue, i.e., the misalignment of coordinates in the rotation matrix. Note that we do not need to permute translation vector $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to rotation matrix $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
 
 Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the required permutation matrix $T_\text{permutation}$ is:
 
@@ -209,9 +220,10 @@ In effect, the permutation operation essentially makes the rotation matrix as if
 The merged BCT file contains two shared variables between all views:
 
 1. `ext_ref_suffix` = Extrinsic Reference Image Suffix: This is the image number which we use as our reference for extrinsic parameters. This is just the image no. and not the actual iamge itself. Having a common extrinsic reference for all views is crucial in developing the correct scene pose.
-2. `view_labels` = View Labels: If you label your view according to some convention (e.g., camera is view 1, LEFT mirror is view 2, and RIGHT mirror is view 3), then in a 2-view project, you might want to preserve the numbering convention even when views involved are 1 and 3. That's what this variable does.
 
-> **Make sure that in the selected extrinsic reference image, the checker is visible in all views!**
+    > Make sure that in the selected extrinsic reference image, the checker is visible in all views!
+
+2. `view_labels` = View Labels: If you label your view according to some convention (e.g., camera is view 1, LEFT mirror is view 2, and RIGHT mirror is view 3), then in a 2-view project, you might want to preserve the numbering convention even when views involved are 1 and 3. That's what this variable does.
 
 View labeling is also helpful if you are testing multiple number of views. However, to set it up correctly, you must carefully select the corresponding calibration result files. Thus, assuming convention mentioned in point 2 just now, if your 2-view setup involved the camera and RIGHT mirror, you would select camera calibration file, SKIP mirror 1 (left mirror) calibration file, and select mirror 2 (right mirror) calibration file.
 
@@ -415,7 +427,7 @@ Now, since there is only one world reference frame, the same 3D world points mus
 Like with other optimization problems, we start with a wild guess for the world coordinates of a physical point `X`, calculate the reprojection error in each view w.r.t. the marked point, i.e., `x_marked - x_reproj`, vectorize the result as `[xcam_reproj, xmir1_reproj, xmir2_reproj]`, compute the mean squared reprojection error (loss function), and update our guess accordingly. Assuming we have $J$ views and the vector of reprojection errors is $\boldsymbol{E}$, then the loss function is:
 
 ```math
-loss = \sum_{j=1}^{J} E_j
+\text{loss} = \sum_{j=1}^{J} E_j
 ```
 
 We repeat this for all the points we marked, and we have the 3D world coordinates for all the points.
@@ -436,33 +448,76 @@ However, the toolbox currently only supports the BCT variant as that preserves t
     >> epipolar_geometry
     ```
 
-2. Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image:
+2. Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image is visible in 2 views (camera and mirror 1).
+
+    ```matlab
+    % UI-based input
+    Locating the image to mark points and plot epilines on...done.
+    ```
 
 ![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
 3. Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
 
+    ```matlab
+    % UI-based input
+    Locating the merged BCT calibration file...done.
+
+    Created total of 1 view pair(s) based on the merged calibration file:
+    	Camera --> Mirror 1
+    ```
+
 4. Choose a directory to save the results to (point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them to: `epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
 
-5. Enter the number of points to mark in the image when prompted in the command window. For example:
+    ```matlab
+    % UI-based input
+    Choosing directory to store results in...done.
+    ```
+
+5. Choose whether to use the original or undistorted images to mark points and show the epilines on. This is recommended, as the BCT extrinsics are intended to be used with undistorted images. However, if your image does not have much distortion, you can get fairly accurate results even without undistortion.
+
+    ```
+    HELP: Only enter "y" if you have the undistorted images or video frames.
+    [PROMPT] Use undistorted images for point marking? (y/n): y
+    ```
+
+6. Enter the number of points to mark in the image when prompted in the command window. For example:
 
     ```
     [PROMPT] Enter the no. of points to mark: 4
     ```
 
-6. A figure titled after the view's name (*Camera*, *Mirror 1*, etc.) will show up. Here, you must mark the selected number of points in the corresponding view one-by-one. You can zoom in and out around the cursor by pressing `q` and `e` respectively, or reset the zoom level with `r`. The figure title tracks the progress as the current point bieng marked over the total to mark. Marked points show up as a plus (`+`) marker with cycling colors.
+7. A figure titled after the view's name (*Camera*, *Mirror 1*, etc.) will show up. Here, you must mark the selected number of points in the corresponding view one-by-one. You can zoom in and out around the cursor by pressing `q` and `e` respectively, or reset the zoom level with `r`. The figure title tracks the progress as the current point being marked over the total to mark. Marked points show up as a plus (`+`) marker with cycling colors.
 
 ![marked_points_original](https://user-images.githubusercontent.com/94681976/218799351-e5e66615-c10d-4d4b-836f-84cf157b94bb.png)
 
-7. Once all points are marked, another figure window will open up. Repeat step 6 for the remaining views. Note that the script keeps track of the history, so when marking the i<sup>th</sup> physical point in the second view and onwards, its pixel location in all the previously marked views will be shown on the image as a crossed square with the corresponding color. This helps keep track of corresponding points between views.
+8. Once all points are marked, another figure window will open up. Repeat step 6 for the remaining views. Note that, like `point_marker.m`, the script keeps track of the history. Thus, when marking the i<sup>th</sup> physical point in the second view and onwards, its pixel location in all the previously marked views will be shown on the image as a crossed square with the corresponding color. This helps keep track of corresponding points between views.
 
 ![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218799326-cebf85aa-49d0-439a-b45b-2e6e0d4bc17a.png)
 
 Once all the views are done, the script will compute the required parameters, i.e., fundamental matrix, epipoles, epilines, epiline to corresponding point distance (point-line distances) and plot them for all combinations of view pairs. The results are saved in the directory selected in Step 4.
 
-> *The script will replace existing results from a previous test if the new test's results are saved to the same directory. However, when using the default location to store results, a unique, non-existent folder is created for each new run of the script.*
+```
+Entering point-marking mode...
 
-#### ***Saved Results***
+	o Mark points in Camera view: 4/4...done.
+	o Mark points in Mirror 1 view: 4/4...done.
+
+All views done. Exiting point-marking mode.
+
+Calculating fundamental matrix, epipoles, epilines, and point-line distances (PLDs) for 1 view pair(s)...
+
+Pair 1: Camera --> Mirror 1
+	Computing fundamental matrix...plotting epilines...calculating PLDs...saving results...done.
+	Avg. PLD Over View Pair: 1.475250 (pixels) | 0.000412 (normalized)
+
+All done. Results saved to:
+	D:\Dev\checker\epipolar\set_3
+```
+
+> Existing results from a previous test if the new test's results are saved to the same directory. However, when using the default location to store results, a unique, non-existent folder is created for each new run of the script.
+
+### **Saved Results**
 
 Suppose `{1}` represents the **name** of the image selected in Step 2. `{2}` represents the name of the view that acts as the **original image**. Finally, let `{3}` represents the **reference image**. The difference between the original and reference image is that for points $x$ in the original image, $l' = Fx$ gives the epiline in the reference image, whereas for points $x'$ in reference image, the F matrix is transposed, i.e., $l = F'x$ gives the epilines in the original image.
 
@@ -482,7 +537,21 @@ For each view pair, the script saves:
   <img src="https://user-images.githubusercontent.com/94681976/218797107-ceef1def-4c9d-417f-be16-9cfb4886313b.PNG">
 </p>
 
-#### ***Image Resolution and Point-Line Distances***
+### **Notes On History Of Marked Points**
+
+This sort of history where, in the current view, we exactly know the pixel location of a marked point in another view, is **unique to our mirror setup**. This is because we are marking points in mirror views &ndash; in a typical multi-camera setup, the marked pixel in one view practically NEVER corresponds to the same pixel location in another view as they are completely different images. Here, we have just one image, and we are repeating it for each view to get the mirror images. The only difference comes from the distinct undistortion profiles - you will notice that with undistorted images, the history is completely accurate.
+
+To iterate further on the undistortion comment, remember that the history of marked points is not very accurate when using undistorted images, since each view has a unique distortion profile and, therefore, a unique transformation to rectify it. This means that the pixel location of an object point in the undistorted camera view is NOT necessarily the same as the pixel location of the same object point in the first mirror, given that the undistortions change the locations.
+
+#### **Fix: Composite Undistortions (Not Implemented)**
+
+To correct the locations of pixels when using undistorted images, we need to use composite rectification transformations. We first need to fit a geometric transformation between each view's distorted (original) and undistorted image, which is information we receive during undistortion, and save it as a .mat file somewhere.
+
+Then, assuming we have a marked point in the undistorted camera view and would like to visualize it in the undistorted mirror view, we can apply the following composite: distort pixel to original image coordinates by using inverse undistortion transformation for camera view &rarr; undistort pixel to the mirror view coordinates by using undistortion transformation for mirror view.
+
+The reason we have not implemented this is simply because we save the undistorted images to speed up the reconstruction process. At that point, it does not make sense to have the transformation pairs for the main objective of the toolbox as we can just load in the undistorted image. However, this might be added in the future, along with a live epipolar line plotter.
+
+### **Image Resolution and Point-Line Distances**
 
 Since the corresponding points are marked manually, there is always some **human error** involved. Particularly, if the image resolution is high, even a slight offset can produce a seemingly large point-line distance (2-3 pixel distances even when the reprojection error is extremely low).
 
@@ -492,10 +561,12 @@ Thus, in addition to the point-line distances in pixel units, the script additio
 \text{PLD}_\text{normalized} = \frac{\text{PLD}_\text{pixels}}{\sqrt[]{ \left( \text{width}_\text{img} \right)^2 + \left( \text{height}_\text{img} \right)^2 }}
 ```
 
-Thus, a 2-pixel distance in a 1000-pixel wide image is equivalent to a 0.002 normalized distance, which provides another perspective on the error.
+That is, we divide the pixel distance error by the length of the image diagonal (which is the largest straight side in a rectangle).
+
+Thus, a 2-pixel distance in an image with a 1000-pixel diagonal is equivalent to a 0.002 normalized distance, which puts things in perspective.
 
 ## **Final Notes**
-If you come across any issues or bugs, please feel free to open an issue on this repository. We will try to address it as soon as possible.
+If you come across any issues or bugs, please feel free to open an issue. We will try to address it as soon as possible.
 
 Pull requests are also welcome (please direct them towards the `dev-tests` branch). For major changes, kindly open an issue first to discuss what you would like to change.
 
@@ -503,12 +574,11 @@ Pull requests are also welcome (please direct them towards the `dev-tests` branc
 <a id="1" href="https://doi.org/10.1088/1748-3182/3/3/034001">[1]</a>
 Hedrick, T. L. (2008). Software techniques for two-and three-dimensional kinematic measurements of biological and biomimetic systems. Bioinspiration & biomimetics, 3(3), 034001.
 
-> [DLTdv8a Webpage](https://biomech.web.unc.edu/dltdv/)
-
 <a id="2" href="https://doi.org/10.1088/1748-3182/3/3/034001">[2]</a>
 Bouguet, J.-Y. (2022). Camera Calibration Toolbox for Matlab (1.0). CaltechDATA. https://doi.org/10.22002/D1.20164
 
-> [BCT Webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/)
+- [DLTdv8a Webpage](https://biomech.web.unc.edu/dltdv/)
+- [BCT Webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/)
 
 ### MATLAB File Exchange (FEX)
 These can optionally be enabled in `defaults.m`.
@@ -516,14 +586,14 @@ These can optionally be enabled in `defaults.m`.
 <a id="3" href="https://www.mathworks.com/matlabcentral/fileexchange/47434-natural-order-filename-sort">[3]</a>
 Stephen23 (2023). Natural-Order Filename Sort (https://www.mathworks.com/matlabcentral/fileexchange/47434-natural-order-filename-sort), MATLAB Central File Exchange. Retrieved July 4, 2023.
 
-> Relevant variable for enabling/disabling in `defaults.m`: FEX_USE_NATSORT
-
 <a id="4" href="https://www.mathworks.com/matlabcentral/fileexchange/34055-tightfig-hfig">[4]</a>
 Richard Crozier (2023). tightfig(hfig) (https://www.mathworks.com/matlabcentral/fileexchange/34055-tightfig-hfig), MATLAB Central File Exchange. Retrieved July 4, 2023.
-
-> Relevant variable for enabling/disabling in `defaults.m`: FEX_USE_TIGHTFIG
 
 <a id="5" href="https://www.mathworks.com/matlabcentral/fileexchange/23629-export-fig">[5]</a>
 Yair Altman (2023). export_fig (https://github.com/altmany/export_fig/releases/tag/v3.39), GitHub. Retrieved July 4, 2023.
 
-> Relevant variable for enabling/disabling in `defaults.m`: FEX_USE_EXPORTFIG
+Relevant variables for enabling/disabling MATLAB File Exchange (FEX) tools in `defaults.m`.
+
+- natsort: `FEX_USE_NATSORT`
+- tightfit: `FEX_USE_TIGHTFIG`
+- export_fig: `FEX_USE_EXPORTFIG`
