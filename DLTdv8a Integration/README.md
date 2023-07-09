@@ -4,14 +4,13 @@ In conjunction with [Bouguet Calibration Toolbox (BCT)](http://robots.stanford.e
 
 > *This is different from the repo's root `README.md` file, which only shares Steps I&ndash;III with this and describes the general process for reconstructing an object in a single image with manually marked points (i.e., DLTdv8a is not involved, while it is involved here).*
 
-# **Instructions**
-Given below is a list of video tutorials that cover the entire process from scratch:
+# **Instructions and Tutorials**
+Given below is a list of video tutorials that cover the entire process of working with video data from scratch:
 
-1. [Toolbox Initailization + Project Setup + Calibrating Setup With BCT](youtube.com)
+1. [Toolbox Initailization + Project Setup + Calibrating Setup With Videos and BCT](youtube.com)
 2. [BCT Result Merging + DLTdv8a Format Conversion + Video Undistortion](youtube.com)
 3. [DLTdv8a Execution + Trackfile Generation](youtube.com)
 4. [Estimating 3D World Points + Reconstructing Frame-by-Frame + Exporting World Points in DLTdv8a Format](youtube.com)
-5. [Verifying Extrinsics With Epipolar Geometry](youtube.com)
 
 Given below is a comprehensive step-by-step guide towards the workflow as well.
 
