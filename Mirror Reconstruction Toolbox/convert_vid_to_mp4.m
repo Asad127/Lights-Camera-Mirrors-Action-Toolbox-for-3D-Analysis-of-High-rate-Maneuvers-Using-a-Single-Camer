@@ -1,4 +1,27 @@
 function convert_vid_to_mp4(input_vid, output_vid)
+% Creates a copy of the input video and converts it to MP4. If output_vid
+% argument = '' (empty) , the converted video is placed in the same
+% directory as input with the same name (but mp4 extension).
+%
+% Note that while the function name has mp4, the output format is governed
+% by `VID_EXT` variable in project `defaults.mat`.
+%
+% If no arguments are provided, UI file browsers pop up to locate both the
+% input video and path to store the converted video. 
+%
+% TAKES
+% =========================================================================
+% input_vid (required, filepath):
+%   The input video.
+% output_vid (optional, default = input_dir/input_name.mp4):
+%   The output video filepath (erither relative or absolute). If empty
+%   input or not provided and the UI browser is canceled, defaults to input
+%   directory with the same name as input video + mp4 extension.
+%
+% RETURNS
+% =========================================================================
+% Nothing. Creates a converted video file.
+
 
 default = load('defaults.mat');
 
@@ -6,7 +29,13 @@ switch nargin
     case 0
         % Transpose the resulting cell array to get a cell column vector as 
         % required by the ui boxes' extension/format filters
-        vid_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_VID_EXTS, 'UniformOutput', false)';
+        vid_filter = cellfun( ...
+            @(extension) ['*' extension], ...
+            default.SUPPORTED_VID_EXTS, ...
+            'UniformOutput', ...
+            false ...
+        )';
+        
         [input_file, input_dir] = uigetfile(vid_filter, 'Locate the video to convert to mp4');
         
         if ~input_file
@@ -97,32 +126,55 @@ elseif isempty(output_vid_dir) && ~isempty(output_vid_base)
 end
 
 vid_in = VideoReader(input_vid);
+
+% Estimate no. of frames in video (not 100% accurate as noted in MATLAB 
+% docs). Since we convert the whole video using hasFrames, this is not much
+% of an issue, but we correct it anyway for user display.
+est_num_frames = vid_in.NumFrames;
+
+% HACK: Sub some frames from the estimation to (hopefully) get a valid 
+% frame number. Then, read the frame in with the read(vid, framenum) form 
+% of the VideoReader read function, which sets the current frame to 
+% framenum. Then readFrame from there on until we run out of frames, and 
+% that is our actual frame count. This saves you from having to read the
+% entire video to get the frame count, and just a few frames.
+
+est_num_frames  = est_num_frames - 5;            
+dummy_read = read(vid_in, est_num_frames); 
+
+while hasFrame(vid_in)
+    frame_in = readFrame(vid_in);  % read the next frame
+    est_num_frames = est_num_frames + 1;
+end
+
+total_frames = est_num_frames;  % since we read till no more frames, this is 100% correct
+dummy_read = read(vid_in, 1);   % reset frame to original position
+
 vid_out = VideoWriter(output_vid, 'MPEG-4');
+vid_out.Quality = 95;
+vid_out.FrameRate = vid_in.FrameRate;
+
 open(vid_out);
 
-total_frames = vid_in.NumFrames;
 curr_frame = 1;
 
-st = dbstack.name;
+st = dbstack;
 bar = waitbar( ...
     curr_frame/total_frames, ...
     sprintf("Converting video to MP4: %d/%d", curr_frame, total_frames), ...
     'Name', st(1).name);
 
-fprintf('Converting video to MP4...');
-
 while hasFrame(vid_in)
     frame_in = readFrame(vid_in);
     writeVideo(vid_out, frame_in);
-    curr_frame = curr_frame+ 1;
-    bar = waitbar(curr_frame/total_frames, sprintf("Converting video to MP4: %d/%d", curr_frame, total_frames));
+    curr_frame = curr_frame + 1;
+    waitbar(curr_frame/total_frames, bar, sprintf("Converting video to MP4: %d/%d", curr_frame, total_frames));
 end
 
 % Cleanup
-close(vid_in);
 close(vid_out);
 waitbar(1, bar, "Finished!")
 pause(1);
-fprintf("done.\n\n\t%-15s: %s\n\t%-15s: %s\n\n", 'Source Video', abspath(input_vid), 'Converted Video', abspath(output_vid))
+close(bar);
 
 end

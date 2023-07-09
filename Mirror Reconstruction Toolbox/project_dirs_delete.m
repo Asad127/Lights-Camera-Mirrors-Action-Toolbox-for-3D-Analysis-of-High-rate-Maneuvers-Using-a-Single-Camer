@@ -13,7 +13,7 @@ function project_dirs_delete(project_identifier)
 % project_identifier:
 %   The line number, project name, or directory path in `project_dirs.m` 
 %   that identifies the project directory to delete. May also be a cell
-%   array where all elements represnent either numerics or chars. Note for
+%   array where all elements represent either numerics or chars. Note for
 %   cell array inputs, no distinction is required between directories and
 %   names as the implementation checks for both by first treating input as
 %   an absolute path, and only if that fails, as the project name.
@@ -47,5 +47,6 @@ projects_file_lines(lines_to_delete) = [];  % delete the relevant rows
 % Re-write the file with the updated line.
 projects_file = fopen(fullfile(toolbox.TOOLBOX_MATLAB_PATH, 'project_dirs.m'), 'w');
 fprintf(projects_file, '%s\n', projects_file_lines{:});
+fclose(projects_file);
 
 end

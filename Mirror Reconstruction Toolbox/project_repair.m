@@ -129,8 +129,9 @@ calib_base_dir = fullfile(project_dir, default.BCT_CALIB_DIR);
 calib_imgs_dir = fullfile(project_dir, default.BCT_CALIB_IMGS_DIR);
 calib_frames_dir = fullfile(project_dir, default.BCT_CALIB_FRAMES_DIR);
 dltdv_trackfiles_dir = fullfile(project_dir, default.DLTDV_TRACKFILES_DIR);
-dltdv_vids_dir = fullfile(project_dir, default.DLTDV_VID_DIR);
-dltdv_vid_frames_dir = fullfile(project_dir, default.DLTDV_VID_FRAMES_DIR);
+media_dir = fullfile(project_dir, default.MEDIA_DIR);
+vids_dir = fullfile(project_dir, default.VIDS_DIR);
+vid_frames_dir = fullfile(project_dir, default.VID_FRAMES_DIR);
 imgs_dir = fullfile(project_dir, default.IMGS_DIR);
 reconstruction_dir = fullfile(project_dir, default.RECONSTRUCTION_DIR);
 epipolar_dir = fullfile(project_dir, default.EPIPOLAR_DIR);
@@ -151,13 +152,17 @@ if ~isfolder(dltdv_trackfiles_dir)
     mkdir(dltdv_trackfiles_dir);
     added_entities{end + 1} = sprintf('+ %s', default.DLTDV_TRACKFILES_DIR);
 end
-if ~isfolder(dltdv_vids_dir)
-    mkdir(dltdv_vids_dir);
-    added_entities{end + 1} = sprintf('+ %s', default.PROJECT_VIDS_DIR);
+if ~isfolder(media_dir)
+    mkdir(media_dir)
+    added_entities{end + 1} = sprintf('+ %s', default.MEDIA_DIR);
 end
-if ~isfolder(dltdv_vid_frames_dir)
-    mkdir(dltdv_vid_frames_dir);
-    added_entities{end + 1} = sprintf('+ %s', default.PROJECT_FRAMES_DIR);
+if ~isfolder(vids_dir)
+    mkdir(vids_dir);
+    added_entities{end + 1} = sprintf('+ %s', default.VIDS_DIR);
+end
+if ~isfolder(vid_frames_dir)
+    mkdir(vid_frames_dir);
+    added_entities{end + 1} = sprintf('+ %s', default.VID_FRAMES_DIR);
 end
 if ~isfolder(imgs_dir)
     mkdir(imgs_dir)
@@ -187,17 +192,17 @@ if isempty(added_entities)
 % If things had to be changed.
 else
     status_msg = msg_4;
-    fprintf('\t%s\n', default.CWLINE_STYLE);
-    fprintf('\t+ %s\n', strrep(project_dir, '\', '\\'))
+    fprintf('%s\n', default.CWLINE_STYLE);
+    fprintf('+ %s\n', strrep(project_dir, '\', '\\'))
     for i = 1 : numel(added_entities)
         fprintf('%-30s', added_entities{i});
         if mod(i, newline_after_count) == 0 && i ~= numel(added_entities)
-            fprintf('\n\t')
+            fprintf('\n')
         end
     end
-fprintf('\n\t%s\n', default.CWLINE_STYLE);
+fprintf('\n%s\n', default.CWLINE_STYLE);
 end
 
-fprintf('\tRepair Status: %s\n', status_msg)
+fprintf('Repair Status: %s\n\n', status_msg)
 
 end

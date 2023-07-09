@@ -1,2 +1,1 @@
-checker_project_dir = 'D:\tutorial\checker';
-checker2_project_dir = 'D:\tutorial\checker2';
+moving_checker_project_dir = 'D:\Dev\moving_checker';

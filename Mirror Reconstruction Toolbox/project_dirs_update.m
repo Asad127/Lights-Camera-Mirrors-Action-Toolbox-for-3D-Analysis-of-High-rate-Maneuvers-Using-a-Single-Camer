@@ -54,5 +54,6 @@ projects_file_lines{target_line_num} = sprintf("%s_project_path = '%s';", new_pr
 % Re-write the file with the updated line.
 projects_file = fopen(fullfile(toolbox.TOOLBOX_MATLAB_PATH, 'project_dirs.m'), 'w');
 fprintf(projects_file, '%s\n', projects_file_lines{:});
+fclose(projects_file);
 
 end

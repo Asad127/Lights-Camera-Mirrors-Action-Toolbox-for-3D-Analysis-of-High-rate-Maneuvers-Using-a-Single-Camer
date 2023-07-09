@@ -64,6 +64,13 @@ project_setup.m:
 
 default = load('defaults.mat');
 
+fprintf( ...
+    ['ABOUT: "calib_select_img_subset.m" is mainly intended to select some extracted frames ' ...
+    'from a\ncalibration video, but may be applied to any set of images in a directory. Pick ' ...
+    'around 15-30\nimages/frames for this final calibration set. Make sure the pose of the ' ...
+    'checker in the selected\nframes varies noticeably.\n\n'] ...
+);
+
 if isfolder(default.BCT_CALIB_SUBSET_HIST_DIR)
     existing_hist_files = dir(fullfile(default.BCT_CALIB_SUBSET_HIST_DIR, '*.mat'));
     if ~isempty(existing_hist_files)
@@ -110,13 +117,6 @@ end
 if exist('frames_dir', 'var')
     imgs_dir = frames_dir;
 end
-
-fprintf( ...
-    ['\nABOUT: "calib_select_img_subset.m" is mainly intended to select some extracted frames ' ...
-    'from a\ncalibration video, but may be applied to any set of images in a directory. Pick ' ...
-    'around 15-30\nimages/frames for this final calibration set. Make sure the pose of the ' ...
-    'checker in the selected\nframes varies noticeably.\n\n'] ...
-);
 
 % Extract subset of frames as the calibration images.
 use_ui = true;
@@ -168,10 +168,12 @@ else
             % At this point, user must have clicked a single image, hence why
             % it did not become a cell. To stop issues that happen when you
             % treat an array as a cell, we force it into a cell as that is the
-            % expected output.
+            % expected output. Not that it matters here since we enforce a
+            % minimum number of calibration images to proceed.
             img_files = cellstr(img_files);  
+        end
             
-        elseif numel(img_files) < default.MIN_CALIB_IMGS
+        if numel(img_files) < default.MIN_CALIB_IMGS
             fprintf('\n\n[BAD INPUT] Please provide a minimum of %d images for calibration.\n', ...
                 default.MIN_CALIB_IMGS ...
             )

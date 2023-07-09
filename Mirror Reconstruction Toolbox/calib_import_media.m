@@ -96,8 +96,9 @@ if calib_img_or_vid == 'i'
                 error('Operation canceled by user.')
             end
             src_files = cellstr(src_files);  % force convert single selection to cell
+        end
     
-        elseif numel(src_files) < default.MIN_CALIB_IMGS
+        if numel(src_files) < default.MIN_CALIB_IMGS
             fprintf('\n[BAD INPUT] Please provide a minimum of %d images for calibration.\n', ...
                 default.MIN_CALIB_IMGS ...
             )
@@ -113,7 +114,7 @@ if calib_img_or_vid == 'i'
     fprintf('Choosing directory to import the images into...')
     calib_imgs_dir = uigetdir( ...
         '', ...
-        'Choose directory to save the calibration images in (cancel = use default directory)' ...
+        'Choose directory to import the calibration images into (cancel = use default directory)' ...
     );
 
     if ~calib_imgs_dir
@@ -126,7 +127,6 @@ if calib_img_or_vid == 'i'
             );
             warning(warn_msg);
             mkdir(calib_imgs_dir)
-            
         end
     end
     fprintf('done.\n')
@@ -155,17 +155,31 @@ if calib_img_or_vid == 'i'
     fprintf('all good.\n')
 
     % Now, we know all images are the same format, so copy them over.
-    fprintf('Copying images to selected directory...')
+    fprintf('Importing images to selected directory...')
+    copy_path_conflict = false;
     for i = 1 : numel(src_filepaths)
         src_filepath = src_filepaths{i};
         [~, ~, src_ext] = fileparts(src_filepath);
 
         calib_img_file = sprintf(default.IMGNAME_FMT, i, src_ext);
         calib_img_filepath = fullfile(calib_imgs_dir, calib_img_file);
+
+        if strcmp(src_filepath, calib_img_filepath)
+            copy_path_conflict = true;
+            continue
+        end
         copyfile(src_filepath, calib_img_filepath);
     end
     
-    fprintf('done.\n\n\t%-17s: %s\n\t%-17s: %s\n\n', 'Source Imgs Dir', src_dir, 'Imported Imgs Dir', calib_imgs_dir)
+    fprintf('done.\n\n\t%-17s: %s\n\t%-17s: %s\n\n', ...
+        'Source Imgs Dir', src_dir, 'Imported Imgs Dir', calib_imgs_dir ...
+    )
+
+    if copy_path_conflict
+        fprintf(['[WARNING] Attempted to copy one or more files onto themselves.\n' ...
+            'Copy instruction was skipped for these paths.\n\n'])
+    end
+
     fprintf('Images are ready for BCT calibration.\n')
     fprintf('...changing CWD to directory with calibration images...\n\n')
 
@@ -176,12 +190,13 @@ if calib_img_or_vid == 'i'
     )
 
 elseif calib_img_or_vid == 'v'
+    
     mp4_conversion_applied = false;
 
+    fprintf('\nLoading video of calibration checker pattern...')
     % Transpose the resulting cell vector to get cell column vectors as 
     % needed by UI filters.
     vid_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_VID_EXTS, 'UniformOutput', false)';
-
     [src_file, src_dir] = uigetfile( ...
         vid_filter, ...
         'Locate the calibration video to import (extension dropdown on bottom-right)' ...
@@ -190,6 +205,8 @@ elseif calib_img_or_vid == 'v'
     if ~src_file
         error('Operation canceled by user.')
     end
+
+    fprintf('done.\n')
     
     src_filepath = fullfile(src_dir, src_file);
 
@@ -198,19 +215,26 @@ elseif calib_img_or_vid == 'v'
 
     % If video extension is not MP4, create a re-encoded MP4 copy of it in
     % the same directory and copy that to calibration directory instead.
-    if src_ext ~= default.VID_EXT
+    if ~strcmp(src_ext, default.VID_EXT)
         mp4_conversion_applied = true;
-        mp4_converted_src = fullfile(src_dir, ['converted' default.VID_EXT]);
-        convert_vid_to_mp4(src_filepath, mp4_converted_src);
+        mp4_src_filepath = fullfile(src_dir, ['converted' default.VID_EXT]);
+
+        fprintf('Converting video to MP4...');
+        convert_vid_to_mp4(src_filepath, mp4_src_filepath);
+
+        fprintf("done.\n\n\t%-15s: %s\n\t%-15s: %s\n\n", ...
+            'Source Video', abspath(src_filepath), ...
+            'Converted Video', abspath(mp4_src_filepath) ...
+        )
 
         % Switch source to the converted video. This ensures the original
-        % video remains is not affected.
-        src_filepath = mp4_converted_src;
+        % video remains unaffected.
+        src_filepath = mp4_src_filepath;
     end
 
     [calib_vid_file, calib_vid_dir] = uiputfile( ...
         default.VID_EXT, ...
-        'Choose location to save the imported calibration video to (cancel = use default location)', ...
+        'Choose location to import calibration video into (cancel = use default location)', ...
         [default.BCT_CALIB_VID_BASE default.VID_EXT] ...
     );
 
@@ -220,17 +244,39 @@ elseif calib_img_or_vid == 'v'
         calib_vid_filepath = fullfile(calib_vid_dir, calib_vid_file);
     end
 
+    calib_vid_filepath = abspath(calib_vid_filepath);
+
     if mp4_conversion_applied
-        movefile(src_filepath, calib_vid_filepath);  % move the converted source file and rename it
-        fprintf(['Imported MP4-converted copy of original video to project directory.' ...
-            '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
-            'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
-        )
+
+        % Move the converted source file and rename it
+        if ~strcmp(src_filepath, calib_vid_filepath)
+            movefile(src_filepath, calib_vid_filepath);
+            fprintf(['Imported MP4-converted copy of original video to project directory.' ...
+                '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
+                'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
+            )
+
+        else
+            fprintf(['[WARNING] Move Path Conflict: Attempted to copy file or directory onto itself.\n' ...
+                'Move instruction was skipped.\n\n'] ...
+            )
+        end
+
     else
-        copyfile(src_filepath, calib_vid_filepath);  % copy the original source file and rename it
-        fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
-            'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
-        )
+
+        % Copy the original source file and rename it
+        if ~strcmp(src_filepath, calib_vid_filepath)
+            copyfile(src_filepath, calib_vid_filepath);
+            fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
+                'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
+            )
+
+        else
+            fprintf(['[WARNING] Copy Path Conflict: Attempted to copy file or directory onto itself.\n' ...
+                'Copy instruction was skipped.\n\n'] ...
+            )
+        end
+
     end
     
     fprintf('...launching "calib_extract_vid_frames.m" (calibration video frame extraction)...\n\n')

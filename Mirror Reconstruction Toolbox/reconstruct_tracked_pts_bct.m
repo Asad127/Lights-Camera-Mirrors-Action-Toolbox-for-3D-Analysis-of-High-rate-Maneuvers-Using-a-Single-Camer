@@ -15,7 +15,8 @@
 format long g  % fixed notation for non-extreme values
 
 set(groot, 'defaultAxesFontName', 'Times New Roman');
-set(groot, 'defaultAxesFontSize', 12);
+set(groot, 'defaultAxesFontSize', 16);
+set(groot, 'defaultfigurecolor', [1 1 1]);
 % txtoptions_bold = {'FontName', 'Times New Roman', 'FontSize', 18, 'FontWeight', 'bold'};
 % txtoptions = {'FontName', 'Times New Roman', 'FontSize', 18};
 
@@ -31,24 +32,29 @@ disp('==========================================================================
 disp('|                   Intended for use with DLTdv8a and Bouguet Calibration Toolbox                   |')
 disp('|                           Supports up to 3 views : 1 camera, 2 mirrors                            |')
 disp('=====================================================================================================')
-fprintf(['Calibrate your camera and mirrors with Bouguet Calibration Toolbox (BCT) prior to ' ...
-    'starting. Have the\nDLT coefficients file for DLTdv8a or merged BCT camera parameters ' ...
-    '(intrinsics + extrinsics + distortion)\nready.\n\n'])
+fprintf('Script for reconstructing tracked 2D points (via DLTdv8a) in videos.\n\n')
 
 fprintf('Locating BCT merged calibration file...')
 % INPUT 1: Choose the camera params file (DLT or KRT).
-[calib_file, calib_dir] = uigetfile( ...
+[merged_calib_file, merged_calib_dir] = uigetfile( ...
     ['*', default.BCT_EXT], ...
     'Select merged BCT calibration parameters file (blank = use default location)' ...
 );
-if ~calib_file
-    calib_file = default.BCT_MERGED_CALIB_PATH;
-    if ~isfile(calib_file)
-        error('The merged BCT calibration parameters file does not exist at default location:\n\t%s', ...
-            calib_file)
+if ~merged_calib_file
+    merged_calib_filepath = default.BCT_MERGED_CALIB_PATH;
+    if ~isfile(merged_calib_filepath)
+        error(['Merged BCT calibration parameters file does not exist at default location:' ...
+            '\n\t%s\nPossible Issues:' ...
+            '\n\t(1) Merged BCT calibration file was not saved to the default location.' ...
+            '\n\t(2) Merged BCT calibration file was not created.' ...
+            '\nPossible Solutions:' ...
+            '\n\t(1) Use the UI to locate the file wherever it was saved.' ...
+            '\n\t(2) Run "calib_process_results.m" before running this script.'], ...
+            merged_calib_filepath ...
+        )
     end
 else
-    calib_file = fullfile(calib_dir, calib_file);
+    merged_calib_filepath = fullfile(merged_calib_dir, merged_calib_file);
 end
 fprintf('found.\n')
 
@@ -58,7 +64,7 @@ min_cam_vars = default.NUM_UNIQUE_VARS_PER_CAM * default.MIN_VIEWS + default.NUM
 max_cam_vars = default.NUM_UNIQUE_VARS_PER_CAM * default.MAX_VIEWS + default.NUM_SHARED_VARS_CAMS;
 
 % Load the file, get view names for available view labels, and check file integrity.
-view_params = load(calib_file);
+view_params = load(merged_calib_filepath);
 view_labels = view_params.view_labels;
 
 view_names = default.VIEW_NAMES_LONG(view_labels);
@@ -110,7 +116,9 @@ while true
         'Select DLTdv8a exported flat-format file of tracked pixels w/o extension (cancel = use default location)' ...
     );
     if ~trackfile_file
-        trackfile = fullfile(default.DLTDV_TRACKFILES_DIR, [default.DLTDV_TRACKFILE_2D_BASE default.DLTDV_EXT]);
+        trackfile = fullfile(default.DLTDV_TRACKFILES_DIR, ...
+            [default.DLTDV_TRACKFILE_2D_BASE default.DLTDV_EXT] ...
+        );
         if ~isfile(trackfile)
             error('The DLTdv8a exported trackfile does not exist at default location:\n\t%s', trackfile)
         end
@@ -138,10 +146,12 @@ fprintf('Total frames: %d\nValid frames: %d\nNo. of physical points: %d\n\n', ..
 % Delete the known suffix to get the trackfile name prefix.
 [~, trackfile_name, ~] = fileparts(trackfile);
 
-trackfile_name_prefix = char(erase( ...
-    string(trackfile_name), ...                  % original string
-    string(default.DLTDV_TRACKFILE_2D_BASE) ...  % this gets deleted from string
-));
+trackfile_name_prefix = char( ...
+    erase( ...
+        string(trackfile_name), ...                  % original string
+        string(default.DLTDV_TRACKFILE_2D_BASE) ...  % this gets deleted from string
+    ) ...
+);
 
 trackfile_3d_filename = [trackfile_name_prefix default.DLTDV_TRACKFILE_3D_BASE default.DLTDV_EXT];
 
@@ -164,22 +174,24 @@ end
 
 % INPUT 3: Directory containing the video frames.
 fprintf('Locating directory containing video frames corresponding to tracked points...')
-frames_dir = uigetdir('', 'Locate the directory containing video frames (cancel = use default directory)');
+frames_dir = uigetdir('', ['Locate the directory containing non-undistorted video frames ' ...
+    '(cancel = use default directory)'] ...
+);
 if ~frames_dir
-    frames_dir = default.DLTDV_VID_FRAMES_DIR;
+    frames_dir = default.VID_FRAMES_DIR;
     if ~isfolder(frames_dir)
         error('The provided directory does not exist:\n\t%s', frames_dir)
     end
 end
 
 if default.GUESS_IMG_EXT_WHEN_POSSIBLE
-    frames_extension = guess_img_extension(frames_dir, default.SUPPORTED_IMG_FORMATS);
+    frame_extension = guess_img_extension(frames_dir, default.SUPPORTED_IMG_EXTS);
 else
-    frames_extension = prompt_img_extension('[PROMPT] Enter the frame extension (e.g. ".jpg", ".png", etc.):');
+    frame_extension = prompt_img_extension('[PROMPT] Enter the frame extension (blank = use default):');
 end
 
 % Check if the directory contains any images and load their filepaths.
-frames_listing = dir(fullfile(frames_dir, ['*' frames_extension]));
+frames_listing = dir(fullfile(frames_dir, ['*' frame_extension]));
 
 % Get rid of '.' and '..' from listing
 frames_listing = frames_listing(~ismember({frames_listing.name}, {'.', '..'}));
@@ -187,65 +199,83 @@ frames_listing = frames_listing(~ismember({frames_listing.name}, {'.', '..'}));
 % The following check takes place in `guess_img_extension.m`, but not in
 % `prompt_img_extension.m` as that is also used to determine output img
 % extensions, not just for input files.
-if isempty(frame_listing)
-    error('No frames with extension "%s" were found in the directory:\n\t%s', frames_extension, frames_dir)
+if isempty(frames_listing)
+    error('No frames with extension "%s" were found in the directory:\n\t%s', ...
+        frame_extension, frames_dir ...
+    )
 end
 
 frame_files = {frames_listing.name};
 
-if has_frames
-    fprintf('done.\n')
-    if num_frames ~= numel(frame_files)
-        while true
-            fprintf(['[WARNING] The number of frames from trackfile does not match the number of frames in directory.' ...
-            '\n\tFrames Detected In Directory = %d\n\tFrames Detected In Trackfile = %d\n'], ...
+if num_frames ~= numel(frame_files)
+    while true
+        fprintf(['\n[WARNING] The number of frames from trackfile does not match the number of ' ...
+            'frames in directory.\n\tFrames Detected In Directory = %d\n\tFrames Detected In ' ...
+            'Trackfile = %d\n'], ...
             numel(frame_files), num_frames ...
-            )
-            proceed_with_uneuqal_frames = input('[PROMPT] Proceed anyway? (y/n): ', 's');
-            if ~ismember(proceed_with_uneuqal_frames, {'y', 'n'})
-                fprintf('[BAD PROMPT] Only "y" (yes) and "n" (no) are accepted values. Please try again.\n')
-                continue
-            end
-            break
+        )
+        proceed_with_uneuqal_frames = input('[PROMPT] Proceed anyway? (y/n): ', 's');
+        if ~ismember(proceed_with_uneuqal_frames, {'y', 'n'})
+            fprintf('[BAD PROMPT] Only "y" (yes) and "n" (no) are accepted values. Please try again.\n')
+            continue
         end
-        if proceed_with_uneuqal_frames == 'n'
-            error('Operation canceled by user.')
-        else
-            minimum_frames = min(num_frames, numel(frame_files));
-            maximum_frames = max(num_frames, numel(frame_files));
-            fprintf('Only plotting data for %d/%d frames.\n', minimum_frames, maximum_frames)
-        end
+        break
     end
+    if proceed_with_uneuqal_frames == 'n'
+        error('Operation canceled by user.')
+    else
+        minimum_frames = min(num_frames, numel(frame_files));
+        maximum_frames = max(num_frames, numel(frame_files));
+        fprintf('Only plotting data for %d/%d available frames.\n\n', minimum_frames, maximum_frames)
+    end
+else
+    fprintf('done.\n\n');
 end
 
-% INPUT 4: Use undistorted video frames?
+% Ask if user wants to use undistorted images.
+fprintf('HELP: Only enter "y" if you have the undistorted images or video frames.\n');
 while true
-    fprintf('HELP: Only enter "y" if you tracked points on undistorted videos within DLTdv8a.');
-	undistorted_reprojections = input('[PROMPT] Use undistorted frames for pixel reprojections? (y/n): ', 's');
-	if ~ismember(undistorted_reprojections, {'y', 'n'})
-		fprintf('[BAD PROMPT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
+	choice = input('[PROMPT] Use undistorted video frames for point marking? (y/n): ', 's');
+    
+    if ~ismember(choice, {'y', 'n'})
+		fprintf('[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
 		continue
-	end
+    end
+
+    if choice == 'y'
+        use_undistorted_frames = true;
+    else
+        use_undistorted_frames = false;
+    end
+
 	break
 end
 
-if undistorted_reprojections == 'y'
-    output_folders = default.UNDISTORTED_IMG_FOLDERS;
-    output_folders = output_folders(view_labels);
-    for j = 1 : num_views
-        if ~isfolder(fullfile(frames_dir, output_folders{j}))
-            error(['An undistorted frame folder was not found in the expected location:' ...
+if use_undistorted_frames
+    all_undistorted_frame_folders = default.UNDISTORTED_IMG_FOLDERS;
+    undistorted_frame_folders = all_undistorted_frame_folders(view_labels);
+    undistorted_frame_dirs = fullfile(frames_dir, undistorted_frame_folders);
+
+    % Check that the directories exist, and contain images.
+    for i = 1 : numel(undistorted_frame_dirs)  % should be equal to num_views
+    
+        if ~isfolder(undistorted_frame_dirs{i})
+    
+            error(['An undistorted frames folder was not found in the expected location:' ...
                 '\n\t%s\nIn general, they are expected in the same directory as the original image ' ...
-                'in separate folders.\nTo ensure proper undistortion setup, run ' ...
+                'in separate folders folders.\nTo ensure proper undistortion setup, run ' ...
                 '"create_undistorted_vid_and_fames.m" (videos) or\n"create_undistorted_imgs.m" ' ...
-                '(images).'], fullfile(frames_dir, output_folders{j}) ...
+                '(images).'], undistorted_frame_dirs{i} ...
             );
+    
         else
-            undistorted_frames_listing = dir(fullfile(frames_dir, output_folders{j}, ['*' frames_extension]));
-            % Check if there are any frames in the directory.
-            if isempty(undistorted_frames_listing(~ismember({undistorted_frames_listing.name}, {'.', '..'})))
-                error(['Undistorted frames folder was found, but it contains no ' ...
-                    'undistorted frames:\n\t%s\n'], fullfile(frames_dir, output_folders{j}) ...
+            % List all image files in the directory.
+            img_listing = dir(fullfile(undistorted_frame_dirs{i}, ['*' frame_extension]));
+    
+            % Check if directory even has images.
+            if isempty(img_listing(~ismember({img_listing.name}, {'.', '..'})))
+                error('Undistorted frames folder was found, but has no images.\n\t%s', ...
+                    undistorted_frame_dirs{i} ...
                 );
             end
         end
@@ -256,11 +286,12 @@ end
 options = optimoptions('lsqnonlin', 'display', 'off');
 options.Algorithm = 'levenberg-marquardt';
 
-figpos_reprojection = {
+figpos_reprojection = { ...
     [0,0.459259259259259,0.384895833333333,0.540740740740741], ...
     [0,0, 0.384895833333333,0.542592592592593], ...
-    [0.384895833333333,0.542592592592593,0.384895833333333,0.44]
+    [0.384895833333333,0.542592592592593,0.384895833333333,0.44] ...
 };
+
 figpos_reconstruction = [0.375,0,0.493229166666667,0.961111111111111];
 
 % Initialize figures for 2D pixel reprojections.
@@ -268,7 +299,7 @@ figH = zeros(1, num_views + 1);
 
 for j = 1 : num_views
     figH(j) = figure( ...
-        'Name', sprintf('%s: Pixel Reprojections', view_names{j}), ...
+        'Name', sprintf('%s - Pixel Reprojections', view_names{j}), ...
         'Units', 'Normalized',...
         'Position', figpos_reprojection{j} ...
     );
@@ -287,12 +318,6 @@ figH(num_views + 1) = figure( ...
 framewise_tracked_world_pts = cell(num_frames, 1);
 
 for f = 1 : num_valid_frames
-
-img = imread(fullfile( ...
-    frames_dir, ...
-    sprintf(default.VID_FRAMENAME_FMT, f, frames_extension)) ...
-);
-
 %% OPTIMIZATION PER POINT FOR N-VIEW WORLD COORDINATE ESTIMATION %%
 x = framewise_tracked_pixels{f, 1};
 frame_num = framewise_tracked_pixels{f, 2};
@@ -356,11 +381,17 @@ for j = 1 : num_views
     proj_pixels_est = proj_pixels_est./proj_pixels_est(3, :);
 
     % Read the image in.
-    if undistorted_reprojections == 'y'
+    if use_undistorted_frames
 	    img = imread(fullfile( ...
-            frames_dir, ...
-            output_folders{j}, ...
-            sprintf(default.VID_FRAMENAME_FMT, f, frames_extension)) ...
+            undistorted_frame_dirs{j}, ...
+            sprintf(default.VID_FRAMENAME_FMT, f, frame_extension)) ...
+        );
+    else
+        img = imread( ...
+            fullfile( ...
+                frames_dir, ...
+                sprintf(default.VID_FRAMENAME_FMT, f, frame_extension) ...
+            ) ...
         );
     end
 
@@ -371,8 +402,7 @@ for j = 1 : num_views
     % Plot the pixels.
     set(0, 'currentfigure', figH(j));
     imshow(img); hold on;
-    xlabel('x (pixel)');
-    ylabel('y (pixel)');
+    % xlabel('x (pixel)'); ylabel('y (pixel)');
     title(sprintf('%s: Pixel Reprojections for Estimated World Coordinates\nFrame %d/%d', ...
         view_names{j}, frame_num, num_frames) ...
     );
@@ -381,6 +411,7 @@ for j = 1 : num_views
     legend('est WC reprojections',  'org WC reprojections')
     hold off;
 end
+mean_reproj_error = mean(per_view_reproj_error, 'all'); 
 fprintf('done.\n')
 
 %% 3D VISUALIZATION - RECONSTRUCTION %%
@@ -390,11 +421,12 @@ set(0, 'currentfigure', figH(num_views + 1))
 
 % Mark first point in red for reference; rest in blue.
 plot3(X_est(1, 1), X_est(2, 1), X_est(3, 1), 'r*');
-plot3(X_est(1, 2 : num_points), X_est(2, 2 : num_points), X_est(3, 2 : num_points), 'b*');
 
 title('3D Reconstruction')
 xlabel('X_{est} (mm)'); ylabel('Y_{est} (mm)'); zlabel('Z_{est} (mm)');
 hold on; grid on;
+
+plot3(X_est(1, 2 : num_points), X_est(2, 2 : num_points), X_est(3, 2 : num_points), 'b*');
 
 if f == 1
     % Plot the cameras (original + virtual).
@@ -429,16 +461,16 @@ if f == 1
     end
 end
 
-for i = 1 : numel(figH)
-    tightfig(figH(i));
-end
+% for i = 1 : numel(figH)
+%     tightfig(figH(i));
+% end
 
 axis equal
 drawnow()
 
 %% METRIC PRINTOUT %%
 
-fprintf('\t*** ESTIMATED WORLD COORDS ***\n');
+fprintf('\t*** ERRORS ***\n');
 fprintf('\tMean Reprojection Error (OVERALL): %f\n', mean(per_view_reproj_error(1, :), 'all'));
 fmt = ['\tMean Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_reproj_error(1, :)) - 1), '%f\n'];
 fprintf(fmt, per_view_reproj_error(1, :));

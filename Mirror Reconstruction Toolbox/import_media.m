@@ -18,7 +18,7 @@
 
 default = load('defaults.mat');
 
-fprintf('Importing media for marking/tracking and reconstruction to project directory...\n')
+fprintf('Importing media containing object for marking/tracking and reconstruction...\n')
 
 while true
     img_or_vid = input( ...
@@ -29,7 +29,6 @@ while true
     end
     break
 end
-fprintf('\n')
 
 % User is importing image(s)
 if img_or_vid == 'i'
@@ -38,7 +37,7 @@ if img_or_vid == 'i'
     % needed by UI filters.
     img_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_IMG_EXTS, 'UniformOutput', false)';
     
-    fprintf('Choosing images to import...')
+    fprintf('\nChoosing image(s) to import...')
     % Get the source images. Their names may be in ANY text format.
     [src_files, src_dir] = uigetfile( ...
         img_filter, ...
@@ -62,7 +61,7 @@ if img_or_vid == 'i'
     fprintf('Choosing directory to import the images into...')
     imgs_dir = uigetdir( ...
         '', ...
-        'Choose directory to save the images in within the project directory (cancel = use default directory)' ...
+        'Choose directory to import the images to (cancel = use default directory)' ...
     );
 
     if ~imgs_dir
@@ -101,8 +100,8 @@ if img_or_vid == 'i'
     fprintf('all good.\n')
 
     % Now, we know all images are the same format, so copy them over.
-    fprintf('Copying images to selected directory...')
-    duplicates_found = false;
+    fprintf('Copying image(s) to selected directory...')
+    copy_file_conflict = false;
     img_filepaths = cell(1, num_src_imgs);
     for i = 1 : num_src_imgs
         src_filepath = src_filepaths{i};
@@ -110,23 +109,23 @@ if img_or_vid == 'i'
 
         img_file = [src_base src_ext];
         img_filepath = fullfile(imgs_dir, img_file);
+        img_filepaths{i} = img_filepath;
 
         if strcmp(src_filepath, img_filepath)
-            if ~duplicates_found
-                duplicates_found = true;
-            end
-            copyfile(src_filepath, img_filepath);
+            if ~copy_file_conflict
+                copy_file_conflict = true;
+            end 
+            continue
         end
-
-        img_filepaths{i} = img_filepath;
+        copyfile(src_filepath, img_filepath);
     end
 
-    if duplicates_found
-        fprintf('skipping files with same source-destination paths...')
+    if copy_path_conflict
+        fprintf(['[WARNING] Attempted to copy one or more files onto themselves.\n' ...
+            'Copy instruction was skipped for these paths.\n\n'])
     end
-    fprintf('done.\n\n')
 
-    fprintf('\t%-17s: %s\n\t%-17s: %s\n\n', ...
+    fprintf('done.\n\n\t%-17s: %s\n\t%-17s: %s\n\n', ...
         'Source Imgs Dir', abspath(src_dir), 'Imported Imgs Dir', abspath(imgs_dir) ...
     )
 
@@ -158,6 +157,7 @@ else
 
     mp4_conversion_applied = false;
     
+    fprintf('\nLoading video containing target object...')
     % Transpose the resulting cell vector to get cell column vectors as 
     % needed by UI filters.
     vid_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_VID_EXTS, 'UniformOutput', false)';
@@ -169,6 +169,7 @@ else
     end
     
     src_filepath = fullfile(src_dir, src_file);
+    fprintf('done.\n')
     
     % Need extension to check and re-adjust filename format.
     [~, ~, src_ext] = fileparts(src_filepath);
@@ -178,8 +179,15 @@ else
     if src_ext ~= default.VID_EXT
         mp4_conversion_applied = true;
         mp4_converted_src = fullfile(src_dir, ['converted' default.VID_EXT]);
+        
+        fprintf('Converting video to MP4...');
         convert_vid_to_mp4(src_filepath, mp4_converted_src);
     
+        fprintf("done.\n\n\t%-15s: %s\n\t%-15s: %s\n\n", ...
+            'Source Video', abspath(src_filepath), ...
+            'Converted Video', abspath(mp4_src_filepath) ...
+        )
+
         % Switch source to the converted video. This ensures the original
         % video is not affected.
         src_filepath = mp4_converted_src;
@@ -188,26 +196,45 @@ else
     [vid_file, vid_dir] = uiputfile( ...
         default.VID_EXT, ...
         'Choose location to save the imported video to (cancel = use default location)', ...
-        [default.DLTDV_VID_BASE default.VID_EXT] ...
+        [default.VID_BASE default.VID_EXT] ...
     );
     
     if ~vid_file
-        vid_filepath = default.DLTDV_VID_PATH;
+        vid_filepath = default.VID_PATH;
     else
         vid_filepath = fullfile(vid_dir, vid_file);
     end
     
+    vid_filepath = abspath(vid_filepath);
+
     if mp4_conversion_applied
-        movefile(src_filepath, vid_filepath);  % move the converted source file and rename it
-        fprintf(['Imported MP4-converted copy of original video to project directory.' ...
-            '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
-            'Source Video', src_filepath, 'Imported Video', vid_filepath ...
-        )
+
+        if ~strcmp(src_filepath, vid_filepath)
+            movefile(src_filepath, vid_filepath);  % move the converted source file and rename it
+            fprintf(['Imported MP4-converted copy of original video to project directory.' ...
+                '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
+                'Source Video', src_filepath, 'Imported Video', abspath(vid_filepath) ...
+            )
+        else
+            fprintf(['[WARNING] Move Path Conflict: Attempted to copy file or directory onto itself.\n' ...
+                'Move instruction was skipped.\n\n'] ...
+            )
+        end
+
     else
-        copyfile(src_filepath, vid_filepath);  % copy the original source file and rename it
-        fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
-            'Source Video', abspath(src_filepath), 'Imported Video', abspath(calib_vid_filepath) ...
-        )
+
+        if ~strcmp(src_filepath, vid_filepath)
+            copyfile(src_filepath, vid_filepath);  % copy the original source file and rename it
+            fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
+                'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
+            )
+
+        else
+            fprintf(['[WARNING] Copy Path Conflict: Attempted to copy file or directory onto itself.\n' ...
+                'Copy instruction was skipped.\n\n'] ...
+            )
+        end
+        
     end
     
     while true

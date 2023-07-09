@@ -111,11 +111,6 @@ NUM_CALIB_FILES = 2;  % CAREFUL! Must be either 2 or 3.
 % extrinsics were computed via Comp. Extrinsic function of BCT.
 EXTRINSICS_REFERENCE_IMG_SUFFIX = '1';
 
-% By default, if the user is working with only 2 views, it is assumed one
-% of them is the actual camera (i.e., both views aren't mirror views). The
-% user will have to specify if this is not the case where pertinent.
-CAMERA_VIEW_PRESENT = 1;
-
 % Number of the latest subset selections to keep a record of. Once this
 % length is exceeded, newer ones replace oldest ones. History is useful if
 % you are comparing different calibrations to get the best one or if you
@@ -139,14 +134,17 @@ GUESS_IMG_EXT_WHEN_POSSIBLE = true;
 
 % Directories
 % =========================================================================
+% Test videos and images (containing object to mark/track points on)
+MEDIA_DIR = 'media';
+
 % Store all PROJECT videos
-DLTDV_VID_DIR = 'videos';
+VIDS_DIR = fullfile(MEDIA_DIR, 'videos');
 
 % Store all frames from PROJECT videos
-DLTDV_VID_FRAMES_DIR = 'videoframes';
+VID_FRAMES_DIR = fullfile(MEDIA_DIR, 'frames');
 
 % Store imported test images.
-IMGS_DIR = 'images';
+IMGS_DIR = fullfile(MEDIA_DIR, 'images');
 
 % DLTdv8a exported trackfiles xypts.csv and xyzpts.csv
 DLTDV_TRACKFILES_DIR = 'trackfiles';
@@ -180,7 +178,7 @@ UNDISTORTED_IMG_FOLDERS = {'cam_rect', 'mir1_rect', 'mir2_rect'};
 BCT_CALIB_VID_BASE = 'calib';
 
 % DLTdv8a video name
-DLTDV_VID_BASE = 'projvid';
+VID_BASE = 'projvid';
 
 % Merged BCT parameters (all views in one)
 BCT_MERGED_CALIB_BASE = 'bct_params';
@@ -238,7 +236,7 @@ BCT_CALIB_VID_PATH = fullfile(BCT_CALIB_DIR, [BCT_CALIB_VID_BASE, VID_EXT]);
 DLT_COEFS_PATH = fullfile(BCT_CALIB_DIR, [DLT_COEFS_BASE DLTDV_EXT]);
 
 % Path to the video that's going to be used in DLTdv8a.
-DLTDV_VID_PATH = fullfile(DLTDV_VID_DIR, [DLTDV_VID_BASE VID_EXT]);
+VID_PATH = fullfile(VIDS_DIR, [VID_BASE VID_EXT]);
 
 % Path to the marked points
 MARKED_POINTS_PATH = fullfile(RECONSTRUCTION_DIR, [MARKED_POINTS_BASE BCT_EXT]);

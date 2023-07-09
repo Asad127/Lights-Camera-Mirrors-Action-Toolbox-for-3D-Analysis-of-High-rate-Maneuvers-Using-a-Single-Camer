@@ -8,25 +8,28 @@
 
 format long g
 
-fprintf('ABOUT: Estimate the 3D world points of points marked manually with "point_marker.m".\n\n')
+disp('=====================================================================================================')
+disp('|           VIRTUAL-CAMERA (MIRROR) BASED 3D RECONSTRUCTION WITH NON-LINEAR LEAST SQUARES           |')
+disp('=====================================================================================================')
+disp('|                   Intended for use with DLTdv8a and Bouguet Calibration Toolbox                   |')
+disp('|                           Supports up to 3 views : 1 camera, 2 mirrors                            |')
+disp('=====================================================================================================')
+fprintf('Reconstructing manually marked points on objects in a single image/frame.\n\n')
 
 default = load('defaults.mat');
 
 set(groot, 'defaultAxesFontName', 'Times New Roman');
-set(groot, 'defaultAxesFontSize', 18);
+set(groot, 'defaultAxesFontSize', 12);
 set(groot, 'defaultfigurecolor', [1 1 1]);
 
-% set(gcf, 'Color', 'w');
-% set(findall(gcf,'-property','FontSize'),'FontSize', 18)
-
 % Locate image to use.
-fprintf('Loading the image containing the object of interest...')
+fprintf('Locating the non-undistorted image containing the object of interest...')
 
 img_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_IMG_EXTS, 'UniformOutput', false)';
 
 [img_file, img_dir] = uigetfile( ...
     img_filter, ...
-    'Locate the image containing the object you want to reconstruct' ...
+    'Locate the image containing the object you marked the points on' ...
 );
 
 if ~img_file
@@ -39,7 +42,7 @@ img_filepath = fullfile(img_dir, img_file);
 fprintf('done.\n')
 
 % Load file containing marked points.
-fprintf('Loading file containing marked points...')
+fprintf('Locating file containing marked points on the image...')
 
 [pts_file, pts_dir] = uigetfile( ...
     '*.mat', ...
@@ -59,7 +62,7 @@ num_points = marked_points.num_points;
 fprintf('done.\n')
 
 % Load the KRT params (calibration).
-fprintf('Loading merged BCT calibration parameters...')
+fprintf('Locating merged BCT calibration parameters...')
 
 [merged_calib_file, merged_calib_dir] = uigetfile( ...
     '*.mat', ...
@@ -82,6 +85,8 @@ if ~merged_calib_file
 else
     merged_calib_filepath = fullfile(merged_calib_dir, merged_calib_file);
 end
+
+disp(merged_calib_filepath)
 
 view_params = load(merged_calib_filepath);
 view_labels = view_params.view_labels;
@@ -121,7 +126,7 @@ fprintf('Choosing base directory to save reconstruction variables to...')
 
 reconstruction_dir = uigetdir( ...
     '', ...
-    'Choose directory to save reconstruction variables to (cancel = use default location)' ...
+    'Choose base directory to save reconstruction variables to (cancel = use default location)' ...
 );
 
 if ~reconstruction_dir
@@ -146,12 +151,12 @@ end
 fprintf('done.\n\n')
 
 % Ask if user wants to use undistorted images.
-fprintf('HELP: Only enter "y" if you have the undistorted images/videoframes.\n');
+fprintf('HELP: Only enter "y" if you have the undistorted images/video frames.\n');
 while true
-	choice = input('[PROMPT] Use undistorted images for point marking? (y/n): ', 's');
+	choice = input('[PROMPT] Use undistorted images for reprojections and reconstruction? (y/n): ', 's');
     
     if ~ismember(choice, {'y', 'n'})
-		fprintf('[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
+		fprintf('\n[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
 		continue
     end
 
@@ -160,6 +165,7 @@ while true
     else
         use_undistorted_imgs = false;
     end
+    
 	break
 end
 
@@ -198,13 +204,14 @@ end
 options = optimoptions('lsqnonlin', 'display', 'off');
 options.Algorithm = 'levenberg-marquardt';
 
-figpos_reprojection = {
-    [0., 0.64, 0.375, 0.32], ...
-    [0., 0.32, 0.375, 0.32], ...
-    [0., 0., 0.375, 0.32]
+figpos_reprojection = { ...
+    [0,0.621296296296296,0.375,0.283333333333333], ...
+    [0,0.362962962962963,0.375,0.283333333333333], ...
+    [0,0.04537037037037,0.375,0.283333333333333] ...
 };
 
-figpos_reconstruction = [0.375, 0., 0.60, 0.96];
+% figpos_reconstruction = [0.375, 0.15, 0.60, 0.75];
+figpos_reconstruction = [0.375,0.047,0.6,0.857];
 
 % Initialize figures for 2D pixel reprojections.
 figH = zeros(1, num_views + 1);
@@ -212,7 +219,7 @@ figH = zeros(1, num_views + 1);
 for j = 1 : num_views
     figH(j) = figure( ...
         'Name', sprintf('%s - Pixel Reprojections', view_names{j}), ...
-        'Units', 'Normalized',...
+        'Units', 'normalized',...
         'Position', figpos_reprojection{j} ...
     );
 end
@@ -220,7 +227,7 @@ end
 % Figure for 3D reconstruction.
 figH(num_views + 1) = figure( ...
     'Name', '3D Reconstruction', ...
-    'Units', 'Normalized', ...
+    'Units', 'normalized', ...
     'Position', figpos_reconstruction ...
 );
 
@@ -229,7 +236,7 @@ figH(num_views + 1) = figure( ...
 fprintf('\nEstimating world coordinates with lsqnonlin...')
 
 X_init = ones(4, 1);       % initial guess for optimizer
-X = zeros(4, num_points);  % to store the estimated 3D world coordinates
+X_est_homo = zeros(4, num_points);  % to store the estimated 3D world coordinates
 xpp = zeros(3, num_views); % to store pixel corresponding to i'th physical point in all views
 
 for i = 1 : num_points
@@ -246,11 +253,10 @@ for i = 1 : num_points
     Xpp = Xpp./Xpp(4);
 
     % Append to array, will be 4 x num_points by end.
-    X(:, i) = Xpp;
+    X_est_homo(:, i) = Xpp;
 end
 fprintf('done.\n')
 
-X_est_homo = X;
 X_est = X_est_homo(1:3, :);
 
 %% PIXEL REPROJECTION VISUALIZATION %%
@@ -274,16 +280,18 @@ for j = 1 : num_views
     end
 
     % Plot them pixels.
-    figure(j)
-    imshow(img, 'Border','tight');
-    title(sprintf('%s: Pixel Projections for Estimated World Coordinates', view_names{j}));
-    xlabel('x (pixel)'); 
-    ylabel('y (pixel)');
+    figure(figH(j));
+    image(img);
+    axis off
     hold on;
+    
+    title(sprintf('%s - Pixel Projections for Estimated World Coordinates', view_names{j}));
+    % xlabel('x (pixel)'); ylabel('y (pixel)');
     plot(proj_pixels_est(1, :), proj_pixels_est(2, :), 'r*', 'linewidth', 1, 'MarkerSize', 7);
     plot(proj_pixels_org(1, :), proj_pixels_org(2, :), 'bo', 'linewidth', 1, 'MarkerSize', 8);
-    legend('est WC reprojections',  'org WC reprojections');
+    legend('est WC reprojections',  'org WC reprojections')
     hold off;
+    
 end
 
 mean_reproj_error = mean(per_view_reproj_error, 'all');
@@ -292,14 +300,15 @@ fprintf("done.\n")
 
 %% 3D VISUALIZATION - RECONSTRUCTION %%
 
-figure(num_views+1)
+figure(figH(num_views + 1));
+
+% Mark first point in red for reference; rest in blue.
+plot3(X_est(1, 1), X_est(2, 1), X_est(3, 1), 'r*');
 
 title('3D Reconstruction')
 xlabel('X_{est} (mm)'); ylabel('Y_{est} (mm)'); zlabel('Z_{est} (mm)');
 hold on; grid on;
 
-% Mark first point in red for reference; rest in blue.
-plot3(X_est(1, 1), X_est(2, 1), X_est(3, 1), 'r*');
 plot3(X_est(1, 2 : num_points), X_est(2, 2 : num_points), X_est(3, 2 : num_points), 'b*');
 
 % Plot the cameras (original + virtual).
@@ -345,8 +354,7 @@ for j = 1 : num_views
             R_world(1,1), R_world(2,1), R_world(3,1), ...
             size, ...
             "r", ...
-            "LineWidth", 4, ...
-            "HandleVisibility","off" ...
+            "LineWidth", 4 ...
         );
         % text(T_world(1), T_world(2), T_world(3), "X", "FontSize", 14)
 
@@ -355,8 +363,7 @@ for j = 1 : num_views
             R_world(1,2), R_world(2,2), R_world(3,2), ...
             size, ...
             "g", ...
-            "LineWidth", 4, ...
-            "HandleVisibility","off" ...
+            "LineWidth", 4 ...
         );
         % text(T_world(1), T_world(2), T_world(3), "Y", "FontSize", 14)
 
@@ -365,8 +372,7 @@ for j = 1 : num_views
             R_world(1,3), R_world(2,3), R_world(3,3), ...
             size, ...
             "b", ...
-            "LineWidth", 4, ...
-            "HandleVisibility","off" ...
+            "LineWidth", 4 ...
         );
         % text(T_world(1), T_world(2), T_world(3), "Z", "FontSize", 14)
     end
@@ -381,9 +387,9 @@ fprintf(output_txtfile, 'Number of Views: %d\n', num_views);
 fprintf(output_txtfile, 'Number of Points: %d\n\n', num_points);
 
 fprintf('\n*** ERRORS ***\n');
-fprintf(output_txtfile, '\n*** ERRORS ***\n');
+fprintf(output_txtfile, '*** ERRORS ***\n');
 
-fmt = ['\tMean Reprojection Error (PER-VIEW): ', ...
+fmt = ['Mean Reprojection Error (PER-VIEW): ', ...
     repmat('%.6f, ', 1, numel(per_view_reproj_error(1, :))-1), ...
     '%.6f\n' ...
 ];
@@ -391,8 +397,8 @@ fmt = ['\tMean Reprojection Error (PER-VIEW): ', ...
 fprintf(fmt, per_view_reproj_error(1, :));
 fprintf(output_txtfile, fmt, per_view_reproj_error(1, :));
 
-fprintf('\tMean Reprojection Error (OVERALL): %f\n', mean_reproj_error);
-fprintf(output_txtfile, '\tMean Reprojection Error (OVERALL): %f\n', mean_reproj_error);
+fprintf('Mean Reprojection Error (OVERALL): %f\n\n', mean_reproj_error);
+fprintf(output_txtfile, 'Mean Reprojection Error (OVERALL): %f\n', mean_reproj_error);
 
 % est_dist = NaN(1, num_points - 1);
 % for i = 1 : num_points - 1
@@ -415,7 +421,7 @@ fprintf(output_txtfile, '\tMean Reprojection Error (OVERALL): %f\n', mean_reproj
 % xlabel('X (mm)'); ylabel('Y (mm)');
 % hold on;
 
-fprintf(output_txtfile, '\n*** ESTIMATED WORLD COORDS ***\n\n');
+fprintf(output_txtfile, '\n*** ESTIMATED WORLD COORDS ***\n');
 for i = 1 : num_points
     fprintf(output_txtfile, 'Point %d: (%4.4f, %4.4f, %4.4f)\n', i, X_est(:, i));
 end
@@ -432,7 +438,7 @@ savefig(fullfile(saveloc_dir, 'reconstruction.fig'))
 
 for j = 1 : num_views
     save_filepath = fullfile(saveloc_dir, sprintf('pixel_reprojections_%s.png', view_names{j}));
-
+    figure(figH(j))
     if default.FEX_USE_EXPORTFIG && default.FEX_USE_TIGHTFIG
         tightfig;
         tightfig;
@@ -455,6 +461,8 @@ for j = 1 : num_views
     end
 
 end
+
+fprintf('Saved results to: %s\n\n', abspath(saveloc_dir));
 
 %% FUNCTIONS %%
 function error = reconst_coords_per_px(X, n_views, x, K, R, T)

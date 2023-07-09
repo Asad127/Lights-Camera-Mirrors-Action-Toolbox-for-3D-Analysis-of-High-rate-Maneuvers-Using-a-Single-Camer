@@ -6,10 +6,11 @@ corresponding to a single camera and 2-mirror setup.
 
 default = load('defaults.mat');
 
+fprintf('Locating (non-undistorted) image to mark points on...')
 img_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_IMG_EXTS, 'UniformOutput', false)';
 [img_file, img_dir] = uigetfile( ...
     img_filter, ...
-    'Locate the image containing the object you want to reconstruct' ...
+    'Locate the non-undistorted image containing the object you want to reconstruct' ...
 );
 if ~img_file
     error('Operation canceled by user.')
@@ -18,6 +19,7 @@ img_filepath = fullfile(img_dir, img_file);
 [~, img_base, img_extension] = fileparts(img_filepath);
 [img_height, img_width, ~] = size(imread(img_filepath));
 
+fprintf('done.\nLocating merged BCT calibration file...')
 [merged_calib_file, merged_calib_dir] = uigetfile( ...
     ['*' default.BCT_EXT], ...
     'Select the merged BCT calibration parameters file (cancel = use default location)' ...
@@ -40,6 +42,8 @@ else
     merged_calib_filepath = fullfile(merged_calib_dir, merged_calib_file);
 end
 
+fprintf('done.\n\n')
+
 view_params = load(merged_calib_filepath);
 view_labels = view_params.view_labels;
 num_views = numel(view_labels);
@@ -53,7 +57,7 @@ while true
     break
 end
 
-fprintf('\nHELP: Only enter "y" if you have the undistorted images/videoframes.\n');
+fprintf('\nHELP: Only enter "y" if you have the undistorted images or video frames.\n');
 while true
 	choice = input('[PROMPT] Use undistorted images for point marking? (y/n): ', 's');
     
@@ -67,6 +71,7 @@ while true
     else
         use_undistorted_imgs = false;
     end
+    
 	break
 end
 
@@ -109,7 +114,6 @@ fprintf('\nEntering point-marking mode...\n\n')
 x = [];
 view_names = default.VIEW_NAMES_LONG(view_labels);
 
-
 for j = 1 : num_views
 
     hist_exists = true;
@@ -126,11 +130,12 @@ for j = 1 : num_views
     end
 
     figure('Units', 'Normalized', 'Position', [0 0.15 0.8 0.8]);
-    set(gcf, 'Color', 'w');
-    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 18)
 
     imshow(img); hold on;
-    xlabel('x (pixel)'); ylabel('y (pixel)');
+    % xlabel('x (pixel)'); ylabel('y (pixel)');
+
+    set(gcf, 'Color', 'w');
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 12);
 
     % Mark first point's history (i.e., if it's been marked in
     % other views, plot those pixel locations on the image). At

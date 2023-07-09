@@ -114,6 +114,7 @@ end
 fprintf('Renaming files...')
 
 % Rename and move the image files sequentially.
+move_path_conflict = false;
 for i = 1 : numel(img_filepaths)
     img_filepath = img_filepaths{i};
 
@@ -122,7 +123,17 @@ for i = 1 : numel(img_filepaths)
     new_img_filepath = fullfile(input_dir, new_img_file);
 
     % Copy the current (original) file to the same input_dir with new name.
-    movefile(img_filepath, new_img_filepath);
+    if ~strcmp(img_filepath, new_img_filepath)
+        movefile(img_filepath, new_img_filepath);
+    else
+        move_path_conflict = true;
+    end
 end
 
 fprintf('done.\n')
+
+if move_path_conflict
+    fprintf(['[WARNING] Move Path Conflict: Attempted to copy file or directory onto itself.\n' ...
+        'Move instruction was skipped.\n\n'] ...
+    )
+end

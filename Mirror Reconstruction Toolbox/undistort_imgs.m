@@ -67,13 +67,11 @@ end
 
 if isfolder(distorted_filepaths_or_dir)
     input_dir = distorted_filepaths_or_dir;
-    fprintf('Input path "%s" appears to be a directory.\n', input_dir)
 
     % Either ask the user to input image extension, or guess it based on
     % directory contents.
     if default.GUESS_IMG_EXT_WHEN_POSSIBLE
         img_extension = guess_img_extension(input_dir, default.SUPPORTED_IMG_EXTS);
-        fprintf('Guessed Image Extension: %s\n', img_extension)
     else
         img_extension = prompt_img_extension('[PROMPT] Enter the extension of images to undistort: ');
     end

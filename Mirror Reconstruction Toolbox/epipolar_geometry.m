@@ -24,7 +24,8 @@
 %% PRELIMINARY LOADING STUFF %%
 default = load('defaults.mat');
 
-% Load in the image. % Since we are dealing with mirrors, we can load in
+fprintf('Locating the image to mark points and plot epilines on...')
+% Load in the image. Since we are dealing with mirrors, we can load in
 % the same image multiple times to simulate multiple views, and so just
 % need to select one image.
 img_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_IMG_EXTS, 'UniformOutput', false)';
@@ -40,10 +41,15 @@ end
 img_filepath = fullfile(img_dir, img_file);
 [~, img_base, img_extension] = fileparts(img_filepath);
 
+fprintf('done.\n')
+
 % Preliminary read to get size of images.
 [img_height, img_width, ~] = size(imread(img_filepath));  % used in plotting epilines
 
 % Load in the merged BCT calibration parameters corresponding to the image.
+
+fprintf('Locating the merged BCT calibration file...')
+
 [merged_calib_file, merged_calib_dir] = uigetfile( ...
     ['*' default.BCT_EXT], ...
     'Locate the merged BCT calibration parameters file (cancel = use default location)' ...
@@ -64,6 +70,8 @@ if ~merged_calib_file
 else
     merged_calib_filepath = fullfile(merged_calib_dir, merged_calib_file);
 end
+
+fprintf('done.\n\n')
 
 % Load in the merged poses and images.
 view_params = load(merged_calib_filepath);
@@ -123,6 +131,8 @@ for i = 1 : num_pairs
 
 end
 
+fprint('Choosing directory to store results in...')
+
 % Get the directory to store results, or just use default lcoation.
 results_dir = uigetdir('', 'Select directory to store the results in (cancel = use default directory)');
 
@@ -148,7 +158,9 @@ if ~results_dir
     end
 end
 
-fprintf('HELP: Only enter "y" if you have the undistorted images/videoframes.\n');
+fprintf('done.\n')
+
+fprintf('HELP: Only enter "y" if you have the undistorted images or video frames.\n');
 while true
 	choice = input('[PROMPT] Use undistorted images for point marking? (y/n): ', 's');
     
@@ -162,6 +174,7 @@ while true
     else
         use_undistorted_imgs = false;
     end
+    
 	break
 end
 
@@ -199,7 +212,6 @@ end
 colors = 'bgrcmy';  % color order used in plotting (cycles)
 
 %% CORE FUNCTIONALITY %%
-fprintf('\n')
 num_points = input('[PROMPT] Enter the no. of points to mark: ');
 
 fprintf('\nEntering point-marking mode...\n\n')
@@ -257,9 +269,7 @@ epipoles_ref_view = zeros(num_pairs, 2);
 epilines_org_all_view_pairs = zeros(3, num_points * num_pairs);
 epilines_ref_all_view_pairs = zeros(3, num_points * num_pairs);
 
-fprintf(['Calculating fundamental matrix, epipoles, epilines, and point-line ' ...
-    'distances (PLDs) for %d view pair(s)...\n\n'], num_pairs ...
-)
+fprintf('CProcessing %d view pair(s)...\n\n', num_pairs)
 
 for i = 1 : num_pairs
 
@@ -337,17 +347,20 @@ for i = 1 : num_pairs
     org_fig = figure('Name', org_fig_win_name, 'Units', 'normalized', 'Position', [0 0.2 0.4 0.8]);
     imshow(img_org); hold on;
     set(gcf, 'Color', 'w');
-    set(findall(gcf,'-property','FontSize'),'FontSize', 18)
+    set(findall(gcf,'-property','FontSize'),'FontSize', 12)
 
     ref_fig_win_name = [win_name_view_pair sprintf('Epilines in %s View', ref_view_name)];
     ref_fig = figure('Name', ref_fig_win_name, 'Units', 'normalized', 'Position', [0.4 0.2 0.8 0.8]);
     imshow(img_ref); hold on;
     set(gcf, 'Color', 'w');
-    set(findall(gcf,'-property','FontSize'),'FontSize', 18)
+    set(findall(gcf,'-property','FontSize'),'FontSize', 12)
 
     fprintf('calculating PLDs...')
     pt_line_dists_org = NaN(1, num_points);
     pt_line_dists_ref = NaN(1, num_points);
+
+    pt_line_dists_org_norm = NaN(1, num_points);
+    pt_line_dists_ref_norm = NaN(1, num_points);
 
     % Go point-by-point
     for p = 1 : num_points
@@ -376,6 +389,9 @@ for i = 1 : num_pairs
 
         pt_line_dists_org(1, p) = pld_org;
         pt_line_dists_ref(1, p) = pld_ref;
+
+        pt_line_dists_org_norm(1, p) = pld_org / sqrt(img_height^2 + img_width^2);
+        pt_line_dists_ref_norm(1, p) = pld_ref / sqrt(img_height^2 + img_width^2);
     end
 
     % SAVING RESULTS
@@ -418,11 +434,12 @@ for i = 1 : num_pairs
         fullfile(results_dir, result_matfile), ...
         'F', 'epipole_org_view', 'epipole_ref_view', 'pts_org_view', ...
         'pts_ref_view', 'epilines_org_view', 'epilines_ref_view', ...
-        'pt_line_dists_org', 'pt_line_dists_ref', 'img_filepath' ...
+        'pt_line_dists_org', 'pt_line_dists_ref', 'pt_line_dists_org_norm', ...
+        'pt_line_dists_ref_norm', 'img_filepath'...
     )
     fprintf('done.\n\tAvg. PLD Over View Pair: %.6f (pixels) | %.6f (normalized)\n\n', ...
         mean([pt_line_dists_org pt_line_dists_ref], 'all'), ...
-        mean([pt_line_dists_org pt_line_dists_ref], 'all') / sqrt(img_height^2 + img_width^2) ...
+        mean([pt_line_dists_org_norm pt_line_dists_ref_norm], 'all') ...
     );
 end
 
@@ -481,10 +498,9 @@ end
 fprintf('\to Mark points in %s view: ', view_name)
 
 figure('Name', sprintf('%s View', view_name), 'NumberTitle', 'off')
+imshow(img);
 set(gcf, 'Color', 'w');
-set(findall(gcf, '-property', 'FontSize'), 'FontSize', 18)
-
-imshow(img);num_points
+set(findall(gcf, '-property', 'FontSize'), 'FontSize', 12)
 hold on;
 
 % Mark first point's history (i.e., if it's been marked in other views,

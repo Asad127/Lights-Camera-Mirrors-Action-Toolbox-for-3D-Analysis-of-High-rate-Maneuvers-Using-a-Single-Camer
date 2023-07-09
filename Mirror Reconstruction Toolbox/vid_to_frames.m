@@ -2,6 +2,10 @@ function vid_to_frames(input_vid, output_dir, frame_name_fmt, frame_ext, start_t
 % Extracts numbered frames from a video in a specific format and stores 
 % them into the target directory.
 % 
+% abs means absolute, and rel means relative. Absolute is the frame number
+% corresponding to the full-length of the video, whereas rel is specific to
+% the interval defined by [start_time_secs stop_time_secs].
+%
 % TAKES
 % ===========================================================================
 % input_vid (required):
@@ -29,7 +33,6 @@ function vid_to_frames(input_vid, output_dir, frame_name_fmt, frame_ext, start_t
 % RETURNS
 % ===========================================================================
 % Nothing. Simply creates a directory with the frames inside.
-
 
 % Set defaults.
 default = load('defaults.mat');
@@ -69,18 +72,22 @@ switch nargin
         frame_ext = default.IMG_EXT;
         start_time_secs = default.VID_START_TIME_SECONDS;
         stop_time_secs = default.VID_STOP_TIME_SECONDS;
+
     case 2
         frame_name_fmt = default.VID_FRAMENAME_FMT;
         frame_ext = default.IMG_EXT;
         start_time_secs = default.VID_START_TIME_SECONDS;
         stop_time_secs = default.VID_STOP_TIME_SECONDS;
+
     case 3
         frame_ext = IMG_EXT;
         start_time_secs = default.VID_START_TIME_SECONDS;
         stop_time_secs = default.VID_STOP_TIME_SECONDS;
+
     case 4
         start_time_secs = default.VID_START_TIME_SECONDS;
         stop_time_secs = default.VID_STOP_TIME_SECONDS;
+
     case 5
         stop_time_secs = default.VID_STOP_TIME_SECONDS;
 end
@@ -91,7 +98,7 @@ end
 % need to validate files. However, generally, this won't be the case with
 % how the scripts are designed (enforcing UI file/folder inputs).
 
-if ~isfile(input_dir)
+if ~isfile(input_vid)
     error('Provided input video path is not a file or does not exist.\nProvided Path: %s', input_vid)
 end
 
@@ -105,6 +112,29 @@ end
 
 % Read the video file.
 vid_obj = VideoReader(input_vid);
+
+% Estimate no. of frames in video (not 100% accurate as noted in MATLAB 
+% docs), and we would like an exact number to prevent mismatch between
+% DLTdv8a's counted number of frames and ours.
+est_num_frames = vid_obj.NumFrames;
+
+% HACK: Sub some frames from the estimation to (hopefully) get a valid 
+% frame number. Then, read the frame in with the read(vid, framenum) form 
+% of the VideoReader read function, which sets the current frame to 
+% framenum. Then readFrame from there on until we run out of frames, and 
+% that is our actual frame count. This saves you from having to read the
+% entire video to get the frame count, and just a few frames.
+
+est_num_frames  = est_num_frames - 5;            
+dummy_read = read(vid_obj, est_num_frames); 
+
+while hasFrame(vid_obj)
+    frame_in = readFrame(vid_obj);  % read the next frame
+    est_num_frames = est_num_frames + 1;
+end
+
+total_frames_abs = est_num_frames;  % since we read till no more frames, this is 100% correct
+dummy_read = read(vid_obj, 1);    % reset frame to original position
 
 % Set current time to starting seconds.
 vid_obj.CurrentTime = start_time_secs;
@@ -125,7 +155,7 @@ end
 % number of frames by VideoReader, we push it down to the no. of reported
 % frames instead.
 
-stop_frame_abs = min(floor(vid_obj.FrameRate * stop_time_secs), vid_obj.NumFrames);
+stop_frame_abs = min(floor(vid_obj.FrameRate * stop_time_secs), total_frames_abs);
 start_frame_abs = max(floor(vid_obj.FrameRate * start_time_secs), 1);
 
 % Rel = relative within the interval. Absolute is with reference of the
@@ -136,7 +166,7 @@ curr_frame_rel = 1;
 curr_frame_abs = start_frame_abs;
 
 st = dbstack;
-bar = waitbar(curr_frame_abs/total_frames_rel, ...
+bar = waitbar(curr_frame_rel/total_frames_rel, ...
     sprintf( ...
         'Extracting video frames: %d/%d (rel) | %d/%d (abs)', ...
         curr_frame_rel, total_frames_rel, start_frame_abs, stop_frame_abs ...
@@ -144,8 +174,8 @@ bar = waitbar(curr_frame_abs/total_frames_rel, ...
     'Name', st(1).name ...
 );
 
-% while hasFrame(vid_obj) && vid_obj.CurrentTime <= stop_time_seconds
-while hasFrame(vid_obj) && curr_frame_rel <= total_frames_rel
+while hasFrame(vid_obj) && vid_obj.CurrentTime <= stop_time_secs
+% while hasFrame(vid_obj) && curr_frame_rel <= total_frames_rel
     % Read the next frame.
     frame = readFrame(vid_obj);
     

@@ -210,9 +210,9 @@ merged_struct.('view_labels') = view_labels;
 );
 
 if ~file
-    saveloc_bct = default.BCT_MERGED_CALIB_PATH;
+    merged_calib_filepath = default.BCT_MERGED_CALIB_PATH;
 else
-    saveloc_bct = fullfile(path, file);
+    merged_calib_filepath = fullfile(path, file);
 end
 
 ui_prompt_count = ui_prompt_count + 1;
@@ -225,20 +225,20 @@ ui_prompt_count = ui_prompt_count + 1;
 );
 
 if ~file
-    saveloc_dlt = default.DLT_COEFS_PATH;
+    dlt_coefs_filepath = default.DLT_COEFS_PATH;
 else
-    saveloc_dlt = fullfile(path, file);
+    dlt_coefs_filepath = fullfile(path, file);
 end
 
 ui_prompt_count = ui_prompt_count + 1;
 
 fprintf('\nGenerating files...\n\n')
-save(saveloc_bct, '-struct', 'merged_struct')
-writematrix(dlts, saveloc_dlt, 'Delimiter', ',')
+save(merged_calib_filepath, '-struct', 'merged_struct')
+writematrix(dlts, dlt_coefs_filepath, 'Delimiter', ',')
 
 fprintf('\t%-26s: %s\n\t%-26s: %s\n\n', ...
-    'Merged BCT params saved to', abspath(saveloc_bct), ...
-    'DLT coefficients saved to', abspath(saveloc_dlt) ...
+    'Merged BCT params saved to', abspath(merged_calib_filepath), ...
+    'DLT coefficients saved to', abspath(dlt_coefs_filepath) ...
 );
 
 fprintf(['Done merging BCT calibration results and creating DLT coefs file.' ...

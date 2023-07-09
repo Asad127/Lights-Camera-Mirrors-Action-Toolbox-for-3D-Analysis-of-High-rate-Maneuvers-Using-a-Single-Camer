@@ -77,13 +77,17 @@ if ~isfolder(default.DLTDV_TRACKFILES_DIR)
     mkdir(default.DLTDV_TRACKFILES_DIR);
     added_entities{end + 1} = sprintf('+ %s', default.DLTDV_TRACKFILES_DIR);
 end
-if ~isfolder(default.DLTDV_VID_DIR)
-    mkdir(default.DLTDV_VID_DIR);
-    added_entities{end + 1} = sprintf('+ %s', default.DLTDV_VID_DIR);
+if ~isfolder(default.MEDIA_DIR)
+    mkdir(default.MEDIA_DIR)
+    added_entities{end + 1} = sprintf('+ %s', default.MEDIA_DIR);
 end
-if ~isfolder(default.DLTDV_VID_FRAMES_DIR)
-    mkdir(default.DLTDV_VID_FRAMES_DIR);
-    added_entities{end + 1} = sprintf('+ %s', default.DLTDV_VID_FRAMES_DIR);
+if ~isfolder(default.VIDS_DIR)
+    mkdir(default.VIDS_DIR);
+    added_entities{end + 1} = sprintf('+ %s', default.VIDS_DIR);
+end
+if ~isfolder(default.VID_FRAMES_DIR)
+    mkdir(default.VID_FRAMES_DIR);
+    added_entities{end + 1} = sprintf('+ %s', default.VID_FRAMES_DIR);
 end
 if ~isfolder(default.IMGS_DIR)
     mkdir(default.IMGS_DIR)
@@ -106,7 +110,6 @@ project_dirs_append(project_dir);
 
 fprintf('%s\n', default.CWLINE_STYLE);
 fprintf('+ %s\n', project_dir);
-
 
 newline_after_count = 3;
 if isempty(added_entities)
