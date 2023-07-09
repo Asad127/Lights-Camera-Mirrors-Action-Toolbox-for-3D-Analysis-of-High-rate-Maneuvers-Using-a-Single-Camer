@@ -2,9 +2,9 @@
 
 If you are new to the MATLAB's Camera Calibration Toolbox (specifically, Bouguet Calibration Toolbox or BCT for short), we recommend downloading the toolbox from the [official webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) and following along with the first few examples on the webpage to familiarize yourself with the general process. Furthermore, add BCT to your MATLAB path as well in order to use it in any directory within your computer.
 
-> *Trying out the examples is highly recommended for anyone who has not used the toolbox before.*
+> ***Trying out the examples is highly recommended for anyone who has not used the toolbox before.***
 
-### ***Encountered Issues***
+### **Encountered Issues**
 As we were developing the toolbox, we encountered some problems when working with BCT. We list them below along with their solutions:
 
 1. (CRITICAL) Could not save calibration results when clicking on the **Save** button in the calibration GUI.
@@ -17,9 +17,9 @@ To fix (1), head to BCT's directory and open up `saving_calib.m` in MATLAB or so
 cont_save = input('Do you want to continue? ([]=no,other=yes) ', 's');
 ```
 
-To fix (2), head to BCT's directory and open up `go_calib_optim_iter.m` in MATLAB or some text editor. In lines 548, 551, and 554, replace x with xp. The corrected lines are shown below:
+To fix (2), head to BCT's directory and open up `go_calib_optim_iter.m` in MATLAB or some text editor. In lines 548, 551, and 554, replace `x` with `xp`. The corrected lines are shown below:
 
-```
+```matlab
 % ...LINE 548...
 [xp,dxdom,dxdT,dxdf,dxdc,dxdk,dxdalpha] = project_points2(X_kk,omckk,Tckk,fc,cc,kc,alpha_c);
 
@@ -32,7 +32,7 @@ end;
 % LINE 555...
 ```
 
-Problem (2) exists because, while `x` is originally computed in the script with no. of columns = no. of checker corners * no. of images, it is later (probably unintentionally) replaced by another computation of `x` (see lines 548-555 above), this time only for a particular image, so that this new `x` has no. of columns = no. of checker corners.
+Problem (2) exists because, while `x` is originally computed in the script with no. of columns = no. of checker corners * no. of images, it is later (probably unintentionally) replaced by another computation of `x` (see lines 548-555 above), this time only for a particular image, so that this new `x` has no. of columns = no. of checker corners. 
 
 This problem does not affect the mirror reconstruction toolbox, but it is something we noticed in our very early tests with reprojection on the checker corners.
 
@@ -40,7 +40,7 @@ This problem does not affect the mirror reconstruction toolbox, but it is someth
 
 The following section explains how to setup the system for capturing multiple views using a single camera fixed on a tripod and reflective mirrors present in the field of view. In the figure below, we show the **mirror container, the tripod, and the light source** we have used to capture our images.
 
-**Camera stand and mirror setup MUST NOT MOVE throughout the process!**
+> ***Camera stand and mirror setup MUST NOT MOVE throughout the process!***
 
 ![w11](https://user-images.githubusercontent.com/65610334/213187130-b907fcc0-bced-43c0-99a9-ee44dae10d69.PNG)
 
@@ -64,7 +64,7 @@ The following section explains how to setup the system for capturing multiple vi
 
 ![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
 
-#### ***All-View Visibility Assumption***
+#### **All-View Visibility Assumption**
 
 Note that, in Step 5, if the assumption of the checker being visible in all views is violated, the calibration for each view can still work as long as there is at least one image where the checker is visible in all views. However, image selection becomes a little complicated.
 
@@ -79,7 +79,7 @@ A good choice for point 2 is to leave the checker flat in front of both the mirr
 
 > We only recommend breaking the assumption if following it makes movement very restrictive or results in a bad calibration.
 
-#### ***Calibration and Reconstruction Accuracy***
+#### **Calibration and Reconstruction Accuracy**
 Reconstruction accuracy is heavily dependent upon good calibration, so make sure you cover a variety of poses when taking the calibration images or recording the calibration video. If BCT shows good reprojections but the undistorted function results in bogus undistortions, or the reconstruction is inaccurate, or reprojections are fine for some points on the image and bad for others, it is VERY likely the calibration is faulty.
 
 In such cases, try to remove redundant and bad images from the existing set of calibration images, and take more calibration images with a variety of poses and repeat the calibration.
@@ -123,7 +123,7 @@ At this point, you should be presented with the following figure (a mosaic of th
 
 This marks the end of the image loading process.
 
-#### ***Image Selection When All-View Visibility Assumption Is Violated***
+#### **Image Selection When All-View Visibility Assumption Is Violated**
 
 Consider an extreme scenario. Assume you have two mirrors and the checker was not visible to either of them in all calibration images except for one. Additionally, suppose that the checker was visisble to the camera view in all images. As discussed earlier, calibration is still possible in this case. However, the image selection must be handled with care.
 
@@ -149,11 +149,11 @@ Thus, the basic idea is that when selecting images for each view, ensure that th
 
 ![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
 
-#### ***Clicking Order for Extreme Internal Corners***
+#### **Clicking Order for Extreme Internal Corners**
 
 The **first** clicked point is selected as the **origin** of the world reference frame attached to the checker grid. The **second** click defines the direction of the **Y-axis** of the reference frame from **(1st click &rarr; 2nd click)**. The **third** click defines the direction of the **X-axis** of the reference frame **(2nd click &rarr; 3rd click)**. The fourth click will complete the **plane's definition** as **1st click &rarr; 2nd click &rarr; 3rd click &rarr; 4th click &rarr; 1st click**.
 
-> *As you mark these four extreme corners in the first image, note the clicking order and follow it for the rest of the images. We will need it to associate the reflected points properly when calibrating the mirror images.*
+> As you mark these four extreme corners in the first image, note the clicking order and follow it for the rest of the images. We will need it to associate the reflected points properly when calibrating the mirror images.
 
 We illustrate the clicking order that we followed for our calibration below.
 
@@ -187,28 +187,30 @@ At this point, we have all the information required to begin calibration. Click 
 
 ![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
 
-    Initialization of the intrinsic parameters - Number of images: 12
+```
+Initialization of the intrinsic parameters - Number of images: 12
 
-    Calibration parameters after initialization:
+Calibration parameters after initialization:
 
-    Focal Length:          fc = [ 1529.18846   1529.18846 ]
-    Principal point:       cc = [ 1631.50000   734.50000 ]
-    Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
-    Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
+Focal Length:          fc = [ 1529.18846   1529.18846 ]
+Principal point:       cc = [ 1631.50000   734.50000 ]
+Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
+Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
 
-    Main calibration optimization procedure - Number of images: 12
-    Gradient descent iterations: 1...2...3...4...5...6...7...8...9...10...done
-    Estimation of uncertainties...done
+Main calibration optimization procedure - Number of images: 12
+Gradient descent iterations: 1...2...3...4...5...6...7...8...9...10...done
+Estimation of uncertainties...done
 
-    Calibration results after optimization (with uncertainties):
+Calibration results after optimization (with uncertainties):
 
-    Focal Length:          fc = [ 1507.97898   1496.24779 ] ± [ 26.82888   26.88096 ]
-    Principal point:       cc = [ 1536.92900   695.75342 ] ± [ 38.21710   42.19543 ]
-    Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
-    Distortion:            kc = [ -0.12315   0.13155   0.00248   -0.01555  0.00000 ] ± [ 0.05752   0.11221   0.00904   0.00697  0.00000 ]
-    Pixel error:          err = [ 0.23942   0.24756 ]
+Focal Length:          fc = [ 1507.97898   1496.24779 ] ± [ 26.82888   26.88096 ]
+Principal point:       cc = [ 1536.92900   695.75342 ] ± [ 38.21710   42.19543 ]
+Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
+Distortion:            kc = [ -0.12315   0.13155   0.00248   -0.01555  0.00000 ] ± [ 0.05752   0.11221   0.00904   0.00697  0.00000 ]
+Pixel error:          err = [ 0.23942   0.24756 ]
 
-    Note: The numerical errors are approximately three times the standard deviations (for reference).
+Note: The numerical errors are approximately three times the standard deviations (for reference).
+```
 
 The calibration parameters are stored in a number of variables in the workspace.
 
@@ -218,15 +220,19 @@ Click the **Reproject On Images** button in the calibration GUI to show the repr
 
 ![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
 
-    Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
-    Number(s) of image(s) to show ([] = all images) = []
+```
+Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
+Number(s) of image(s) to show ([] = all images) = []
+```
 
 The following figure shows four of the images with the detected corners (red crosses) and the reprojected grid corners (circles).
 
 ![Asad](https://user-images.githubusercontent.com/65610334/212270143-6e7e929a-3dee-4e6a-903a-d3b5ce15f6cf.jpg)
 
-    Number(s) of image(s) to show ([] = all images) = []
-    Pixel error:      err = [0.23942   0.24756] (all active images)
+```
+Number(s) of image(s) to show ([] = all images) = []
+Pixel error:      err = [0.23942   0.24756] (all active images)
+```
 
 The reprojection error is also shown in the form of color-coded crosses, as shown in the figure below.
 
@@ -242,7 +248,7 @@ This will plot the camera and checkers using the estimated extrinsics from the c
 
 ![extrrr](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
- To switch from a "camera-centered" view to a "world-centered" view, click on the **Switch to world-centered view** button located at the bottom-right corner of the figure.
+To switch from a "camera-centered" view to a "world-centered" view, click on the **Switch to world-centered view** button located at the bottom-right corner of the figure.
 
 ![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
@@ -260,11 +266,11 @@ We only require the matfile, so rename `Calib_Results.mat` to `Calib_Results_cam
 
 We are now done calibrating the first view (the actual camera).
 
-#### ***Notes on Reference Image and Extrinsics***
+#### **Notes on Reference Image and Extrinsics**
 
 Before we move on to the mirror view calibration, we must make an important note on the world reference image. For reconstruction on test images later on, we need a common image reference for the world frame and a pose for each view relative to the checker in that image. We assure that, during calibration, the **camera does not move between image captures**, so the camera pose relative to the reference world frame remains the same for both the calibration images and the images we take at test time.
 
-The calibration process estimates the camera pose (rotation R and translation T) for each image in the calibration set. These poses can be viewed in the `Calib_Results.mat` file, as `Rc_{image suffix}` and `Tc_{image suffix}`. So, if we had the images ***{Image1.jpg, ..., Image30.jpg}***, then `Tc_15` and `Rc_15` correspond to the extrinsics for ***Image15.jpg***. Suppose that our reference was ***Image1.jpg***, then during calibration, this image is also included in the calibration set, so BCT computes its pose (R and T) and we can use that at test time.
+The calibration process estimates the camera pose (rotation R and translation T) for each image in the calibration set. These poses can be viewed in the `Calib_Results.mat` file, as `Rc_{image suffix}` and `Tc_{image suffix}`. So, if we had the images {Image1.jpg, ..., Image30.jpg}, then `Tc_15` and `Rc_15` correspond to the extrinsics for Image15.jpg. Suppose that our reference was Image1.jpg, then during calibration, this image is also included in the calibration set, so BCT computes its pose (R and T) and we can use that at test time.
 
 In the event that the image reference is not included in the calibration image set, BCT's **Comp. Extrinsic** function can be used to compute the extrinsics, and this case, the suffix is `ext` (e.g., `Rc_ext`) instead of a number. However, this is a special case discussed in detail at the end under the section ***Special Scenarios***.
 
@@ -276,7 +282,7 @@ This section explains how to calibrate the mirror view using the reflection of t
 
 This process must be repeated separately for each mirror.
 
-> ***If continuing directly from a previous view's calibration, CLEAR THE WORKSPACE, CLOSE ALL FIGURES, and RESTART `calib_gui` before proceeding to avoid issues with existing workspace variables.***
+> If continuing directly from a previous view's calibration, CLEAR THE WORKSPACE, CLOSE ALL FIGURES, and RESTART `calib_gui` before proceeding to avoid issues with existing workspace variables.*
 
 ### **1. Loading Calibration Images**
 
@@ -292,19 +298,19 @@ The only change in this step is the **clicking order**, and that the points must
 
 We visually explain the **reflected clicking order** in the mirror images below. Note that the clicking order here depends on the clicking order from when the original set was calibrated.
 
-- **The 1st point which is the origin in the mirror view is the reflected version of the 1st point clicked in the original view.**
+- The 1st point which is the origin in the mirror view is the reflected version of the 1st point clicked in the original view.
 
 ![q1](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
 
-- **The 2nd point in the mirror view is the reflected version of the 2nd point clicked in the original view.**
+- The 2nd point in the mirror view is the reflected version of the 2nd point clicked in the original view.
 
 ![q2](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
 
-- **The 3rd point in the mirror view is the reflected version of the 3rd point clicked in the original view.**
+- The 3rd point in the mirror view is the reflected version of the 3rd point clicked in the original view.
 
 ![q3](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
 
-- **The 4th point in the mirror view is the reflected version of the 4th point clicked in the original view.**
+- The 4th point in the mirror view is the reflected version of the 4th point clicked in the original view.
 
 ![q4](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
 
@@ -322,48 +328,53 @@ The tooblox first guesses the corner locations, prompts for the distortion guess
 
 ![extracted acdcc](https://user-images.githubusercontent.com/65610334/212286285-18da988a-4855-4b63-885e-e1035fa1f071.jpg)
 
-> ***Repeat the same process for the rest of images in the calibration set. Again, BCT only prompts for the distortion guess for all images after the first.***
+> Repeat the same process for the rest of images in the calibration set. Again, BCT only prompts for the distortion guess for all images after the first.
 
 ### **3. Main Calibration Step**
 
 The main calibration step for the mirror view is the same as described for the **original view**.
 
-    Initialization of the intrinsic parameters - Number of images: 12
+```
+Initialization of the intrinsic parameters - Number of images: 12
 
-    Calibration parameters after initialization:
+Calibration parameters after initialization:
 
-    Focal Length:          fc = [ 1439.23693   1439.23693 ]
-    Principal point:       cc = [ 1631.50000   734.50000 ]
-    Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
-    Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
+Focal Length:          fc = [ 1439.23693   1439.23693 ]
+Principal point:       cc = [ 1631.50000   734.50000 ]
+Skew:             alpha_c = [ 0.00000 ]   => angle of pixel = 90.00000 degrees
+Distortion:            kc = [ 0.00000   0.00000   0.00000   0.00000   0.00000 ]
 
-    Main calibration optimization procedure - Number of images: 12
-    Gradient descent iterations: 1...2...3...4...5...6...7...8...9...10...11...12...13...done
-    Estimation of uncertainties...done
+Main calibration optimization procedure - Number of images: 12
+Gradient descent iterations: 1...2...3...4...5...6...7...8...9...10...11...12...13...done
+Estimation of uncertainties...done
 
-    Calibration results after optimization (with uncertainties):
+Calibration results after optimization (with uncertainties):
 
-    Focal Length:          fc = [ 1450.42395   1449.67211 ] ± [ 44.81565   36.31254 ]
-    Principal point:       cc = [ 1570.68503   759.76341 ] ± [ 52.54308   54.49669 ]
-    Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
-    Distortion:            kc = [ -0.24718   0.51654   0.01726   -0.01352  0.00000 ] ± [ 0.12459   0.34828   0.00662   0.01536  0.00000 ]
-    Pixel error:          err = [ 0.29234   0.26648 ]
+Focal Length:          fc = [ 1450.42395   1449.67211 ] ± [ 44.81565   36.31254 ]
+Principal point:       cc = [ 1570.68503   759.76341 ] ± [ 52.54308   54.49669 ]
+Skew:             alpha_c = [ 0.00000 ] ± [ 0.00000  ]   => angle of pixel axes = 90.00000 ± 0.00000 degrees
+Distortion:            kc = [ -0.24718   0.51654   0.01726   -0.01352  0.00000 ] ± [ 0.12459   0.34828   0.00662   0.01536  0.00000 ]
+Pixel error:          err = [ 0.29234   0.26648 ]
 
-    Note: The numerical errors are approximately three times the standard deviations (for reference).
+Note: The numerical errors are approximately three times the standard deviations (for reference).
+```
 
 ### **4. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
 
 This procedure is also the **same** as in the **original view**.
 ![Unadsm](https://user-images.githubusercontent.com/65610334/212606564-7dcd28b3-393d-4c4e-9730-6ce153e7e08f.jpg)
 
-    Number(s) of image(s) to show ([] = all images) = []
-    Pixel error:      err = [0.23616   0.25538] (all active images)
+```
+Number(s) of image(s) to show ([] = all images) = []
+Pixel error:      err = [0.23616   0.25538] (all active images)
+```
 
 ![r5](https://user-images.githubusercontent.com/65610334/212606286-b63e08bc-d689-41c8-81f0-7d249d653b8b.jpg)
 
 ### **5. (OPTIONAL) Plot the Camera and checkers in 3D Space**
 
 Again, the process remains the same as discussed in the original view.
+
 ![3d](https://user-images.githubusercontent.com/65610334/212606407-4e0ecebd-f88a-4601-be5e-90e711b6797d.jpg)
 
 ![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
@@ -377,8 +388,6 @@ Rename the resulting `Calib_Results.mat` to `Calib_Results_mir1.mat` if this is 
 ## **IV - Merging the Original and Mirror Camera Parameters**
 
 Exactly the same as described in Step II of the repo's root `README.md`. Please refer to that for more details &ndash; it's the step that runs `calib_process_results` in the command window from the project root.
-
-***
 
 # **Special Scenarios**
 
@@ -398,20 +407,23 @@ Possible, but this requires (a) modifying the BCT's save script, and (b) an exis
 
 As can be seen, the extrinsics are no longer indexed by the image number; they appear as `Rc_ext` and `Tc_ext` instead, ***AND ARE NOT SAVED UPON PRESSING THE SAVE BUTTON IN BCT's GUI!*** In order to save the non-calibration image's extrinsics, you must modify BCT's saving script `saving_calib.m`:
 
-1. Locate the file in the BCT directory on yoru computer and open it up in a text editor / MATLAB.
+1. Locate the file in the BCT directory on your computer and open it up in a text editor / MATLAB.
 
-2. Search for `string_save`. You will notice there are four occurrences; we are interested in the first and third:
+2. Search for variable `string_save`. You will notice there are four occurrences; we are interested in the first and third:
+3. 
     ```
     % First occurrence - if route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
     ```
+    
     ```
     % Third occurrence - else route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
     ```
+    
     Note that `...` above represent a bunch of other variables in between.
 
-3. Replace the two occurrences with the following:
+4. Replace the two occurrences with the following:
     ```
     % MODIFIED First occurrence - if route
     if exist('Rc_ext', 'var') && exist('Tc_ext', 'var')
@@ -420,6 +432,7 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
         string_save = ['save ' save_name ' center_optim param_list active_images ind_active est_alpha est_dist est_aspect_ratio est_fc fc kc cc alpha_c fc_error kc_error cc_error alpha_c_error  err_std ex x y solution solution_init wintx winty n_ima type_numbering N_slots small_calib_image first_num image_numbers format_image calib_name Hcal Wcal nx ny map dX_default dY_default KK inv_KK dX dY wintx_default winty_default no_image check_cond MaxIter'];
     end
     ```
+    
     ```
     % MODIFIED Third occurrence - else route
     if exist('Rc_ext') && exist('Tc_ext')
@@ -429,11 +442,11 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
     end
     ```
 
-4. Save the changes.
+5. Save the changes.
 
 Now, upon pressing the **Save** button in BCT's GUI, the extrinsics for the non-calibration image will also be saved in the `Calib_Results.mat` file (if they exist). The rest of the procedure continues as normal.
 
-### ***Why even do this?***
+### **Why even do this?**
 
 The **Comp. Extrinsic** function of BCT is, theoretically speaking, useful if the stationary camera and mirrors assumption is violated, e.g., you move the setup around after calibration, or perhaps you calibrated the cameras in a larger space and are now moving to a more restricted/expansive space where the original checker is either too big or too small and you need to change the checker grid or square size.
 
@@ -444,22 +457,33 @@ However, be cautioned that this remains largely untested on our end and the resu
 Hypothetically speaking, if this is possible, calibration need only be performed once on the actual camera, and then we can replicate the intrinsics and distortion coefficients for the mirror views. The only thing left is to compute the reference extrinsics, for which we can:
 
 1. Save camera calibration results as `Calib_Results.mat`, clear workspace, reload them in, and run `calib_gui` to bring up BCT's GUI.
+
 2. Choose any image from the camera's calibration set or any non-calibration image with a checker visible in all views to serve as the reference
+
 3. Click **Comp. Extrinsic** and enter the selected image's name. This will bring up a figure window.
-4. Mark the four extreme internal corners of the checker in the reflected view of the first mirror.
+
+4. Mark the four extreme internal corners of the checker in the reflected view.
+
 5. Enter the square dimensions on the checker. This will compute the extrinsics as `Rc_ext` and `Tc_ext` in the workspace.
+
 6. Type the following into the command window:
+
 ```
 save('Calib_Results_mir1.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
 ```
-6. Repeat Steps 3&ndash;5 for the second mirror, and then run the following command:
+
+7. Repeat Steps 3&ndash;5 for the second mirror, and then run the following command:
+
 ```
 save('Calib_Results_mir2.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
 ```
-7. ***If*** the chosen image is a non-calibration image, repeat Steps 3&ndash;5 for the camera view as well. ***Else***, the extrinsics are already computed in the form: `Rc_{image-number}` and `Tc_{image-number}`, so just rename them to `Rc_ext` and `Tc_ext`.
+
+8. ***If*** the chosen image is a non-calibration image, repeat Steps 3&ndash;5 for the camera view as well. ***Else***, the extrinsics are already computed in the form: `Rc_{image-number}` and `Tc_{image-number}`, so just rename them to `Rc_ext` and `Tc_ext`.
+
 ```
 save('Calib_Results_cam.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
 ```
-8. Proceed as usual with merging the three together.
+
+9. Proceed as usual with merging the three together.
 
 This is something we have slightly tested as it greatly reduces user input, but in certain cases, the results were unpredictable and BCT would sometimes fail to compute extrinsics correctly in the mirror view (the reprojections would be erroneous in some cases). This might have to do with the fact that mirrors introduce some level of distortion themselves, and that the nature of this distortion changes between mirrors. However, more testing is needed before we can reach a definitive conclusion.
