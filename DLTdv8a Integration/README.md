@@ -7,10 +7,10 @@ In conjunction with [Bouguet Calibration Toolbox (BCT)](http://robots.stanford.e
 # **Instructions and Tutorials**
 Given below is a list of video tutorials that cover the entire process of working with video data from scratch:
 
-1. [Toolbox Initailization + Project Setup + Calibrating Setup With Videos and BCT](youtube.com)
-2. [BCT Result Merging + DLTdv8a Format Conversion + Video Undistortion](youtube.com)
-3. [DLTdv8a Execution + Trackfile Generation](youtube.com)
-4. [Estimating 3D World Points + Reconstructing Frame-by-Frame + Exporting World Points in DLTdv8a Format](youtube.com)
+1. [Toolbox Initailization + Project Setup + Calibrating Setup With Videos and BCT](https://youtu.be/S_DW808hsZs)
+2. [BCT Result Merging + DLTdv8a Format Conversion + Video Undistortion](https://youtu.be/-hg2HE2-30c)
+3. [DLTdv8a Execution + Trackfile Generation](https://youtu.be/f6k406cfXcA)
+4. [Estimating 3D World Points + Reconstructing Frame-by-Frame + Exporting World Points in DLTdv8a Format](https://youtu.be/x22F_YB5RK0)
 
 Given below is a comprehensive step-by-step guide towards the workflow as well.
 
