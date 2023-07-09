@@ -28,7 +28,7 @@ This README contains instructions on how to use the mirror reconstruction toolbo
 
 Given below is a list of video tutorials that cover the entire process of reconstructing single images from scratch (apart from Epipolar Geometry, they are all part of a playlist):
 
-1. [Toolbox Initailization + Project Setup + Calibrating Setup With BCT](https://youtu.be/jj8qtrYcpmg)
+1. [Toolbox Initialization + Project Setup + Calibrating Setup With BCT](https://youtu.be/jj8qtrYcpmg)
 2. [Merging BCT Result + DLTdv8a Format Conversion + Image Undistortion](https://youtu.be/m7j7KHaHQjQ)
 3. [Manually Marking Corresponding Points In Views](https://youtu.be/KPzqxeG_P4Q)
 4. [Estimating 3D World Points + Reconstructing + Exporting Marked Points](https://youtu.be/MqHf93R815U)
