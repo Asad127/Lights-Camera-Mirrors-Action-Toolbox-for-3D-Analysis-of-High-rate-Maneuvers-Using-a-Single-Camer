@@ -137,7 +137,7 @@ In order to generate a new `defaults.mat` with edited settings within a project 
 
 On the other hand, if you want to replace a project's local `defaults.m` with a fresh copy of the global `defaults.m` in the toolbox path, head to the project root and run `recover_defaults_mfile` in the command window. This will create a fresh copy of `defaults.m` using the version stored at the toolbox path.
 
-```matlab
+```
 >> recover_defaults_mfile   % if replacing `defaults.m` with global version
 >> create_defaults_matfile  % generate new `defaults.mat` using local `defaults.m`
 ```
@@ -178,7 +178,7 @@ Moving back to the scripts, the step-wise process is described below:
 
 This will generate the consolidated BCT parameters file and the DLT coefficients file. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`, and both of them are stored in the `calibration` folder within the project root.
 
-> **Following are a few important notes on this step to helpunderstand what's happening in more detail. Skip to Step III if uninterested.**
+> **Following are a few important notes on this step to help understand what's happening in more detail. Skip to Step III if uninterested.**
 
 ### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
 
@@ -423,10 +423,10 @@ If an object point is visible in at least two views (camera-mirror, mirror-mirro
 
 Now, since there is only one world reference frame, the same 3D world points must project to two different pixel locations on the two cameras. We already know these pixel locations -- we marked them just now! So all we really need to do is figure out the choice of 3D points for which the forward projection (i.e., pixel projection `x = K * [R T] * X`) of both the views is correct (i.e., the reprojection error in both images is collectively minimized).
 
-Like with other optimization problems, we start with a wild guess for the world coordinates of a physical point `X`, calculate the reprojection error in each view w.r.t. the marked point, i.e., `x_marked - x_reproj`, vectorize the result as `[xcam_reproj, xmir1_reproj, xmir2_reproj]`, compute the mean squared reprojection error (loss function), and update our guess accordingly. Assuming we have $J$ views and the vector of reprojection errors is $\boldsymbol{E}$, then the loss function is:
+Like with other optimization problems, we start with a wild guess for the world coordinates of a physical point `X`, calculate the reprojection error in each view w.r.t. the marked point, i.e., `x_marked - x_reproj`, vectorize the result as `[xcam_reproj, xmir1_reproj, xmir2_reproj]`, compute the mean squared reprojection error (loss function), and update our guess accordingly. Assuming we have $J$ views, the vector of true pixel locations is $\boldsymbol{x_\text{marked}}$, and that the vector of reprojected points is $\boldsymbol{x_\text{reproj}}$, then the loss function is:
 
 ```math
-\text{loss} = \sum_{j=1}^{J} E_j
+\text{loss} = \frac{1}{J} \sum_{j=1}^{J} \left( x_\text{reproj} - x_\text{marked} \right)^2
 ```
 
 We repeat this for all the points we marked, and we have the 3D world coordinates for all the points.
@@ -449,7 +449,7 @@ However, the toolbox currently only supports the BCT variant as that preserves t
 
 2. Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image is visible in 2 views (camera and mirror 1).
 
-    ```matlab
+    ```
     % UI-based input
     Locating the image to mark points and plot epilines on...done.
     ```
@@ -458,7 +458,7 @@ However, the toolbox currently only supports the BCT variant as that preserves t
 
 3. Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
 
-    ```matlab
+    ```
     % UI-based input
     Locating the merged BCT calibration file...done.
 
@@ -468,7 +468,7 @@ However, the toolbox currently only supports the BCT variant as that preserves t
 
 4. Choose a directory to save the results to (point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them to: `epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
 
-    ```matlab
+    ```
     % UI-based input
     Choosing directory to store results in...done.
     ```
