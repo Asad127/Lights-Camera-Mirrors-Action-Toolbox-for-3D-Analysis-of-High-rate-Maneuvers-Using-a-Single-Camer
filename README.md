@@ -367,7 +367,7 @@ Below, we have attached a picture of an included `marked_points.mat` file (you c
 - `x = 3 x 280`
 
 <p align="center" width="100%">
-    <img src="https://user-images.githubusercontent.com/65610334/213194210-e5b9e24d-f35f-4e42-bc95-9b08ea01684c.jpg">
+    <img src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1c293ba8-6f9c-4f74-b0ae-9c768321f23b">
 </p>
 
 > In the above figure, while we mark a total of `2n` pixels over two images, we are actually only dealing with `n` real-world points. They are just projected to two views. If we had k views, we would have a total of `k * n` points.
