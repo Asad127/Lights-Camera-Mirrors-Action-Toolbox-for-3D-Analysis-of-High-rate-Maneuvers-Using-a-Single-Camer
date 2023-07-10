@@ -76,11 +76,11 @@ Reconstruction may be performed using either the DLT file or the merged BCT cali
 
 And that's it. The script will then estimate the 3D world coordinates for each tracked point in each view using non-linear least squares (`lsqnonlin`) with the **Levenberg-Marquardt** optimization algorithm. It will then reproject pixels on to the images using these estimated coordinates, reconstruct them in 3D, plot the cameras alongside the reconstructed points, and finally export them in DLTdv8a format.
 
-#### ***Frame Mismatch Warning***
+#### **Frame Mismatch Warning**
 
-When selecting the 2D trackfile created in Step V, the script might produce a warning that the number of frames in the trackfile does not agree with the number of extracted frames. This generally happens when MATLAB's VideoReader (which we use to read frames) does not identify the same number of total frames as DLTdv8a. Usually, it's a matter of 1&ndash;2 frames near the end of the video.
+When selecting the 2D trackfile created in Step V, the script might produce a warning that the number of frames in the trackfile does not agree with the number of extracted frames. This generally happens when MATLAB's VideoReader (which we use to read frames) does not identify the same number of total frames as DLTdv8a. Usually, it's a matter of 1&ndash;2 frames near the end of the video. This warning will usually appear when DLTdv8a reads a different number of frames than our scripts, but we are unsure if that will ever happen. 
 
-This is usually not a problem if the last couple of frames are not important to you. the number of extracted frames is less than or equal to the number of frames detected by DLTdv8a. To be completely safe from indexing errors, however, you can manually delete the extra rows or extra frames from the trackfile or video frames directory, respectively (depending on which is greater).
+Even if the warning appears, it is usually not a problem if the last couple of frames are not important to you. If you enter `y` on the warning's proceed prompt, the script will automatically assume that you are working on the minimum of the reported frames to avoid indexing errors.
 
 # **(OPTIONAL) Step VI: Extrinsics Verification With Epipolar Geometry**
 Exactly the same as in the repo root `README.md` file. Please refer to that for details.
