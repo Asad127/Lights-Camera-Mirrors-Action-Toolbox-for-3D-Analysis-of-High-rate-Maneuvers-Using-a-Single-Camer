@@ -51,25 +51,34 @@ Before we start, we need to initialize the toolbox and set up a project director
 
 3. Create a project in any directory by navigating to it inside MATLAB and running the following in the command window:
 
-    ```
-    >> project_setup
-    ```
+	```
+	>> project_setup
+	```
+    
+	Which outpputs the following:
 
-    This will create a 'skeleton' of the project, with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the project-specific default settings (described in Mirror Reconstruction Toolbox's `defaults.m`). The default settings are used when executing the toolbox's various scripts and functions to ensure smooth behavior within the project.
+	```
+	Creating a project in the current folder.
+	NOTE: You can configure the structure globally by editing "defaults.m" in the toolbox path.
+	
+	[PROMPT] Enter the name of the project: checker
+	```
+
+    This will create a 'skeleton' of the project under a folder with the name above (in this case, `checker`), with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the project-specific default settings (described in Mirror Reconstruction Toolbox's `defaults.m`). The default settings are used when executing the toolbox's various scripts and functions to ensure smooth behavior within the project.
 
    > From here on out, before executing any of the mirror reconstruction toolbox's scripts, move to the project's root directory from within MATLAB, otherwise the missing `defaults.mat` will throw errors.
 
-5. Gather the calibration images as described in this repo's `Calibration/README.md`.
+4. Gather the calibration images as described in this repo's `Calibration/README.md`, Step I.
 
-6. Begin the preliminary calibration preparation by moving to the project's root directory and running (in command window):
+5. Begin the preliminary calibration preparation by moving to the *project's root directory* and running (in command window):
 
     ```
     >> calib_import_media
     ```
 
-    Setting up a project with `project_setup` automatically changes directory to the project's root directory.
+    > Setting up a project with `project_setup` automatically changes directory to the project's root directory.
 
-7. When prompted, enter whether you have calibration images (`i`) or video (`v`).
+6. Enter whether you have calibration images (`i`) or video (`v`).
 
     ```
     [PROMPT] Do you have calibration images or video? ("i" = imgs, "v" = vid): i
@@ -77,23 +86,29 @@ Before we start, we need to initialize the toolbox and set up a project director
 
 ### **Images Route**
 
-- In the pop-up UI box, browse and select the calibration images anywhere on your computer.
+- (UI Browser) Select the calibration images anywhere on your computer.
 
-- In the next pop-up UI box, choose the directory to put the images in, relative to the project's root directory. The script will automatically rename them in a format optimized for BCT as described in `defaults.m`, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
+- (UI Browser) Choose the directory to put the images in, relative to the project's root directory. Click **Cancel** to place them in the default location (`project_root/calibration/images/`). The script will automatically rename them in a format optimized for BCT as described in `defaults.m`, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
 
-A mock set of 11 calibration images is provided in the repo's `Calibration` directory. If you have manually imported the calibration images into the project root instead, skip Steps 5&ndash;6, and the two above. Instead, rename them sequentially by directly running the following in the command window from the project root:
+> A set of 11 calibration images is provided in the repo's `Calibration` directory. 
+
+If you have manually imported the calibration images somewhere into the project root instead, skip Steps 5&ndash;6 and the two above. Further, if these images are not in numbered order, simply rename them sequentially by directly running the following in the command window from the project root:
 
 ```
 >> imgs_sequential_rename
 ```
 
+This will ask if you want to rename a directory of images, or a subset of selected images. Based on your choice, you will have to locate a directory or select a set of images in a UI browser, and the images inside will be renamed. At this point, you can proceed to Step 7 (calibration) below.
+
 > WARNING: `imgs_sequential_rename.m` will rename the files without making copies of the original. Make a backup of the original images before you run it!
 
 ### **Video Route**
 
-- In the pop-up UI box, browse and select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
+- (UI Browser) Select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
 
-- In the next pop-up UI box, select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
+- (UI Browser) Select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
+
+- (UI Browser) Select the directory to extract the frames into. Alternatively, click **Cancel** to quickly use the default directory instead (`calibration/frames/`). 
 
 - Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (blank inputs) the whole video is used.
 
@@ -105,6 +120,8 @@ A mock set of 11 calibration images is provided in the repo's `Calibration` dire
 - Enter the format in which to extract the frames (by default, JPG).
 
     ```
+    Supported Image Formats = .jpg, .png, .tif, .bmp
+    Input Mapping: "j" = ".jpg", "p" = ".png", "t" = ".tif", "b" = ".bmp"
     [PROMPT] Enter image extension for extracted calibration frames (blank = default image extension): j
     ```
 
@@ -120,7 +137,7 @@ If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_e
 
 ***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`.*** It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.
 
-Once you have setup the camera and mirrors for calibration, ensure they remain stationary for the remaining steps. If they do move, you will need to recompute the reference extrinsics with BCT's **Comp. Extrinsic** function, which is a little tricky to setup, but potentially quite useful (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
+Once you have setup the camera and mirrors for calibration, ensure they remain stationary for the remaining steps as well as during calibration. If they do move after calibration, you will need to recompute the reference extrinsics with BCT's **Comp. Extrinsic** function, which is a little tricky to setup and remains largely untested on our end as it occasionally produces spurious results (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md` for details).
 
 ### **Editing Default Configuration: `defaults.m`, `defaults.mat`, `create_defaults_matfile.m`**
 
