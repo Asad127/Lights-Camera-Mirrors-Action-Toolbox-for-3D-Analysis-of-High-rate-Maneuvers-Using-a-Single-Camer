@@ -55,7 +55,7 @@ Before we start, we need to initialize the toolbox and set up a project director
 	>> project_setup
 	```
     
-	Which outpputs the following:
+	Which outputs the following:
 
 	```
 	Creating a project in the current folder.
