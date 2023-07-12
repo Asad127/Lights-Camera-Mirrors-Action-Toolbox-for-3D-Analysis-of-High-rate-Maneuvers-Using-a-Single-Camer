@@ -1,45 +1,38 @@
-Developed and intended for use with [Bouguet Calibration Toolbox (BCT)](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) [[1]](#1) and [DLTdv8a](https://biomech.web.unc.edu/dltdv/) [[2]](#2) (app version).
-
 # **Capturing High Speed Maneuvers Using a Single Camera and Planar Mirrors**
 
 ### **Reconstructing Manually Tracked 3D Motion of Housefly**
+
 https://user-images.githubusercontent.com/65610334/221478255-8cf1ea76-92bf-4a1c-9693-54b65a3b086c.mp4
 
 ### **Dragonfly**
+
 https://user-images.githubusercontent.com/65610334/218671910-4910fe86-2c61-4224-9f2b-d1678b5d4f65.mp4
 
 ### **Housefly**
+
 https://user-images.githubusercontent.com/65610334/218388649-2074825e-5431-46ce-885d-7af7965979b4.mp4
 
 ### **Butterfly**
+
 https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-a107-09850fb4c078.mp4
 
-# **Requirements**
-The mirror reconstruction toolbox has been tested on MATLAB R2023a on Windows, Unix and Linux systems. It does not require any other MATLAB toolbox, except for the Computer Vision Toolbox for plotting the camera view in the reconstructed scene. The toolbox should also work on any other platform that supports MATLAB R2023a.
+## **Requirements**
 
-As noted by the developers of DLTdv8a, some optional (but exciting) features require the MATLAB Image Analysis and Deep Learning toolboxes.
+The mirror reconstruction toolbox has been tested on MATLAB R2023a on Windows, Unix and Linux systems. It does not require any other MATLAB toolbox, except for the Computer Vision Toolbox for plotting the camera view in the reconstructed scene. The toolbox should also work on any other platform that supports MATLAB R2023a.
 
 > The dependency on the Computer Vision Toolbox will likely be removed in the future.
 
 # **Instructions and Tutorials**
-There are two other READMEs, one in the repo's `Calibration` folder and the other in `DLTdv8a Integration` folder. The former contains instructions on how to calibrate the camera and mirrors using BCT and notes on some special cases, while the latter contains instructions on how to use the mirror reconstruction toolbox with DLTdv8a to reconstruct tracked points in a video.
 
-This README contains instructions on how to use the mirror reconstruction toolbox for manually marked points in a single image.
-
-Given below is a list of video tutorials that cover the entire process of reconstructing single images from scratch (apart from Epipolar Geometry, they are all part of a playlist):
+Given below is a list of video tutorials that cover the entire process of working with and reconstructing single images from scratch:
 
 1. [Toolbox Initialization + Project Setup + Calibrating Setup With BCT](https://youtu.be/jj8qtrYcpmg)
-2. [Merging BCT Result + DLTdv8a Format Conversion + Image Undistortion](https://youtu.be/m7j7KHaHQjQ)
+2. [Merging BCT Result + Image Undistortion](https://youtu.be/m7j7KHaHQjQ)
 3. [Manually Marking Corresponding Points In Views](https://youtu.be/KPzqxeG_P4Q)
 4. [Estimating 3D World Points + Reconstructing + Exporting Marked Points](https://youtu.be/MqHf93R815U)
 5. [Verifying Extrinsics With Epipolar Geometry](https://youtu.be/clQF8QTfbyg)
 
-Note that there are two reconstruction scripts that differ with regards to type of test media, i.e., whether you are reconstructing a still image or multiple images/videoframes:
-
-1. `reconstruct_marked_pts_bct.m`: Reconstruct manually marked points in still image(s) of the object(s) you want to reconstruct
-2. `reconstruct_tracked_pts_bct.m`: Reconstruct tracked points in a video of the object(s) you want to reconstruct (requires DLTdv8a)
-
-Both options have some shared steps, and some unique steps. Option 2's unique steps are covered in detail within `DLTdv8a Integration/README.md`, and the tutorial videos listed there. Here, we focus on Option 1, i.e., **Single Image Reconstruction**. The following also details the common steps (I&ndash;III) between both approaches.
+Note that there are two other READMEs, one in the repo's `Calibration` folder and the other in `DLTdv8a Integration` folder. The former contains instructions on how to calibrate the camera and mirrors using BCT and notes on some special cases, while the latter contains instructions on how to use the mirror reconstruction toolbox with DLTdv8a to reconstruct tracked points in a video.
 
 ## **Step I: Toolbox Initialization + Project Setup + Calibrating Setup With BCT**
 
@@ -54,13 +47,13 @@ Before we start, we need to initialize the toolbox and set up a project director
 	```
 	>> project_setup
 	```
-    
+
 	Which outputs the following:
 
 	```
 	Creating a project in the current folder.
 	NOTE: You can configure the structure globally by editing "defaults.m" in the toolbox path.
-	
+
 	[PROMPT] Enter the name of the project: checker
 	```
 
@@ -90,7 +83,7 @@ Before we start, we need to initialize the toolbox and set up a project director
 
 - (UI Browser) Choose the directory to put the images in, relative to the project's root directory. Click **Cancel** to place them in the default location (`project_root/calibration/images/`). The script will automatically rename them in a format optimized for BCT as described in `defaults.m`, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
 
-> A set of 11 calibration images is provided in the repo's `Calibration` directory. 
+> A set of 11 calibration images is provided in the repo's `Calibration` directory.
 
 If you have manually imported the calibration images somewhere into the project root instead, skip Steps 5&ndash;6 and the two above. Further, if these images are not in numbered order, simply rename them sequentially by directly running the following in the command window from the project root:
 
@@ -108,7 +101,7 @@ This will ask if you want to rename a directory of images, or a subset of select
 
 - (UI Browser) Select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
 
-- (UI Browser) Select the directory to extract the frames into. Alternatively, click **Cancel** to quickly use the default directory instead (`calibration/frames/`). 
+- (UI Browser) Select the directory to extract the frames into. Alternatively, click **Cancel** to quickly use the default directory instead (`calibration/frames/`).
 
 - Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (blank inputs) the whole video is used.
 
@@ -138,26 +131,6 @@ If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_e
 ***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`.*** It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.
 
 Once you have setup the camera and mirrors for calibration, ensure they remain stationary for the remaining steps as well as during calibration. If they do move after calibration, you will need to recompute the reference extrinsics with BCT's **Comp. Extrinsic** function, which is a little tricky to setup and remains largely untested on our end as it occasionally produces spurious results (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md` for details).
-
-### **Editing Default Configuration: `defaults.m`, `defaults.mat`, `create_defaults_matfile.m`**
-
-Most of the inputs/prompts in the codebase have a default fallback option. These prompts are skippable (as indicated in the prompt message) by entering a blank for Command Window prompts, or pressing the **Cancel** button for UI prompts. For inputs skipped as such, the default file locations/settings are defined in `defaults.mat` (located in project root directory).
-
-To change the defaults, you may do so globally or locally by editing `defaults.m` in the MATLAB path of the toolbox or the version stored in the project directory when creating a project with `project_setup.m`. The `defaults.m` file is used to generate `defaults.mat`.
-
-- If the global version of `defaults.m` is changed, all new projects after these changes will use the new settings.
-- If the local version of `defaults.m` is changed, only the corresponding project will use the new settings.
-
-> WARNING: When editing the local version, DO NOT EDIT anything related to paths (directories, basenames, extensions)! This can potentially lead to I/O problems.
-
-In order to generate a new `defaults.mat` with edited settings within a project folder, head to the project root and run `create_defaults_matfile` in the command window, which will create a fresh copy of `defaults.mat` using the local `defaults.m`.
-
-On the other hand, if you want to replace a project's local `defaults.m` with a fresh copy of the global `defaults.m` in the toolbox path, head to the project root and run `recover_defaults_mfile` in the command window. This will create a fresh copy of `defaults.m` using the version stored at the toolbox path.
-
-```
->> recover_defaults_mfile   % if replacing `defaults.m` with global version
->> create_defaults_matfile  % generate new `defaults.mat` using local `defaults.m`
-```
 
 ## **Step II: Merging BCT Result and Converting to DLTdv8a Format**
 
@@ -262,7 +235,7 @@ Now that we have the merged calibration file ready, we can begin gathering some 
 
 Place the object you want to reconstruct in the calibrated region, and make sure its features are clearly visible in all the calibrated views. Capture as many images as you want with the test object in various positions, making sure the camera and mirror setup remains in the same position as during calibration.
 
-![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
+![Test Image Example](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
 If your camera has noticeable distortion or you would just like to work with undistorted videos/images, you can begin the undistortion procedure by pressing `y` when prompted. Otherwise, type `n` to skip undistortion.
 
@@ -282,43 +255,82 @@ Step-wise, the process is described below:
 
 ### **Video Route**
 
-> **If you enter this route, follow instructions in `DLTdv8a Integration/README.md` after this step. You can still follow the steps listed here if you want to reconstruct a single frame of the video, but that's likely not your intention with video data.**
+> **If you enter this route, follow instructions in `DLTdv8a Integration/README.md` AFTER this step. You can still follow the steps listed here if you want to reconstruct a single frame of the video, but that's likely not your intention with video data.**
 
-- (UI Browser) Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4 and save it in either the default project directory or to a path of your choosing.
+- (UI Browser) Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4.
+
+- (UI Browser) Choose the path to import the video into. Clicking **Cancel** will place it in the default location (`media/videos`).
 
 - When prompted to undistort the video, type `y` in the command window to begin the undistortion process described in `create_undistorted_vid_and_frames.m`. Otherwise, type `n` to skip directly to frame extraction without undistortion.
 
+#### *No Undistortion Sub-Route*
+
+```
+NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
+Undistort the imported video? (y/n): n
+```
+
+The script `vid_extract_frames` is auto-run by `import_media`.
+
+- (UI Broswer) Choose directory into which you wish to extract the video frames. Clicking **Cancel** will place them in the default location (`media/frames`).
+
+- Choose the extension of the extracted frames.
+
     ```
-    NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
-    Undistort the imported video? (y/n): y
+    Supported Image Formats = .jpg, .png, .tif, .bmp
+    Input Mapping: "j" = ".jpg", "p" = ".png", "t" = ".tif", "b" = ".bmp"
+    [PROMPT] Enter image extension for extracted video frames (blank = default image extension): j
     ```
 
-    > If you already have the video in your project directory and it is MP4, directly run `create_undistorted_vid_and_frames` in the command window instead of `import_media`. If the video is not MP4, use `convert_vid_to_mp4.m` to convert it to MP4 first.
+Assuming a total of F frames in the video, the frames are named as {Frame1.jpg, Frame2.jpg, ..., FrameF.jpg}.
+
+#### *Undistortion Sub-Route*
+
+```
+NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
+Undistort the imported video? (y/n): y
+```
+
+The script will auto-run `create_undistorted_vid_and_frames.m` to undistort the video and extract the frames.
+
+> If you already have the video in your project directory and it is MP4, directly run `create_undistorted_vid_and_frames` in the command window instead of `import_media`. If the video is not MP4, use `convert_vid_to_mp4.m` to convert it to MP4 first.
 
 - (UI Browser) Locate and select the merged BCT calibration parameters file from Step II.
 
-- Choose a directory to extract the video frames into, and the extension of the frames. These frames are then undistorted (if user entered `y` when promtped earlier) with the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views: `cam_rect`, `mir1_rect`, and `mir2_rect`.
+- (UI Browser) Choose a directory to extract the video frames into. Clicking **Cancel** will place them in the default location (`media/frames`).
 
-Wait until the script finishes undistorting frames and re-creating the videos from them for each view. It will produce as many videos as the number of views, each one using a different distortion profile. The videos are stored in the same directory as the original video with the same name, but suffixed with `{original-name}_cam_rect.mp4`, `{original-name}_mir1_rect.mp4`, and `{original-name}_mir2_rect.mp4`.
+- Select the extension of the extracted frames.
+
+    ```
+    Supported Image Formats = .jpg, .png, .tif, .bmp
+    Input Mapping: "j" = ".jpg", "p" = ".png", "t" = ".tif", "b" = ".bmp"
+    [PROMPT] Enter image extension for extracted video frames (blank = default image extension): j
+    ```
+
+These frames are then undistorted with the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views: `cam_rect`, `mir1_rect`, and `mir2_rect`.
+
+Additionally, these undistorted frames are stitched back into undistorted videos that are placed in the same directory as the original video with the same name., but suffixed with `{original-name}_cam_rect.mp4`, `{original-name}_mir1_rect.mp4`, and `{original-name}_mir2_rect.mp4`.
 
 ### **Image Route**
 
 - (UI Browser) Locate the images containing the object of interest anywhere on your computer.
 
-- (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the `images` folder by default.
+- (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the `media/images` folder by default.
 
-- When prompted to undistort the images, type `y` to auto-run `create_undistorted_imgs.m` and begin the  undistortion procedure for the imported images.
+- When prompted to undistort the images, type `y` to auto-run `create_undistorted_imgs.m` and begin the undistortion procedure for the imported images. Otherwise, type `n` to finish the import process.
 
-    ```
-    NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
-    Undistort the imported images? (y/n): y
-    ```
+#### *Undistortion Sub-Route*
 
-    > `create_undistorted_imgs.m` can be run standalone. In that case, the user is asked for an additional input to a directory containing images or a set of image files to undistort.
+```
+NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
+Undistort the imported images? (y/n): y
+```
 
 - (UI Browser) Locate the merged BCT calibration parameters file from Step II.
 
 Wait until all the images are undistorted w.r.t. the distortion coefficients from each view. The results are stored in subfolders named `cam_rect`, `mir1_rect`, and `mir2_rect` in the same directory as the original images. Each folder contains the undistorted images corresponding to the distortion coefficients for that view. The image names are not changed within the folders, but you can edit the script to add suffixes which are supported by the undistortion functions/scripts.
+
+> `create_undistorted_imgs.m` can be run standalone. In that case, the user is asked to locate a directory containing images or a set of image files to undistort.
 
 ### **Undistortion: Grayscale or RGB?**
 
@@ -426,9 +438,11 @@ That is all. The script will proceed to perform the world point estimation, comp
     <img src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg" alt="Error Histogram">
 </p>
 
-That's it! Feel free to test out the toolbox on other images included in this repo (see `Marked 2D Points`, `Results` (also has a README explaining what is what), and `Test Images` folder), or setup your own camera + mirrors and take your own images.
+This concludes the process of 3D reconstruction.
 
-At this point, we recommend viewing Optional Step VI (extrinsics verification with epipolar geometry) and learning how to work with video data by checking out `DLTdv8a Integration/README.md` in this repo. You may also test different calibration scenarios, especially the ones near the end of `Calibration/README.md`. 
+Feel free to test out the toolbox on other images we have included in this repo. See folders: `Test Images`, `Marked 2D Points`, and `Results` for some of our own images, pre-marked points, and expected results. See `Results/README.md` to understand the naming conventions. Otherwise, you may setup your own camera + mirrors and take your own images.
+
+At this point, we recommend viewing Optional Step VI (extrinsics verification with epipolar geometry) and learning how to work with video data by checking out `DLTdv8a Integration/README.md` in this repo. You may also test different calibration scenarios, especially the ones near the end of `Calibration/README.md`.
 
 ### **Details On Estimation of 3D World Points (`lsqnonlin`)**
 
