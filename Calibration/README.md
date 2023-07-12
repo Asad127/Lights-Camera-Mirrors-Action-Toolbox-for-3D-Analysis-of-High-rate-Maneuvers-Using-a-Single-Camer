@@ -32,7 +32,7 @@ end;
 % LINE 555...
 ```
 
-Problem (2) exists because, while `x` is originally computed in the script with no. of columns = no. of checker corners * no. of images, it is later (probably unintentionally) replaced by another computation of `x` (see lines 548-555 above), this time only for a particular image, so that this new `x` has no. of columns = no. of checker corners. 
+Problem (2) exists because, while `x` is originally computed in the script with no. of columns = no. of checker corners * no. of images, it is later (probably unintentionally) replaced by another computation of `x` (see lines 548-555 above), this time only for a particular image, so that this new `x` has no. of columns = no. of checker corners.
 
 This problem does not affect the mirror reconstruction toolbox, but it is something we noticed in our very early tests with reprojection on the checker corners.
 
@@ -410,17 +410,17 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
 1. Locate the file in the BCT directory on your computer and open it up in a text editor / MATLAB.
 
 2. Search for variable `string_save`. You will notice there are four occurrences; we are interested in the first and third:
-3. 
+3.
     ```
     % First occurrence - if route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
     ```
-    
+
     ```
     % Third occurrence - else route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
     ```
-    
+
     Note that `...` above represent a bunch of other variables in between.
 
 4. Replace the two occurrences with the following:
@@ -432,7 +432,7 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
         string_save = ['save ' save_name ' center_optim param_list active_images ind_active est_alpha est_dist est_aspect_ratio est_fc fc kc cc alpha_c fc_error kc_error cc_error alpha_c_error  err_std ex x y solution solution_init wintx winty n_ima type_numbering N_slots small_calib_image first_num image_numbers format_image calib_name Hcal Wcal nx ny map dX_default dY_default KK inv_KK dX dY wintx_default winty_default no_image check_cond MaxIter'];
     end
     ```
-    
+
     ```
     % MODIFIED Third occurrence - else route
     if exist('Rc_ext') && exist('Tc_ext')
