@@ -1,6 +1,6 @@
-This functionality of the mirror reconstruction toolbox requires [DLTdv8a](https://biomech.web.unc.edu/dltdv/) tracking software, which allows working with moving objects by tracking them in recorded video data.
+This functionality of the mirror reconstruction toolbox additionally requires [DLTdv8a tracking software](https://biomech.web.unc.edu/dltdv/), which allows working with moving objects by tracking them over various frames in recorded video data.
 
-In conjunction with [Bouguet Calibration Toolbox (BCT)](http://robots.stanford.edu/cs223b04/JeanYvesCalib/), the toolbox allows for quickly setting up DLTdv8a-compatible projects with a camera and two-mirror setup.
+As noted by the developers of DLTdv8a, some optional (but exciting) features require the MATLAB Image Analysis and Deep Learning toolboxes.
 
 > *This is different from the repo's root `README.md` file, which only shares Steps I&ndash;III with this and describes the general process for reconstructing an object in a single image with manually marked points (i.e., DLTdv8a is not involved, while it is involved here).*
 
@@ -60,7 +60,7 @@ This step is fairly straightforward. Extensive video tutorials as well as writte
 
     ![Mirror View Epiline In Dltdv8a Passing Through Corresponding Point](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/2e101e9c-e2b1-4e92-8b00-2489ef4ec371)
 
-6. Mark the corresponding points ON THE REFLECTIONS of the object in the second and (if available) third videos. If a point is not visible in any view, skip marking it for that view and it will become NaN, which is expected and handled by the toolbox's reconstruction scripts. When you mark a corresponding point, a green diamond indicating the reprojected pixel location from the estimated 3D point should appear assuming you provided the DLT coefficients in Step 3. 
+6. Mark the corresponding points ON THE REFLECTIONS of the object in the second and (if available) third videos. If a point is not visible in any view, skip marking it for that view and it will become NaN, which is expected and handled by the toolbox's reconstruction scripts. When you mark a corresponding point, a green diamond indicating the reprojected pixel location from the estimated 3D point should appear assuming you provided the DLT coefficients in Step 3.
 
     ![Corresponding Points Marked](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4b9cdd42-b009-4593-98cc-3619fd0d3dfa)
 
