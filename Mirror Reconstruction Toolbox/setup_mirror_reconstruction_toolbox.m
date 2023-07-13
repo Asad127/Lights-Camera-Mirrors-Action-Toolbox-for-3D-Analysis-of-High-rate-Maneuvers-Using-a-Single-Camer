@@ -142,6 +142,7 @@ if ~isempty(curr_toolbox_matlab_path) && strcmp(curr_toolbox_matlab_path, toolbo
 
 end
 
+% If toolbox was not already on path, add it to path and save it.
 if isempty(curr_toolbox_matlab_path)
     path(toolbox_dir, matlab_path);
     savepath
