@@ -86,8 +86,6 @@ else
     merged_calib_filepath = fullfile(merged_calib_dir, merged_calib_file);
 end
 
-disp(merged_calib_filepath)
-
 view_params = load(merged_calib_filepath);
 view_labels = view_params.view_labels;
 
