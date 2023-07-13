@@ -214,7 +214,9 @@ colors = 'bgrcmy';  % color order used in plotting (cycles)
 %% CORE FUNCTIONALITY %%
 num_points = input('[PROMPT] Enter the no. of points to mark: ');
 
-fprintf('\nEntering point-marking mode...\n\n')
+fprintf(['\nEntering point-marking mode...\nNOTE: Press "q" to zoom in, "e" to zoom out, and "r" to reset zoom ' ...
+	'level. Zoom is around cursor!\n\n'] ...
+ )
 
 hist_marked_pts = zeros(2, num_points * num_views);
 pts_all_views = zeros(3, num_points * num_views);
