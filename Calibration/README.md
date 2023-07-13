@@ -36,33 +36,33 @@ Problem (2) exists because, while `x` is originally computed in the script with 
 
 This problem does not affect the mirror reconstruction toolbox, but it is something we noticed in our very early tests with reprojection on the checker corners.
 
-## **I - Calibration Dataset Collection**
+## **Step I - Calibration Dataset Collection**
 
 The following section explains how to setup the system for capturing multiple views using a single camera fixed on a tripod and reflective mirrors present in the field of view. In the figure below, we show the **mirror container, the tripod, and the light source** we have used to capture our images.
 
-> ***Camera stand and mirror setup MUST NOT MOVE throughout the process!***
+![Experimental Setup](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1a441f87-5c4e-4080-8dd7-59c13374ca84)
 
-![w11](https://user-images.githubusercontent.com/65610334/213187130-b907fcc0-bced-43c0-99a9-ee44dae10d69.PNG)
+> ***Camera stand and mirror setup MUST NOT MOVE throughout the process!***
 
 1. Print a checker pattern and measure the dimensions (x and y) of any one square on the checker.
 
-![ch Diagram](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
+    ![Checker Pattern](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 
 2. Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.
 
-![w43](https://user-images.githubusercontent.com/65610334/213187833-99e95ccb-4358-4e17-a54e-be245f93dc82.PNG)
+    ![Camera To Checker Distance](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/815ef573-3669-4f71-8c0a-2b5b1987179b)
 
 3. Place the checker in the mirror container and make sure it can be seen in all three views, i.e., original and both the mirror views.
 
-![m1](https://user-images.githubusercontent.com/65610334/213096148-a47db345-14b7-4b3e-9a0d-8ad0de3f9e05.PNG)
+    ![Image With Checker Visisble In All Views](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d794dc09-3ea2-4412-9865-e4e9c24b01ef)
 
 4. Take a picture of the checker from the camera.
 
 5. Change the position of the checker in a limited region to ensure that the pattern can be seen in all relevant views, i.e., the original and both the mirror views, and capture an image.
 
-6. Repeat Steps 4&ndash;5 to capture at least 15&ndash;20 images of the checker pattern at different positions. Make sure the checker's pose varies considerably between images in order to get a good calibration later.
+6. Repeat Steps 4&ndash;5 to capture at least 15&ndash;20 images of the checker pattern at different positions. Make sure the checker's pose varies considerably between images in order to get a good calibration.
 
-![Images](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
+    ![Calibration Images Mosaic](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
 
 #### **All-View Visibility Assumption**
 
@@ -77,14 +77,14 @@ In light of this, as each view's calibration is independent, you can select diff
 
 A good choice for point 2 is to leave the checker flat in front of both the mirrors. Usually, we keep this as the first or last image, though it may be any image in the set. After that, you can free yourself of the worry that the checker is visisble in all views and focus only on one particular view at a time.
 
-> We only recommend breaking the assumption if following it makes movement very restrictive or results in a bad calibration.
+> We only recommend breaking the assumption if following it makes checker movement very restrictive (necessary for a good calibration) or results in a bad calibration.
 
 #### **Calibration and Reconstruction Accuracy**
 Reconstruction accuracy is heavily dependent upon good calibration, so make sure you cover a variety of poses when taking the calibration images or recording the calibration video. If BCT shows good reprojections but the undistorted function results in bogus undistortions, or the reconstruction is inaccurate, or reprojections are fine for some points on the image and bad for others, it is VERY likely the calibration is faulty.
 
-In such cases, try to remove redundant and bad images from the existing set of calibration images, and take more calibration images with a variety of poses and repeat the calibration.
+In such cases, try to remove redundant and bad images from the existing set of calibration images, and take more calibration images with a greater variety of poses and repeat the calibration.
 
-## **II - Original View Calibration**
+## **Step II - Original View Calibration**
 
 This section explains how to use the **Camera Calibration Toolbox for Matlab**, also called the **Bouguet Calibration Toolbox (BCT)** after the author, to calibrate the original set of images. We go through all the relevant features of the toolbox step-by-step for our purposes below.
 
@@ -99,7 +99,7 @@ This section explains how to use the **Camera Calibration Toolbox for Matlab**, 
 3. Click on the **Image Names** button in the camera calibration tool window (GUI) and go through the prompts for the image basename and format.
 
 <p align="center" width="100%">
-    <img src="https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png">
+    <img alt="Image Names Button" src="https://user-images.githubusercontent.com/65610334/213086588-19a14b08-0927-40a4-9096-24c3c581bcc0.png">
 </p>
 
 4. BCT will display a directory listing (all files and folders in the current MATLAB directory). You will be prompted to enter the image basenames and their extension identifier (e.g., **j** for .jpg, **p** for .png, etc.). Following a typical naming convention, e.g., {Image1.jpg, Image2.jpg, ..., Image12.jpg}, the basename would be **Image** (i.e., the string part without the integer identifier), and the extension in this case would be **j**.
@@ -121,6 +121,8 @@ done
 
 At this point, you should be presented with the following figure (a mosaic of the calibration images):
 
+![Image Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/80b19d0c-faa0-45cf-9116-93391a5ecdfd)
+
 This marks the end of the image loading process.
 
 #### **Image Selection When All-View Visibility Assumption Is Violated**
@@ -133,21 +135,23 @@ Thus, the basic idea is that when selecting images for each view, ensure that th
 
 ### **2. Extract the Grid Corners**
 
-1. Click on the  highlited button of **Extract Grid Corners** in the calibration GUI.
+1. Click on the highlited button of **Extract Grid Corners** in the calibration GUI.
+
+    > You can click directly on Extract Grid Corners upon launching `calib_gui`, and it will automatically begin the image loading process described in Step 1.
 
 <p align="center" width="100%">
-    <img src="https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png">
+    <img alt="Extract Grid Corners Button" src="https://user-images.githubusercontent.com/65610334/212662591-9ce4ac12-9114-4fb6-8b8c-e9792c70e7bb.png">
 </p>
 
 2. Enter the global settings in the corresponding prompts: window size for corner finding and whether to auto-count squares along the x and y directions or manually enter them for each image.
 
     > These global settings are used for extracting corners from all images. Most of the time, auto-counting works fine. In the event it fails for any reason (usually a misclick on the user's end), the toolbox will revert to manual input.
 
-![c2](https://user-images.githubusercontent.com/65610334/213191980-d15f847a-52db-4f7a-9357-22a4f2dfc577.jpg)
+    ![Command Window With Highlighted Input Fields](https://user-images.githubusercontent.com/65610334/213191980-d15f847a-52db-4f7a-9357-22a4f2dfc577.jpg)
 
 3. Mark the four extreme internal checker corners on the figure that pops up after Step 2.
 
-![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
+    ![Clicker Figure](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/667b1f32-1492-461b-9d26-90264ea50986)
 
 #### **Clicking Order for Extreme Internal Corners**
 
@@ -157,35 +161,37 @@ The **first** clicked point is selected as the **origin** of the world reference
 
 We illustrate the clicking order that we followed for our calibration below.
 
-![asddddd](https://user-images.githubusercontent.com/65610334/213100379-beb1dad9-47d7-47b4-bd3b-30200bd67aef.png)
+![Clicking Order](https://user-images.githubusercontent.com/65610334/213100379-beb1dad9-47d7-47b4-bd3b-30200bd67aef.png)
 
 The planar boundary of the calibration grid is then shown below.
 
-![bd](https://user-images.githubusercontent.com/65610334/212264520-26a30d6e-2eff-41bc-867e-8f561fecaf16.jpg)
+![Planar Boundary Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4fc44c25-7394-4e52-a3ff-e4dbf8031f18)
 
 4. After marking the four extreme corners, the toolbox prompts for the **dimensions** of the squares on the checker pattern (in millimeters). Here, you enter the values measured earlier.
 
-![c3](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
+    ![Command Window With Highlighted Input Fields](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
 
 5. (OPTIONAL) Enter a guess for the distortion parameters, which can help with corner detection if your camera suffers from extreme distortion. However, this is empirical and you would have to fiddle around a little bit to get the right results. Otherwise, you can completely skip this step with an empty input.
 
     BCT will proceed to first guess all the checker corner locations within the plane defined in Step 3, and then refine them to subpixel accuracy.
 
-![corners11](https://user-images.githubusercontent.com/65610334/212265637-e70c9ba5-b7da-4542-bac6-321273b4a3c2.jpg)
+    ![Guessed Corners Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d32ca298-f2be-4e5c-8aa5-3e7ff3c73b80)
 
-![extraxted corners](https://user-images.githubusercontent.com/65610334/212265827-fec020ae-8599-48cf-b542-401dc5c90dc8.jpg)
+    ![Refined Corners Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f470b44c-98a7-4b66-a5b2-1165d2021a9d)
 
 6. Repeat steps 1&ndash;5 for the rest of the calibration images. For each new image, you will only be prompted for the initial guess for distortion as the toolbox assumes the same checker pattern has been used in each image.
 
-Once corner extraction is complete, the matlab data file `calib_data.mat` is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, etc.). Assuming a clear MATLAB worksapce, you can recover all this information by typing `calib_gui` into the command window, and then loading `calib_data.mat` into the workspace. Then, you can proceed directly to the main calibration step.
+Once corner extraction is complete, the matlab data file `calib_data.mat` is automatically generated. This file contains all the information gathered throughout the corner extraction stage (image coordinates, corresponding 3D grid coordinates, grid sizes, etc.). Assuming a clear MATLAB worksapce, you can recover all this information by launching `calib_gui` from the command window, and then loading `calib_data.mat` into the workspace. Then, you can proceed directly to the main calibration step.
 
-![h55](https://user-images.githubusercontent.com/65610334/213192784-ebcafe65-982a-46ba-b996-1acfb174a7dc.PNG)
+![Clicked Corners MATLAB Workspace (`calib_data.mat`)](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/351c6791-d1c4-42a7-8ec5-c2dceefa3944)
 
 ### **3. Main Calibration Step**
 
 At this point, we have all the information required to begin calibration. Click the **Calibration** button on the calibration GUI to run the main camera calibration procedure.
 
-![WRR](https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png)
+<p align="center" width="100%">
+    <img alt="GUI button" src="https://user-images.githubusercontent.com/65610334/212663304-28278a91-0cbf-4638-91e2-a679576e44ff.png">
+</p>
 
 ```
 Initialization of the intrinsic parameters - Number of images: 12
@@ -218,7 +224,9 @@ The calibration parameters are stored in a number of variables in the workspace.
 
 Click the **Reproject On Images** button in the calibration GUI to show the reprojections of the grids onto the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
 
-![W3](https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png)
+<p align="center" width="100%">
+    <img alt="Reproject On Images Button" src="https://user-images.githubusercontent.com/65610334/212663501-41912859-477e-4ced-8a0d-e7fd0082a60d.png">
+</p>
 
 ```
 Number(s) of image(s) to show ([] = all images) to indicate that you want to show all the images:
@@ -227,7 +235,7 @@ Number(s) of image(s) to show ([] = all images) = []
 
 The following figure shows four of the images with the detected corners (red crosses) and the reprojected grid corners (circles).
 
-![Asad](https://user-images.githubusercontent.com/65610334/212270143-6e7e929a-3dee-4e6a-903a-d3b5ce15f6cf.jpg)
+![Reprojections Mosaic Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/2aa8b843-09df-4785-949d-3b7790d97ec8)
 
 ```
 Number(s) of image(s) to show ([] = all images) = []
@@ -236,26 +244,32 @@ Pixel error:      err = [0.23942   0.24756] (all active images)
 
 The reprojection error is also shown in the form of color-coded crosses, as shown in the figure below.
 
-![error11](https://user-images.githubusercontent.com/65610334/212270799-077fa4b1-0888-40b4-b471-e7cf41e0760e.jpg)
+<p align="center">
+    <img alt="Reprojection Errors Camera View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d4e2b763-fffd-4627-a71b-cb98cc01b71f">
+</p>
 
 ### **5. (OPTIONAL) Plot the Camera and Checkers in 3D Space**
 
 Click the **Show Extrinsic** button in BCT's GUI.
 
-![W2](https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png)
+<p align="center" width="100%">
+    <img alt="Show Extrinsic Button" src="https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png">
+</p>
 
 This will plot the camera and checkers using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid corresponds to the effective field of view of the camera defined by the image plane.
 
-![extrrr](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
+![Camera Centered Extrinsics Visual](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
 To switch from a "camera-centered" view to a "world-centered" view, click on the **Switch to world-centered view** button located at the bottom-right corner of the figure.
 
-![ww](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
+![World Centered Extrinsics Visual](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
 ### **6. Saving the Calibration Results**
 Click on the highlighted button of **Save** on the calibration GUI.
 
-![W2](https://user-images.githubusercontent.com/65610334/213089098-8d0d4f67-8d9c-44df-b708-bc5984c4499f.png)
+<p align="center" width="100%">
+    <img alt="Save Button" src="https://user-images.githubusercontent.com/65610334/213089098-8d0d4f67-8d9c-44df-b708-bc5984c4499f.png">
+</p>
 
 BCT generates two files in the current directory in MATLAB:
 
@@ -276,19 +290,20 @@ In the event that the image reference is not included in the calibration image s
 
 As mentioned earlier, for convenience, we choose a flat checker position for the reference image, and include it as either the first or last image of the calibration set. We prefer a **flat position** because it is both intuitive and geometrically easy to verify.
 
-## **III: Mirror View Calibration**
+## **Step III: Mirror View Calibration**
 
 This section explains how to calibrate the mirror view using the reflection of the checker in the mirrors. The procedure is exactly the same as described for the calibraiton of the original view. The only thing that is different is the **clicking order** because, in the mirror, the points are **reflected**.
 
 This process must be repeated separately for each mirror.
 
-> If continuing directly from a previous view's calibration, CLEAR THE WORKSPACE, CLOSE ALL FIGURES, and RESTART `calib_gui` before proceeding to avoid issues with existing workspace variables.*
+> If continuing directly from a previous view's calibration, CLEAR THE WORKSPACE, CLOSE ALL FIGURES, and RESTART `calib_gui` before proceeding to avoid issues with existing workspace variables.
 
 ### **1. Loading Calibration Images**
 
 The procedure remains exactly the same as in the camera's calibration, and we can use the same images (assuming the checker was visisble in the mirrors).
 
-![Calib1](https://user-images.githubusercontent.com/65610334/212251855-ccf59d9a-ce84-41ec-8a53-35a0da8d8b96.jpg)
+![Clicker Figure](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/3a415ef3-39dd-4255-a841-661dc20a5a11)
+
 
 ### **2. Extracting the Grid Corners**
 
@@ -300,33 +315,33 @@ We visually explain the **reflected clicking order** in the mirror images below.
 
 - The 1st point which is the origin in the mirror view is the reflected version of the 1st point clicked in the original view.
 
-![q1](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
+![First Reflected Click](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
 
 - The 2nd point in the mirror view is the reflected version of the 2nd point clicked in the original view.
 
-![q2](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
+![Second Reflected Click](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
 
 - The 3rd point in the mirror view is the reflected version of the 3rd point clicked in the original view.
 
-![q3](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
+![Third Reflected Click](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
 
 - The 4th point in the mirror view is the reflected version of the 4th point clicked in the original view.
 
-![q4](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
+![Fourth Reflected Click](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
 
 After the fourth click, the planar boundary of the **calibration grid** is then shown in a separate figure.
 
-![BBIMAGES](https://user-images.githubusercontent.com/65610334/212285450-3e0ecadc-eb91-4ae3-a029-32efa048535f.jpg)
+![Planar Boundary Mirror View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/30a5b99a-afba-4f91-b42b-bd7470a83596)
 
 When prompted for the square dimensions on the checker pattern, enter the same ones used during the camera's calibration.
 
-![c3](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
+![Command Window With Higlighted Input Fields](https://user-images.githubusercontent.com/65610334/213192408-17ee514f-5aba-438a-b2fb-a141242d8d5b.jpg)
 
 The tooblox first guesses the corner locations, prompts for the distortion guess (optional), and finally refines the guesses to subpixel accuracy; just like before.
 
-![casaasaa](https://user-images.githubusercontent.com/65610334/212286733-16bbf630-b0c9-4b64-ad22-22fe9e80503e.jpg)
+![Guessed Corners Mirror View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/7a678694-dc5d-4242-a6da-efd8156ffbc0)
 
-![extracted acdcc](https://user-images.githubusercontent.com/65610334/212286285-18da988a-4855-4b63-885e-e1035fa1f071.jpg)
+![Refined Corners Mirror View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/176ba5ac-a23d-47d5-95eb-9c6a463eec67)
 
 > Repeat the same process for the rest of images in the calibration set. Again, BCT only prompts for the distortion guess for all images after the first.
 
@@ -362,22 +377,25 @@ Note: The numerical errors are approximately three times the standard deviations
 ### **4. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
 
 This procedure is also the **same** as in the **original view**.
-![Unadsm](https://user-images.githubusercontent.com/65610334/212606564-7dcd28b3-393d-4c4e-9730-6ce153e7e08f.jpg)
+
+![Reprojections Mosaic Mirror View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/7a4b4cab-16c6-4c92-bacf-cb718c014452)
 
 ```
 Number(s) of image(s) to show ([] = all images) = []
 Pixel error:      err = [0.23616   0.25538] (all active images)
 ```
 
-![r5](https://user-images.githubusercontent.com/65610334/212606286-b63e08bc-d689-41c8-81f0-7d249d653b8b.jpg)
+<p align="center">
+    <img alt="Reprojection Errors Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/5b96398b-6abd-4b6d-8e2b-93321b6cebe4">
+</p>
 
 ### **5. (OPTIONAL) Plot the Camera and checkers in 3D Space**
 
 Again, the process remains the same as discussed in the original view.
 
-![3d](https://user-images.githubusercontent.com/65610334/212606407-4e0ecebd-f88a-4601-be5e-90e711b6797d.jpg)
+![Camera Centered Extrinsics (Mirror View)](https://user-images.githubusercontent.com/65610334/212606407-4e0ecebd-f88a-4601-be5e-90e711b6797d.jpg)
 
-![3d2](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
+![World Centered Extrinsics (Mirror View)](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
 ### **6. Saving the Calibration Results**
 
@@ -385,11 +403,23 @@ Repeat the same procedure as in the original view calibration to save the calibr
 
 Rename the resulting `Calib_Results.mat` to `Calib_Results_mir1.mat` if this is for the first mirror, and to `Calib_Results_mir2.mat` if this is for the second mirror. The mirror numbering convention is subjective and up to you, e.g., left mirror is mirror 1, and right mirror is mirror 2, etc.
 
-## **IV - Merging the Original and Mirror Camera Parameters**
+# **Wrapping Up**
 
-Exactly the same as described in Step II of the repo's root `README.md`. Please refer to that for more details &ndash; it's the step that runs `calib_process_results` in the command window from the project root.
+Once you have done this process for the camera and up to two mirrors (as supported by our toolbox), you can proceed to Step II and onwards as documented in the main repo's `README.md`.
+
+At this point, you should have the following files:
+
+<p align="center" width="100%">
+    <img alt="Calibration Results" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/51fb8c43-3cbb-4404-b489-131f0e2dda93">
+</p>
+
+To reiterate, `calib_data_{view-name}.mat` saves the clicked corners information if you want to recompute the calibration parameters. `Calib_Results_{view-name}.mat` are the saved calibration results, including the intrinsics and extrinsics that we require for reconstruction. You will additionally have `Calib_Results_{view-name}.m` as well, which we personally recommend deleting as it is not used, but feel free to keep it. 
+
+Step II in the main repo `README.md` deals with how to process these results and export them into a format that's suitable for the reconstruction scripts. Please go there for next steps.
 
 # **Special Scenarios**
+
+Following are a few special cases that are manly based around the violation of still camera/mirror setup assumption. However, proceed with caution as these are mostly untested on our end, and might produce unexpected results.
 
 ## **1. Using a Non-Calibration Image as the Extrinsic Reference**
 
@@ -410,7 +440,7 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
 1. Locate the file in the BCT directory on your computer and open it up in a text editor / MATLAB.
 
 2. Search for variable `string_save`. You will notice there are four occurrences; we are interested in the first and third:
-3.
+
     ```
     % First occurrence - if route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
@@ -423,7 +453,8 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
 
     Note that `...` above represent a bunch of other variables in between.
 
-4. Replace the two occurrences with the following:
+3. Replace the two occurrences with the following:
+
     ```
     % MODIFIED First occurrence - if route
     if exist('Rc_ext', 'var') && exist('Tc_ext', 'var')
@@ -442,13 +473,13 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
     end
     ```
 
-5. Save the changes.
+4. Save the changes.
 
 Now, upon pressing the **Save** button in BCT's GUI, the extrinsics for the non-calibration image will also be saved in the `Calib_Results.mat` file (if they exist). The rest of the procedure continues as normal.
 
 ### **Why even do this?**
 
-The **Comp. Extrinsic** function of BCT is, theoretically speaking, useful if the stationary camera and mirrors assumption is violated, e.g., you move the setup around after calibration, or perhaps you calibrated the cameras in a larger space and are now moving to a more restricted/expansive space where the original checker is either too big or too small and you need to change the checker grid or square size.
+The **Comp. Extrinsic** function of BCT is useful if the stationary camera and mirrors assumption is violated, e.g., you move the setup around after calibration, or perhaps you calibrated the cameras in a larger space and are now moving to a more restricted/expansive space where the original checker is either too big or too small and you need to change the checker grid or square size.
 
 However, be cautioned that this remains largely untested on our end and the results might not be accurate or even unpredicatable in some cases.
 
@@ -468,22 +499,22 @@ Hypothetically speaking, if this is possible, calibration need only be performed
 
 6. Type the following into the command window:
 
-```
-save('Calib_Results_mir1.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
-```
+    ```
+    save('Calib_Results_mir1.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
+    ```
 
 7. Repeat Steps 3&ndash;5 for the second mirror, and then run the following command:
 
-```
-save('Calib_Results_mir2.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
-```
+    ```
+    save('Calib_Results_mir2.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
+    ```
 
 8. ***If*** the chosen image is a non-calibration image, repeat Steps 3&ndash;5 for the camera view as well. ***Else***, the extrinsics are already computed in the form: `Rc_{image-number}` and `Tc_{image-number}`, so just rename them to `Rc_ext` and `Tc_ext`.
 
-```
-save('Calib_Results_cam.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
-```
+    ```
+    save('Calib_Results_cam.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
+    ```
 
-9. Proceed as usual with merging the three together.
+9. Proceed as usual with merging the three (or two, if you have one camera + one mirror) together as documented in Step II of the main repo `README.md`.
 
 This is something we have slightly tested as it greatly reduces user input, but in certain cases, the results were unpredictable and BCT would sometimes fail to compute extrinsics correctly in the mirror view (the reprojections would be erroneous in some cases). This might have to do with the fact that mirrors introduce some level of distortion themselves, and that the nature of this distortion changes between mirrors. However, more testing is needed before we can reach a definitive conclusion.
