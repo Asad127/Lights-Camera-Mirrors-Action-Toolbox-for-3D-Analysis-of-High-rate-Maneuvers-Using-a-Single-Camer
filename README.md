@@ -34,14 +34,18 @@ Given below is a list of video tutorials that cover the entire process of workin
 
 Note that there are two other READMEs, one in the repo's `Calibration` folder and the other in `DLTdv8a Integration` folder. The former contains instructions on how to calibrate the camera and mirrors using BCT and notes on some special cases, while the latter contains instructions on how to use the mirror reconstruction toolbox with DLTdv8a to reconstruct tracked points in a video.
 
+> All the scripts can be called directly from the command window from anywhere after initializing the toolbox (which adds it to the MATLAB path.
+
 ## **Step I: Toolbox Initialization + Project Setup + Calibrating Setup With BCT**
 
 Before we start, we need to initialize the toolbox and set up a project directory in which we will be working. The project directory contains all the necessary files and folders for the mirror reconstruction toolbox to work effectively, and is also where the calibration and reconstruction results are stored.
 
-1. Clone this repository and head to the folder `Mirror Reconstruction Toolbox`.
+1. Clone this repository, launch MATLAB in any folder apart from the cloned one, and navigate to the folder `Mirror Reconstruction Toolbox` from within MATLAB.
 
-2. Open up the file `setup_mirror_recosntruction_toolbox.m` and run it. This will add the toolbox to MATLAB's path and generate a couple of important files to keep track of and manage the projects you'll be creating (`project_dirs.m` and `toolbox_dir.mat`).
+2. Open up the file `setup_mirror_reconstruction_toolbox.m` and run it. This will add the toolbox to MATLAB's path and generate a couple of important files to keep track of and manage the projects you'll be creating (`project_dirs.m` and `toolbox_dir.mat`).
 
+	> WARNING: If you run `setup_mirror_reconstruction_toolbox.m` directly from its folder (so that MATLAB opens in its directory), the script will think that the toolbox is already on the path, and enter reintiailzie/reset mode. Therefore, it is recommended to launch MATLAB in some other path and then navigate to the `Mirror Reconstruction Toolbox` directory for a first-time setup. Otherwise, you may proceed with re-initialize mode, and manually save the current working directory (i.e., `Cloned Path/Mirror Reconstruction Toolbox` to toolbox path by running `savepath(pwd)` in the command window.  
+ 
 3. Create a project in any directory by navigating to it inside MATLAB and running the following in the command window:
 
 	```
@@ -59,19 +63,19 @@ Before we start, we need to initialize the toolbox and set up a project director
 
     This will create a 'skeleton' of the project under a folder with the name above (in this case, `checker`), with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the project-specific default settings (described in Mirror Reconstruction Toolbox's `defaults.m`). The default settings are used when executing the toolbox's various scripts and functions to ensure smooth behavior within the project.
 
-   > From here on out, before executing any of the mirror reconstruction toolbox's scripts, move to the project's root directory from within MATLAB, otherwise the missing `defaults.mat` will throw errors.
+   > From here on out, before executing any of the mirror reconstruction toolbox's scripts, move to the project's root directory from within MATLAB, otherwise the missing `defaults.mat` will throw errors. Note that setting up a project with `project_setup.m` automatically changes directory to the project's root directory.
 
-4. Gather the calibration images as described in this repo's `Calibration/README.md`, Step I.
+![Project Skeleton Checker](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/531c2916-c377-4dc2-9d64-b247c3a39660)
 
-5. Begin the preliminary calibration preparation by moving to the *project's root directory* and running (in command window):
+5. Gather the calibration images as described in this repo's `Calibration/README.md`, Step I.
+
+6. Begin the preliminary calibration preparation by moving to the *project's root directory* and running (in command window):
 
     ```
     >> calib_import_media
     ```
 
-    > Setting up a project with `project_setup` automatically changes directory to the project's root directory.
-
-6. Enter whether you have calibration images (`i`) or video (`v`).
+7. Enter whether you have calibration images (`i`) or video (`v`).
 
     ```
     [PROMPT] Do you have calibration images or video? ("i" = imgs, "v" = vid): i
@@ -85,7 +89,7 @@ Before we start, we need to initialize the toolbox and set up a project director
 
 > A set of 11 calibration images is provided in the repo's `Calibration` directory.
 
-If you have manually imported the calibration images somewhere into the project root instead, skip Steps 5&ndash;6 and the two above. Further, if these images are not in numbered order, simply rename them sequentially by directly running the following in the command window from the project root:
+If you have manually imported the calibration images somewhere into the project root instead, skip Steps 5&ndash;6 + the two above, and proceed directly to Step 7. Note that if these images are not in numbered order, simply rename them sequentially by directly running the following in the command window from the project root:
 
 ```
 >> imgs_sequential_rename
@@ -124,9 +128,11 @@ This will ask if you want to rename a directory of images, or a subset of select
 
 Note that if you have manually imported the calibration video into the project root and it is already MP4, skip steps 5&ndash;6 and directly run `calib_extract_vid_frames.m` instead, which will again auto-run `calib_select_img_subset.m`.
 
-If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_extract_vid_frames`.
+If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_extract_vid_frames.m`.
 
-7. **CALIBRATION STEP:** Move to the calibration images directory and call `calib_gui` to begin the **BCT calibration process**. Note that the mirror reconstruction toolbox will automatically change directory to the calibration images once they are ready.
+> A calibration video can be found in the repo's `DLTdv8a Integration/test_vids/` directory.
+
+7. **CALIBRATION STEP:** Assuming Bouguet Calibration Toolbox (BCT) is correctly setup and on the MATLAB path, move to the calibration images directory and call `calib_gui` to begin the **BCT calibration process**. Note that the mirror reconstruction toolbox will automatically change directory to the calibration images once they are ready.
 
 ***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`.*** It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.
 
@@ -427,6 +433,20 @@ By now, we have the poses, the intrinsics, and the 2D corresponding points for b
     ```
 
 That is all. The script will proceed to perform the world point estimation, compute the average reprojection error, plot the 3D error hsitogram if the distances are provided (though this is not fully supported as it is very siutational), and save the results in the directory specified in Step 5.
+
+```
+% THESE RESULTS FOR 140 POINTS MARKED ON TEST IMAGE, NOT 4!
+% Use "Marked 2D Points/P4_undistorted.mat" when prompted for
+% marked points to reproduce.
+Estimating world coordinates with lsqnonlin...done.
+Reprojecting using the estimated world coordinates... done.
+
+*** ERRORS ***
+Mean Reprojection Error (PER-VIEW): 0.185320, 0.246668
+Mean Reprojection Error (OVERALL): 0.215994
+
+Saved results to: D:\Dev\checker\reconstruction\test
+```
 
 ![Pixel Reprojections With Estimated World Coordinates](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
 
