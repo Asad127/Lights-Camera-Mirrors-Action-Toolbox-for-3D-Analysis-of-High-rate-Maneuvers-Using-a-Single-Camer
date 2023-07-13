@@ -44,7 +44,7 @@ Before we start, we need to initialize the toolbox and set up a project director
 
 2. Open up the file `setup_mirror_reconstruction_toolbox.m` and run it. This will add the toolbox to MATLAB's path and generate a couple of important files to keep track of and manage the projects you'll be creating (`project_dirs.m` and `toolbox_dir.mat`).
 
-	> WARNING: If you run `setup_mirror_reconstruction_toolbox.m` directly from its folder (so that MATLAB opens in its directory), the script will think that the toolbox is already on the path, and enter reintiailzie/reset mode. Therefore, it is recommended to launch MATLAB in some other path and then navigate to the `Mirror Reconstruction Toolbox` directory for a first-time setup. Otherwise, you may proceed with re-initialize mode, and manually save the current working directory (i.e., `Cloned Path/Mirror Reconstruction Toolbox` to toolbox path by running `savepath(pwd)` in the command window.  
+	> WARNING: If you run `setup_mirror_reconstruction_toolbox.m` directly from its folder (so that MATLAB opens in its directory), the script will think that the toolbox is already on the path, and enter reintiailzie/reset mode. Therefore, it is recommended to launch MATLAB in some other path and then navigate to the `Mirror Reconstruction Toolbox` directory for a first-time setup. Otherwise, you may proceed with re-initialize mode, and manually save the current working directory (i.e., `Cloned Path/Mirror Reconstruction Toolbox/` to toolbox path by running `savepath(pwd)` in the command window.  
  
 3. Create a project in any directory by navigating to it inside MATLAB and running the following in the command window:
 
@@ -61,11 +61,11 @@ Before we start, we need to initialize the toolbox and set up a project director
 	[PROMPT] Enter the name of the project: checker
 	```
 
+	![Project Skeleton Checker](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/702a7ec3-dd4a-4f43-a1a1-f5d8bd3b2f18)
+
     This will create a 'skeleton' of the project under a folder with the name above (in this case, `checker`), with pre-defined folders and two files: `project_dir.mat`, that contains the absolute path of this project on the computer, and `defaults.mat`, that contains the project-specific default settings (described in Mirror Reconstruction Toolbox's `defaults.m`). The default settings are used when executing the toolbox's various scripts and functions to ensure smooth behavior within the project.
 
    > From here on out, before executing any of the mirror reconstruction toolbox's scripts, move to the project's root directory from within MATLAB, otherwise the missing `defaults.mat` will throw errors. Note that setting up a project with `project_setup.m` automatically changes directory to the project's root directory.
-
-![Project Skeleton Checker](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/531c2916-c377-4dc2-9d64-b247c3a39660)
 
 5. Gather the calibration images as described in this repo's `Calibration/README.md`, Step I.
 
@@ -85,9 +85,13 @@ Before we start, we need to initialize the toolbox and set up a project director
 
 - (UI Browser) Select the calibration images anywhere on your computer.
 
+	> A set of 11 calibration images is provided in the repo's `Calibration` directory.
+
+	![11 Calibration Images In Repo Calibration Folder](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/374b6226-9ff0-4dc3-9b01-f1597e776a69)
+
 - (UI Browser) Choose the directory to put the images in, relative to the project's root directory. Click **Cancel** to place them in the default location (`project_root/calibration/images/`). The script will automatically rename them in a format optimized for BCT as described in `defaults.m`, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
 
-> A set of 11 calibration images is provided in the repo's `Calibration` directory.
+	![11 Calibration Images Imported to Project Directory](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/8deecb57-6486-4891-b6f5-92848745faec)
 
 If you have manually imported the calibration images somewhere into the project root instead, skip Steps 5&ndash;6 + the two above, and proceed directly to Step 7. Note that if these images are not in numbered order, simply rename them sequentially by directly running the following in the command window from the project root:
 
@@ -103,7 +107,13 @@ This will ask if you want to rename a directory of images, or a subset of select
 
 - (UI Browser) Select the calibration video from anywhere on your computer. The script will copy and auto-convert it to MP4 if it is in any other format.
 
+	> A calibration video can be found in the repo's `DLTdv8a Integration/test_vids/` directory.
+
+	![Calibration Video in Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e8e4590a-8cc0-4fae-9367-97c8849e0f98)
+
 - (UI Browser) Select the path to save the video to within the project directory. The script will then auto-run `calib_extract_vid_frames.m` to extract the video frames.
+
+	![Calibration Video Imported](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f7f1c0ca-d7fb-4706-81f8-60e519c94feb)
 
 - (UI Browser) Select the directory to extract the frames into. Alternatively, click **Cancel** to quickly use the default directory instead (`calibration/frames/`).
 
@@ -124,21 +134,33 @@ This will ask if you want to rename a directory of images, or a subset of select
 
     The script will now extract the frames as {Frame1.jpg, Frame2.jpg, ..., FrameF.jpg} and auto-run `calib_select_img_subset.m`.
 
+	![Calibration Video Extracted Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/91886e3c-8d0e-4f64-848f-019df148196f)
+
 - Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
+
+	![Calbration Images From Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/29bc0ee0-464e-48c3-883f-18602e09a793)
 
 Note that if you have manually imported the calibration video into the project root and it is already MP4, skip steps 5&ndash;6 and directly run `calib_extract_vid_frames.m` instead, which will again auto-run `calib_select_img_subset.m`.
 
 If the video is not MP4, run `convert_vid_to_mp4.m` first, and then run `calib_extract_vid_frames.m`.
 
-> A calibration video can be found in the repo's `DLTdv8a Integration/test_vids/` directory.
-
 7. **CALIBRATION STEP:** Assuming Bouguet Calibration Toolbox (BCT) is correctly setup and on the MATLAB path, move to the calibration images directory and call `calib_gui` to begin the **BCT calibration process**. Note that the mirror reconstruction toolbox will automatically change directory to the calibration images once they are ready.
 
 ***For full details on the calibration process with Bouguet Calibration Toolbox (BCT), view `Calibration/README.md`.*** It is very comprehensive, and it is highly recommended to read through it at least once, especially if you are not familiar with BCT.
 
+By the end of the calibration process, you should have the following files (assuming two views, 1 camera + 1 mirror):
+
+<p align="center">
+    <img alt="Calibration Result Files For Two Views" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/51fb8c43-3cbb-4404-b489-131f0e2dda93">
+</p>
+
+Here, `calib_data.mat` saves the clicked corners information if you want to recompute the calibration parameters. `Calib_Results.mat` are the saved calibration results, including the intrinsics and extrinsics that we require for reconstruction. Step II deals with how to process these results and export them into a format that's suitable for the reconstruction scripts.
+
+### **Camera And Mirror Movement**
+
 Once you have setup the camera and mirrors for calibration, ensure they remain stationary for the remaining steps as well as during calibration. If they do move after calibration, you will need to recompute the reference extrinsics with BCT's **Comp. Extrinsic** function, which is a little tricky to setup and remains largely untested on our end as it occasionally produces spurious results (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md` for details).
 
-## **Step II: Merging BCT Result and Converting to DLTdv8a Format**
+## **Step II: Merging BCT Result and Simultaneously Converting to DLTdv8a Format**
 
 Once we have the calibration results for each view (as many `.mat` files as the no. of views), we need to merge the variables necessary for reconstruction into one mat-file. We also need to convert the BCT results from KRT form to the normalized 11-DLT coefficients form &ndash; this is to use the calibration result when working with videos in DLTdv8a (otherwise, the epipolar lines won't show).
 
@@ -160,7 +182,7 @@ Moving back to the scripts, the step-wise process is described below:
     [PROMPT] Enter calibration image suffix to use as world reference image for extrinsics (blank = default): 3
     ```
 
-    The default value is 1. Needless to say, extrinsics `Rc_x` and `Tc_x` corresponding to suffix `x` must exist in the calibration results, otherwise an error is thrown.
+    The default value is `1`. Needless to say, extrinsics `Rc_x` and `Tc_x` corresponding to suffix `x` must exist in the calibration results, otherwise an error is thrown.
 
     > <sup>+</sup>If the extrinsic reference is not part of the calibration set (meaning extrinsics were computed via **Comp. Extrinsic** function of BCT), you would enter `ext` here (see ***Special Scenarios*** section, item no. 1 at the end of `Calibration/README.md`).
 
@@ -174,7 +196,49 @@ Moving back to the scripts, the step-wise process is described below:
 
 This will generate the consolidated BCT parameters file and the DLT coefficients file. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`, and both of them are stored in the `calibration` folder within the project root.
 
-> **Following are a few important notes on this step to help understand what's happening in more detail. Skip to Step III if uninterested.**
+<p align="center">
+    <img alt="Merged BCT and DLT Coefs File" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f45ee981-23b1-4d1b-8656-2a2c06cd0759">
+</p>
+
+The merged BCT params (viewed in MATLAB workspace).
+
+<p align="center">
+    <img alt="Merged BCT In MATLAB Workspace" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/dbba8a06-0bab-4c42-857c-ffa4269cdf13">
+</p>
+
+And the DLT coefficients file (viewed in MS Excel). Note that the tags CAMERA and MIRROR 1 are not in the actual file, they were added to make it clear that the first column is the camera view's 11 DLT coefficients and the second column are the mirror view's 11 DLT coefficients.
+
+<p align="center">
+    <img alt="DLT Coefs File In Excel" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/b8d73158-14e5-44bc-ab06-2a92883d520e" height="400px">
+</p>
+
+> **Following are a few important notes on this step to help understand what's happening in more detail. You may skip to Step III.**
+
+### **Details On Merged BCT Parameters**
+
+The merged BCT file contains two shared variables between all views:
+
+1. `ext_ref_suffix` = Extrinsic Reference Image Suffix: This is the image number which we use as our reference for extrinsic parameters. This is just the image no. and not the actual iamge itself. Having a common extrinsic reference for all views is crucial in developing the correct scene pose.
+
+    > Make sure that in the selected extrinsic reference image, the checker is visible in all views!
+
+2. `view_labels` = View Labels: If you label your view according to some convention (e.g., camera is view 1, LEFT mirror is view 2, and RIGHT mirror is view 3 per our assumptions), then in a 2-view project, you might want to preserve the numbering convention even when views involved are 1 and 3. That's what this variable does.
+
+View labeling is also helpful if you are testing multiple number of views. However, to set it up correctly, you must carefully select the corresponding calibration result files. Thus, assuming convention mentioned in point 2 just now, if your 2-view setup involved the camera and RIGHT mirror, you would select camera calibration file, SKIP mirror 1 (left mirror) calibration file, and select mirror 2 (right mirror) calibration file.
+
+You might wonder that indexing with 1 and 3 and no 2 in-between would cause problems when dealing with arrays or making loops based on the number of views, and you'd be right. This is why we need the view labels variable in the first place: it allows us to index to the appropriate parameter, but we do not use it for slicing into arrays within the scripts &ndash; for that, we use the number of views, which disregards view labels.
+
+Additionally, there are five parameters unique to each view. The unique parameters are:
+
+1. `kc`: Undistortion Coefficients
+2. `KK`: View Intrinsics
+3. `Rc`: Rotation Matrix (permuted for mirror views to enforce left-handedness)
+4. `Tc`: Translation Vector
+5. `CF`: Path to the original calibration file &ndash; this is mainly just to keep track of what came from where
+
+These are indexed according to the view label, as `kc_1` (distortion coefficeints for view 1) and Tc_3 (translation vector for view 3). Which view number corresponds to which view is subjective and up to you.
+
+We classify `CF` (unique), `view_labels` (shared), and `ext_ref_suffix` (shared) as secondary variables that are not directly associated with calibration results. On the other hand, the remaining variables including distortion coefficients `kc` (unique), intrinsics `KK` (unique), and extrinsics `Rc` and `Tc` (unique) are primary results.
 
 ### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
 
@@ -209,37 +273,25 @@ R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{z
 
 In effect, the permutation operation essentially makes the rotation matrix as if the world's X was its Y, and Y was X, and so it is now defined w.r.t. the world frame in the original camera view.
 
-### **Details On Merged BCT Parameters**
+Below, we provide a side-by-side comparison of the variables in the workpsace to show that the first and second columns are swapped. The images correspond to the tutorial we have been following so far, so the reference extrinsics image suffix was `3`. Additionally, in the merged BCT file, we follow the view labels {1, 2, 3} for {Camera, Mirror 1 (Left Mirror), and Mirror 2 (Right Mirror)}. 
 
-The merged BCT file contains two shared variables between all views:
+Keeping the above in mind, the image on the left (with variable `Rc_calibration`) corresponds to `Rc_3` from BCT calibration result file `Calib_Results_mir1.mat`, and the image on the right (with variable `Rc_permuted`) corresponds to `Rc_2` from the merged BCT calibration file created in Step II (by default, `bct_params.mat`).
 
-1. `ext_ref_suffix` = Extrinsic Reference Image Suffix: This is the image number which we use as our reference for extrinsic parameters. This is just the image no. and not the actual iamge itself. Having a common extrinsic reference for all views is crucial in developing the correct scene pose.
+<p align="center" width="100%">
+    <img alt="Rotation at Calibration Time (Rc_3 in Calib_Results.mat file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6a4199ef-2588-4ab4-a8f1-313e3c46371b" width="48%">
+	&nbsp; &nbsp;
+	<img alt="Rotation Permuted On Process (Rc_2 in merged BCT file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fd081270-9df0-4e4d-a2b4-ba431ed615c8" width="48%">
+</p>
 
-    > Make sure that in the selected extrinsic reference image, the checker is visible in all views!
-
-2. `view_labels` = View Labels: If you label your view according to some convention (e.g., camera is view 1, LEFT mirror is view 2, and RIGHT mirror is view 3), then in a 2-view project, you might want to preserve the numbering convention even when views involved are 1 and 3. That's what this variable does.
-
-View labeling is also helpful if you are testing multiple number of views. However, to set it up correctly, you must carefully select the corresponding calibration result files. Thus, assuming convention mentioned in point 2 just now, if your 2-view setup involved the camera and RIGHT mirror, you would select camera calibration file, SKIP mirror 1 (left mirror) calibration file, and select mirror 2 (right mirror) calibration file.
-
-You might wonder that indexing with 1 and 3 and no 2 in-between would cause problems when dealing with arrays or making loops based on the number of views, and you'd be right. This is why we need the view labels variable in the first place: it allows us to index to the appropriate parameter, but we do not use it for slicing into arrays within the scripts &ndash; for that, we use the number of views, which disregards view labels.
-
-Additionally, there are five parameters unique to each view. The unique parameters are:
-
-1. `kc`: Undistortion Coefficients
-2. `KK`: View Intrinsics
-3. `Rc`: Rotation Matrix (permuted for mirror views to enforce left-handedness)
-4. `Tc`: Translation Vector
-5. `CF`: Path to the original calibration file &ndash; this is mainly just to keep track of what came from where
-
-These are indexed according to the view label, as `kc_1` (distortion coefficeints for view 1) and Tc_3 (translation vector for view 3). Which view number corresponds to which view is subjective and up to you.
-
-We classify `CF` (unique), `view_labels` (shared), and `ext_ref_suffix` (shared) as secondary variables that are not directly associated with calibration results. On the other hand, the remaining variables including distortion coefficients `kc` (unique), intrinsics `KK` (unique), and extrinsics `Rc` and `Tc` (unique) are primary results.
+This swapping only happens for mirror views, so in the case of camera view, `Rc_3` from `Calib_Results_cam.mat` and `Rc_1` (corresponding to camera view) from merged BCT calibration file (default, `bct_params.mat`) are both exactly the same.
 
 ## **Step III: Creating Test Images/Frames/Video + Importing + Undistortion**
 
 Now that we have the merged calibration file ready, we can begin gathering some test images or videos of the object that we want to reconstruct.
 
 Place the object you want to reconstruct in the calibrated region, and make sure its features are clearly visible in all the calibrated views. Capture as many images as you want with the test object in various positions, making sure the camera and mirror setup remains in the same position as during calibration.
+
+Given below is an example of a test image (location: `Test Images/3.jpg` in this repository).
 
 ![Test Image Example](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
@@ -259,17 +311,58 @@ Step-wise, the process is described below:
     [PROMPT] Import images or video? ("i" = imgs, "v" = vid): i
     ```
 
+### **Image Route**
+
+- (UI Browser) Locate the images containing the object of interest anywhere on your computer.
+
+	> 4 test images are provided in this repo's `Test Images` folder.
+
+	![Test Images In Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1db1c305-1773-4d97-873e-e145f322f280)
+
+- (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the project's `media/images/` folder by default.
+
+	![Imported Test Image](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f7a7c5cb-033f-47b3-918a-bce08208379b)
+
+- When prompted to undistort the images, type `y` to auto-run `create_undistorted_imgs.m` and begin the undistortion procedure for the imported images. Otherwise, type `n` to finish the import process.
+
+#### **No Undistortion Sub-Route**
+
+Nothing else to do. Proceed to marking points on the image as detailed in Step IV.
+
+#### **Undistortion Sub-Route**
+
+```
+NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
+Undistort the imported images? (y/n): y
+```
+
+- (UI Browser) Locate the merged BCT calibration parameters file from Step II.
+
+Wait until all the images are undistorted w.r.t. the distortion coefficients from each view. The results are stored in subfolders named `cam_rect`, `mir1_rect`, and `mir2_rect` in the same directory as the original images. Each folder contains the undistorted images corresponding to the distortion coefficients for that view. The image names are not changed within the folders, but you can edit the script to add suffixes which are supported by the undistortion functions/scripts.
+
+> `create_undistorted_imgs.m` can be run standalone. In that case, the user is asked to locate a directory containing images or a set of image files to undistort.
+
+<img alt="Undistorted Image Folders" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/ccb7522c-5ab1-4e61-a578-338a5c32120e" width="50%">
+
+The undistortions are visualized below:
+
+![Undistortion Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e9e1798b-8395-45b0-b76a-bf80226e58bf)
+
 ### **Video Route**
 
 > **If you enter this route, follow instructions in `DLTdv8a Integration/README.md` AFTER this step. You can still follow the steps listed here if you want to reconstruct a single frame of the video, but that's likely not your intention with video data.**
 
 - (UI Browser) Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4.
 
-- (UI Browser) Choose the path to import the video into. Clicking **Cancel** will place it in the default location (`media/videos`).
+	![Test Video in Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6ad786d5-0cf0-442e-ab1d-e18d9fee6481)
+
+- (UI Browser) Choose the path to import the video into. Clicking **Cancel** will place it in the default location (`media/videos/`).
+
+	![Imported Test Video](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/7f6baed5-41c6-4e2f-85b5-876494921175)
 
 - When prompted to undistort the video, type `y` in the command window to begin the undistortion process described in `create_undistorted_vid_and_frames.m`. Otherwise, type `n` to skip directly to frame extraction without undistortion.
 
-#### *No Undistortion Sub-Route*
+#### **No Undistortion Sub-Route**
 
 ```
 NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
@@ -278,7 +371,7 @@ Undistort the imported video? (y/n): n
 
 The script `vid_extract_frames` is auto-run by `import_media`.
 
-- (UI Broswer) Choose directory into which you wish to extract the video frames. Clicking **Cancel** will place them in the default location (`media/frames`).
+- (UI Broswer) Choose directory into which you wish to extract the video frames. Clicking **Cancel** will place them in the default location (`media/frames/`).
 
 - Choose the extension of the extracted frames.
 
@@ -290,7 +383,9 @@ The script `vid_extract_frames` is auto-run by `import_media`.
 
 Assuming a total of F frames in the video, the frames are named as {Frame1.jpg, Frame2.jpg, ..., FrameF.jpg}.
 
-#### *Undistortion Sub-Route*
+![Extracted Test Video Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f0da4212-5e73-4dd1-b980-4ed6044ec4fb)
+
+#### **Undistortion Sub-Route**
 
 ```
 NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
@@ -303,7 +398,7 @@ The script will auto-run `create_undistorted_vid_and_frames.m` to undistort the 
 
 - (UI Browser) Locate and select the merged BCT calibration parameters file from Step II.
 
-- (UI Browser) Choose a directory to extract the video frames into. Clicking **Cancel** will place them in the default location (`media/frames`).
+- (UI Browser) Choose a directory to extract the video frames into. Clicking **Cancel** will place them in the default location (`media/frames/`).
 
 - Select the extension of the extracted frames.
 
@@ -315,28 +410,15 @@ The script will auto-run `create_undistorted_vid_and_frames.m` to undistort the 
 
 These frames are then undistorted with the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views: `cam_rect`, `mir1_rect`, and `mir2_rect`.
 
+<img alt="Undistorted Frame Folders" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e6ce95c5-ac3e-40b7-9416-2bebccc436fa" width="50%">
+
+The undistorted frames are visualized below:
+
+![Undistortion Mosaic For Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4f2e8830-122c-4890-a6a7-780645bb164f)
+
 Additionally, these undistorted frames are stitched back into undistorted videos that are placed in the same directory as the original video with the same name., but suffixed with `{original-name}_cam_rect.mp4`, `{original-name}_mir1_rect.mp4`, and `{original-name}_mir2_rect.mp4`.
 
-### **Image Route**
-
-- (UI Browser) Locate the images containing the object of interest anywhere on your computer.
-
-- (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the `media/images` folder by default.
-
-- When prompted to undistort the images, type `y` to auto-run `create_undistorted_imgs.m` and begin the undistortion procedure for the imported images. Otherwise, type `n` to finish the import process.
-
-#### *Undistortion Sub-Route*
-
-```
-NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
-Undistort the imported images? (y/n): y
-```
-
-- (UI Browser) Locate the merged BCT calibration parameters file from Step II.
-
-Wait until all the images are undistorted w.r.t. the distortion coefficients from each view. The results are stored in subfolders named `cam_rect`, `mir1_rect`, and `mir2_rect` in the same directory as the original images. Each folder contains the undistorted images corresponding to the distortion coefficients for that view. The image names are not changed within the folders, but you can edit the script to add suffixes which are supported by the undistortion functions/scripts.
-
-> `create_undistorted_imgs.m` can be run standalone. In that case, the user is asked to locate a directory containing images or a set of image files to undistort.
+![Undistorted Videos](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/b3e4105d-8292-4655-a3f9-a09695a94c5e)
 
 ### **Undistortion: Grayscale or RGB?**
 
@@ -354,7 +436,7 @@ Before we can reconstruct the object, we first need to manually mark correspondi
     >> point_marker
     ```
 
-2. (UI Browser) Locate the test image containing the object of interest (to be reconstructed).
+2. (UI Browser) Locate the test image containing the object of interest (to be reconstructed) that was imported in Step III. This may be a video frame as well.
 
 3. (UI Browser) Locate the merged BCT calibration file created in Step II.
 
@@ -368,41 +450,69 @@ Before we can reconstruct the object, we first need to manually mark correspondi
 
     ```
     HELP: Only enter "y" if you have the undistorted images/video frames.
-    [PROMPT] Mark points on undistorted images? (y/n): n
+    [PROMPT] Mark points on undistorted images? (y/n): y
     ```
 
 6. Based on inputs in Steps 2 and 5, either the original or undistorted versions of the image will open up in a figure. Here, mark exactly the number of points you entered in Step 3 by clicking on image points corresponding to the particular view. The marked points will show up as colored plus (`+`) markers. Once all the points are marked, a new figure will open.
 
     > We will be reconstructing the 3D coordinates using these 2D points, so ***it is important to mark the corresponding points in all views accurately.***
 
-![py1](https://user-images.githubusercontent.com/65610334/213213561-f5757cc8-46fa-4016-9d2e-0c69e5ac1575.jpg)
+	![Marked Points Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/35f137d2-f87d-45ad-be45-a1c4ecafaf7d)
 
 7. Repeat Step 6 until the remaining views are exhausted, taking care to mark points in the ***same physical order*** in each successive view as in the first view. Like in epipolar verification, the script keeps track of the marked points' history, so when marking the i<sup>th</sup> point in the second view and onwards, its pixel location in all the previously marked views will be shown on the image as a crossed square with the corresponding color.
 
-![py2](https://user-images.githubusercontent.com/65610334/213213952-476fc2f0-96d1-4b48-a57b-4a82aea61f0a.jpg)
+	![Marked Points Mirror View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/b39bde96-0cf8-4856-ade2-46b6bd01106e)
 
 7. (UI Browser) will open up. Here, choose the path to the save the results, or click **Cancel** to use the default location, i.e., `reconstruction/marked_points.mat` in the project root. The saved variables are:
 
     - `x`: A 2D array containing the marked pixel locations of all physical points in all views
     - `num_points`: An integer describing the total number of physical points marked (i.e., the input in Step 3)
 
-The correspondence between physical points in different views is visualized below.
+Command window output:
 
-![Point Correspondence Between Two Views](https://user-images.githubusercontent.com/65610334/212617135-aa878f26-fa2d-4e7f-841a-9f663eefbc5b.jpg)
+```
+Entering point-marking mode...
+NOTE: Press "q" to zoom in, "e" to zoom out, and "r" to reset zoom level. Zoom is around cursor!
 
-#### **Output Details**
+	o Camera View - Marking Points: 4/4...done.
+	o Mirror 1 View - Marking Points: 4/4...done.
 
-For `num_views` correspondences over a certain `num_points`, `x` is a `(3, num_views * num_points)` matrix. Each column represents a homogenous pixel's coordinates, [`x_px`; `y_px`; `1`]. The set of columns `1 : num_points` are the points marked in the first view (usually the camera view) and columns `num_points + 1 : 2 * num_points` are the corresponding points in the second view (usually the first mirror reflection). Similarly, columns `2 * num_points + 1 : 3 * num_points` are the points marked in the third view (usually the second mirror reflection).
+All done. Results: D:\Dev\checker\reconstruction\marked_points.mat
+```
+
+The correspondence between physical points in two different views is visualized below.
+
+<p align="center" width=100%>
+	<img alt="Point Correspondence In Two Views" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1914366b-5d18-490f-a8a0-112a88bb12d9" width="40%">
+</p>
+
+Within MATLAB from `point_marker.m`, the following is a visualization of the clicking order in the two view images:
+
+![Marked Point Click Order Within MATLAB](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/ee2c4aea-5b0e-4b22-a358-aeda49cfc1d2)
+
+And the following is a display of the `x` array containing all the marked pixel locations. You can see they match up with the above figure:
+
+![Display of Marked Points `x` Array](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/3c11f36c-9dd3-469d-8c26-e3a734d43e40)
+
+### **Output Details**
+
+For `num_views` correspondences over a certain `num_points`, `x` is a `(3, num_views * num_points)` matrix. Each column represents a homogenous pixel's coordinates, `[x_px; y_px; 1]`. The set of columns `1 : num_points` are the points marked in the first view (usually the camera view) and columns `num_points + 1 : 2 * num_points` are the corresponding points in the second view (usually the first mirror reflection). Similarly, columns `2 * num_points + 1 : 3 * num_points` are the points marked in the third view (usually the second mirror reflection).
 
 Simultaneously, assuming the user marked the points in the same physical order, the pixel location depicted in the **column `1`** of `x` (i.e., first marked point in the first view) *corresponds* to the same physical point as the pixel location in **column `n + 1`** (i.e., first marked point in the mirror view) and so on for successive views. Similarly, the second pixel in column 2 corresponds to the reflected pixel at `n + 2`, and so on. In general, the pixel in column `k` such that `k <= num_points` corresponds to the pixel in column `k + num_points`. Each of these pixel correspondences represents a single physical point in the world. We can then use `x` by appropriately slicing it to select the set of corresponding points that we need for reconstructing a single physical point.
 
-Below, we have attached a picture of an included `marked_points.mat` file (you can find it at `Marked 2D Points/P4.mat`):
+Below, we have attached a picture of an included `marked_points.mat` file with the full set of 140 points marked (you can find it at `Marked 2D Points/P4.mat`):
 
 - `num_points = 140`
 - `x = 3 x 280`
 
+<p align="center">
+    <img alt="Saved Marked Points File In MATLAB Workspace" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1c293ba8-6f9c-4f74-b0ae-9c768321f23b">
+</p>
+
 <p align="center" width="100%">
-    <img src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1c293ba8-6f9c-4f74-b0ae-9c768321f23b">
+    <img alt="140 Marked Points Camera View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/81eee341-a29f-4606-aa0a-ed1adde1b6ac" width="48%">
+	&nbsp; &nbsp;
+	<img alt="140 Marked Points Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/084d7fd4-5f35-4927-bca2-01b4f1b0f326" width="48%">
 </p>
 
 > In the above figure, while we mark a total of `2n` pixels over two images, we are actually only dealing with `n` real-world points. They are just projected to two views. If we had k views, we would have a total of `k * n` points.
@@ -448,17 +558,31 @@ Mean Reprojection Error (OVERALL): 0.215994
 Saved results to: D:\Dev\checker\reconstruction\test
 ```
 
+<!--
 ![Pixel Reprojections With Estimated World Coordinates](https://user-images.githubusercontent.com/65610334/212618909-913d524c-792e-44d0-b6eb-37a7c7d00d78.jpg)
+-->
+
+The reprojections with the estimated world coordinates are visualized below:
 
 <p align="center" width="100%">
-    <img src="https://user-images.githubusercontent.com/65610334/212619094-96753fd8-5b20-4c7d-8798-07dada5a0c29.jpg" alt="3D Reconstruction (est. World Coordinates)">
+    <img alt="Reprojections Camera View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/0c11a396-2573-4464-9807-594f2c0e3c2b" width="49%">
+	<img alt="Reprojections Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d170ce31-93da-4ff6-be1b-de386d653832" width="49%">
 </p>
 
+The 3D scene reconstruction WITH cameras present is visualized below:
+
+![Reconstruction With Cameras Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/45c978d4-783a-4ff7-bbd6-fff7fff9a009)
+
+The 3D scene reconstruction WITHOUT cameras present is visualized below:
+![Reconstruction Without Cameras Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/717fe70c-4d97-4ffc-a35f-d3bb66e92ed3)
+
 <p align="center" width="100%">
-    <img src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg" alt="Error Histogram">
+    <img alt="Error Histogram" src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg">
 </p>
 
 This concludes the process of 3D reconstruction.
+
+### **Test It Out Yourself**
 
 Feel free to test out the toolbox on other images we have included in this repo. See folders: `Test Images`, `Marked 2D Points`, and `Results` for some of our own images, pre-marked points, and expected results. See `Results/README.md` to understand the naming conventions. Otherwise, you may setup your own camera + mirrors and take your own images.
 
@@ -498,15 +622,17 @@ However, the toolbox currently only supports the BCT variant since that preserve
     >> epipolar_geometry
     ```
 
-2. (UI Browser) Locate the image on which you want to mark points and verify extrinsics via epilines. This may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the views. For example, the following image is visible in 2 views (camera and mirror 1).
+2. (UI Browser) Locate the image on which you want to mark points and verify extrinsics via epilines. Usually, this will be an image you import in Step III.
 
     ```
     Locating the image to mark points and plot epilines on...done.
     ```
 
-![Image2](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
+    Note that this may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the required views. For example, the following image is visible in 2 views (camera and mirror 1 - location: `Test Images/3.jpg` in this repo).
+   
+	![Test Image Example](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
-3. (UI Browser) Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
+4. (UI Browser) Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
 
     ```
     Locating the merged BCT calibration file...done.
@@ -515,37 +641,38 @@ However, the toolbox currently only supports the BCT variant since that preserve
     	Camera --> Mirror 1
     ```
 
-4. (UI Browser) Choose a directory to save the results to (point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them to: `epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
+5. (UI Browser) Choose a directory to save the results to (point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them to: `epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
 
     ```
     Choosing directory to store results in...done.
     ```
 
-5. Choose whether to use the original or undistorted images to mark points and show the epilines on. This is recommended, as the BCT extrinsics are intended to be used with undistorted images. However, if your image does not have much distortion, you can get fairly accurate results even without undistortion.
+6. Choose whether to use the original or undistorted images to mark points and show the epilines on. This is recommended, as the BCT extrinsics are intended to be used with undistorted images. However, if your image does not have much distortion, you can get fairly accurate results even without undistortion.
 
     ```
     HELP: Only enter "y" if you have the undistorted images or video frames.
     [PROMPT] Use undistorted images for point marking? (y/n): y
     ```
 
-6. Enter the number of points to mark in the image when prompted in the command window. For example:
+7. Enter the number of points to mark in the image when prompted in the command window. For example:
 
     ```
     [PROMPT] Enter the no. of points to mark: 4
     ```
 
-7. A figure titled after the view's name (*Camera*, *Mirror 1*, etc.) will show up. Here, you must mark the selected number of points in the corresponding view one-by-one. You can zoom in and out around the cursor by pressing `q` and `e` respectively, or reset the zoom level with `r`. The figure title tracks the progress as the current point being marked over the total to mark. Marked points show up as a plus (`+`) marker with cycling colors.
+8. A figure titled after the view's name (*Camera*, *Mirror 1*, etc.) will show up. Here, you must mark the selected number of points in the corresponding view one-by-one. You can zoom in and out around the cursor by pressing `q` and `e` respectively, or reset the zoom level with `r`. The figure title tracks the progress as the current point being marked over the total to mark. Marked points show up as a plus (`+`) marker with cycling colors.
 
-![marked_points_original](https://user-images.githubusercontent.com/94681976/218799351-e5e66615-c10d-4d4b-836f-84cf157b94bb.png)
+![Marked Points In Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/5b8073b6-9ada-46df-a953-1d6081850b16)
 
 8. Once all points are marked, another figure window will open up. Repeat step 6 for the remaining views. Note that, like `point_marker.m`, the script keeps track of the history. Thus, when marking the i<sup>th</sup> physical point in the second view and onwards, its pixel location in all the previously marked views will be shown on the image as a crossed square with the corresponding color. This helps keep track of corresponding points between views.
 
-![marked_points_reflected](https://user-images.githubusercontent.com/94681976/218799326-cebf85aa-49d0-439a-b45b-2e6e0d4bc17a.png)
+![Marked Points In Mirror 1 View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/40c0b563-2a74-4dbe-bc7a-be1721d2ed52)
 
 Once all the views are done, the script will compute the required parameters, i.e., fundamental matrix, epipoles, epilines, epiline to corresponding point distance (point-line distances) and plot them for all combinations of view pairs. The results are saved in the directory selected in Step 4.
 
 ```
 Entering point-marking mode...
+NOTE: Press "q" to zoom in, "e" to zoom out, and "r" to reset zoom level. Zoom is around cursor!
 
 	o Mark points in Camera view: 4/4...done.
 	o Mark points in Mirror 1 view: 4/4...done.
@@ -572,16 +699,16 @@ For each view pair, the script saves:
 
 - `[{1}@{2}_{3}]-epilines_in_{3}.png`: Image with epipolar lines in the reflected view corresponding to original points (using the fundamental matrix as is).
 
-![epilines_in_reflected_view](https://user-images.githubusercontent.com/94681976/218801942-22c9af75-1bf4-47e1-be4d-86b7df8375d6.png)
+![Epilines In Reflected Mirror 1 View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d92a8dba-16cf-4c8a-973b-c214feb73574)
 
 - `[{1}@{2}_{3}]-epilines_in_{2}.png`: Image with epipolar lines in the original view corresponding to reflected points (transpose of fundamental matrix).
 
-![epilines_in_original_view](https://user-images.githubusercontent.com/94681976/218802025-9e487d3d-4965-4b60-8451-62d7efaaddbc.png)
+![Epilines In Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/182d8e17-0d02-4efb-9852-ccd8db3ef0c4)
 
 - `[{1}@{2}_{3}]-fun_and_plds.mat`: A .mat file with the fundamental matrices and point-line distances.
 
 <p align="center" width="100%">
-  <img src="https://user-images.githubusercontent.com/94681976/218797107-ceef1def-4c9d-417f-be16-9cfb4886313b.PNG">
+  <img alt="Matfile Containing Saved Variables" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fcd93fbb-a2b6-49b8-b3a0-1879a427afcd">
 </p>
 
 ### **Notes On History Of Marked Points**
@@ -590,7 +717,7 @@ This sort of history where, in the current view, we exactly know the pixel locat
 
 To iterate further on the undistortion comment, remember that the history of marked points is not very accurate when using undistorted images, since each view has a unique distortion profile and, therefore, a unique transformation to rectify it. This means that the pixel location of an object point in the undistorted camera view is NOT necessarily the same as the pixel location of the same object point in the first mirror, given that the undistortions change the locations.
 
-#### **Fix: Composite Undistortions (Not Implemented)**
+#### **History Fix: Composite Undistortions (Not Implemented)**
 
 To correct the locations of pixels when using undistorted images, we need to use composite rectification transformations. We first need to fit a geometric transformation between each view's distorted (original) and undistorted image, which is information we receive during undistortion, and save it as a .mat file somewhere.
 
