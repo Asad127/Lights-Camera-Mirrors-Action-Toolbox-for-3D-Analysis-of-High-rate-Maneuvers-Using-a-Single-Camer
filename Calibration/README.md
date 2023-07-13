@@ -407,7 +407,7 @@ Rename the resulting `Calib_Results.mat` to `Calib_Results_mir1.mat` if this is 
 
 Once you have done this process for the camera and up to two mirrors (as supported by our toolbox), you can proceed to Step II and onwards as documented in the main repo's `README.md`.
 
-At this point, you should have the following files:
+At this point, you should have the following files (assuming two views, 1 camera + 1 mirror):
 
 <p align="center" width="100%">
     <img alt="Calibration Results" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/51fb8c43-3cbb-4404-b489-131f0e2dda93">
