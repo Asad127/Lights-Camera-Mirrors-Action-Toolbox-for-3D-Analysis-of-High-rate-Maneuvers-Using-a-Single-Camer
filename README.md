@@ -742,8 +742,6 @@ Thus, a 2-pixel distance in an image with a 1000-pixel diagonal is equivalent to
 ## **Final Notes**
 If you come across any issues or bugs, please feel free to open an issue. We will try to address it as soon as possible.
 
-Pull requests are also welcome (please direct them towards the `dev-tests` branch). For major changes, kindly open an issue first to discuss what you would like to change.
-
 ## **References**
 <a id="1" href="https://doi.org/10.1088/1748-3182/3/3/034001">[1]</a>
 Hedrick, T. L. (2008). Software techniques for two-and three-dimensional kinematic measurements of biological and biomimetic systems. Bioinspiration & biomimetics, 3(3), 034001.
