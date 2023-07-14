@@ -500,19 +500,19 @@ Hypothetically speaking, if this is possible, calibration need only be performed
 6. Type the following into the command window:
 
     ```matlab
-    save('Calib_Results_mir1.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
+    save('Calib_Results_mir1.mat', 'KK', 'kc', 'Rc_ext', 'Tc_ext')
     ```
 
 7. Repeat Steps 3&ndash;5 for the second mirror, and then run the following command:
 
     ```matlab
-    save('Calib_Results_mir2.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
+    save('Calib_Results_mir2.mat', 'KK', 'kc', 'Rc_ext', 'Tc_ext')
     ```
 
 8. ***If*** the chosen image is a non-calibration image, repeat Steps 3&ndash;5 for the camera view as well. ***Else***, the extrinsics are already computed in the form: `Rc_{image-number}` and `Tc_{image-number}`, so just rename them to `Rc_ext` and `Tc_ext`.
 
     ```matlab
-    save('Calib_Results_cam.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
+    save('Calib_Results_cam.mat', 'KK', 'kc', ;Rc_ext', 'Tc_ext')
     ```
 
 9. Proceed as usual with merging the three (or two, if you have one camera + one mirror) together as documented in Step II of the main repo `README.md`.
