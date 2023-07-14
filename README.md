@@ -342,7 +342,7 @@ Wait until all the images are undistorted w.r.t. the distortion coefficients fro
 
 > `create_undistorted_imgs.m` can be run standalone. In that case, the user is asked to locate a directory containing images or a set of image files to undistort.
 
-<img alt="Undistorted Image Folders" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/ccb7522c-5ab1-4e61-a578-338a5c32120e" width="50%">
+<img alt="Undistorted Image Folders" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/ccb7522c-5ab1-4e61-a578-338a5c32120e" width="75%">
 
 The undistortions are visualized below:
 
@@ -410,7 +410,7 @@ The script will auto-run `create_undistorted_vid_and_frames.m` to undistort the 
 
 These frames are then undistorted with the distortion coefficients for each view and stored in new folders (one per view) in the extracted frames' directory. The folders are named after the corresponding views: `cam_rect`, `mir1_rect`, and `mir2_rect`.
 
-<img alt="Undistorted Frame Folders" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e6ce95c5-ac3e-40b7-9416-2bebccc436fa" width="50%">
+<img alt="Undistorted Frame Folders" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e6ce95c5-ac3e-40b7-9416-2bebccc436fa" width="75%">
 
 The undistorted frames are visualized below:
 
