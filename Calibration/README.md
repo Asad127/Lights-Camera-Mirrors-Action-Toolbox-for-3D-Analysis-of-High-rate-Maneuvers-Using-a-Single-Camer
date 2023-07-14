@@ -13,7 +13,7 @@ As we were developing the toolbox, we encountered some problems when working wit
 
 To fix (1), head to BCT's directory and open up `saving_calib.m` in MATLAB or some text editor. Move to line 176, and replace it with the following:
 
-```
+```matlab
 cont_save = input('Do you want to continue? ([]=no,other=yes) ', 's');
 ```
 
@@ -441,12 +441,12 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
 
 2. Search for variable `string_save`. You will notice there are four occurrences; we are interested in the first and third:
 
-    ```
+    ```matlab
     % First occurrence - if route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
     ```
 
-    ```
+    ```matlab
     % Third occurrence - else route
     string_save = ['save ' save_name ' center_optim param_list active_images ... MaxIter'];
     ```
@@ -455,7 +455,7 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
 
 3. Replace the two occurrences with the following:
 
-    ```
+    ```matlab
     % MODIFIED First occurrence - if route
     if exist('Rc_ext', 'var') && exist('Tc_ext', 'var')
         string_save = ['save ' save_name ' Rc_ext Tc_ext center_optim param_list active_images ind_active est_alpha est_dist est_aspect_ratio est_fc fc kc cc alpha_c fc_error kc_error cc_error alpha_c_error  err_std ex x y solution solution_init wintx winty n_ima type_numbering N_slots small_calib_image first_num image_numbers format_image calib_name Hcal Wcal nx ny map dX_default dY_default KK inv_KK dX dY wintx_default winty_default no_image check_cond MaxIter'];
@@ -464,7 +464,7 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
     end
     ```
 
-    ```
+    ```matlab
     % MODIFIED Third occurrence - else route
     if exist('Rc_ext') && exist('Tc_ext')
         string_save = ['save ' save_name ' Rc_ext Tc_ext center_optim param_list active_images ind_active est_alpha est_dist est_aspect_ratio est_fc fc kc cc alpha_c fc_error kc_error cc_error alpha_c_error err_std ex x y solution solution_init wintx winty n_ima nx ny dX_default dY_default KK inv_KK dX dY wintx_default winty_default no_image check_cond MaxIter'];
@@ -499,19 +499,19 @@ Hypothetically speaking, if this is possible, calibration need only be performed
 
 6. Type the following into the command window:
 
-    ```
+    ```matlab
     save('Calib_Results_mir1.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
     ```
 
 7. Repeat Steps 3&ndash;5 for the second mirror, and then run the following command:
 
-    ```
+    ```matlab
     save('Calib_Results_mir2.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
     ```
 
 8. ***If*** the chosen image is a non-calibration image, repeat Steps 3&ndash;5 for the camera view as well. ***Else***, the extrinsics are already computed in the form: `Rc_{image-number}` and `Tc_{image-number}`, so just rename them to `Rc_ext` and `Tc_ext`.
 
-    ```
+    ```matlab
     save('Calib_Results_cam.mat', 'KK', 'kc', Rc_ext', 'Tc_ext')
     ```
 
