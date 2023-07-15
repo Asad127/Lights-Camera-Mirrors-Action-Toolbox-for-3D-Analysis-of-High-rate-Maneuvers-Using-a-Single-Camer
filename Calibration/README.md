@@ -466,7 +466,7 @@ As can be seen, the extrinsics are no longer indexed by the image number; they a
 
     ```matlab
     % MODIFIED Third occurrence - else route
-    if exist('Rc_ext') && exist('Tc_ext')
+    if exist('Rc_ext', 'var') && exist('Tc_ext', 'var')
         string_save = ['save ' save_name ' Rc_ext Tc_ext center_optim param_list active_images ind_active est_alpha est_dist est_aspect_ratio est_fc fc kc cc alpha_c fc_error kc_error cc_error alpha_c_error err_std ex x y solution solution_init wintx winty n_ima nx ny dX_default dY_default KK inv_KK dX dY wintx_default winty_default no_image check_cond MaxIter'];
     else
         string_save = ['save ' save_name ' center_optim param_list active_images ind_active est_alpha est_dist est_aspect_ratio est_fc fc kc cc alpha_c fc_error kc_error cc_error alpha_c_error err_std ex x y solution solution_init wintx winty n_ima nx ny dX_default dY_default KK inv_KK dX dY wintx_default winty_default no_image check_cond MaxIter'];
