@@ -512,9 +512,9 @@ Hypothetically speaking, if this is possible, calibration need only be performed
 8. ***If*** the chosen image is a non-calibration image, repeat Steps 3&ndash;5 for the camera view as well. ***Else***, the extrinsics are already computed in the form: `Rc_{image-number}` and `Tc_{image-number}`, so just rename them to `Rc_ext` and `Tc_ext`.
 
     ```matlab
-    save('Calib_Results_cam.mat', 'KK', 'kc', ;Rc_ext', 'Tc_ext')
+    save('Calib_Results_cam.mat', 'KK', 'kc', 'Rc_ext', 'Tc_ext')
     ```
 
-9. Proceed as usual with merging the three (or two, if you have one camera + one mirror) together as documented in Step II of the main repo `README.md`.
+9. Proceed as usual with merging the three (or two, if you have one camera + one mirror, or two mirrors and no camera) together as documented in Step II of the main repo `README.md`.
 
 This is something we have slightly tested as it greatly reduces user input, but in certain cases, the results were unpredictable and BCT would sometimes fail to compute extrinsics correctly in the mirror view (the reprojections would be erroneous in some cases). This might have to do with the fact that mirrors introduce some level of distortion themselves, and that the nature of this distortion changes between mirrors. However, more testing is needed before we can reach a definitive conclusion.
