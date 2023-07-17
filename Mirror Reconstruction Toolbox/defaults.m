@@ -202,8 +202,8 @@ BCT_MERGED_CALIB_PATH = fullfile(BCT_CALIB_DIR, [BCT_MERGED_CALIB_BASE BCT_EXT])
 % -------------------------------------------------------------------------
 % Path to the camera's calibration result files.
 % BCT_CAM_CALIB_PATH = strrep(fullfile(BCT_CALIB_DIR, ...
-% [BCT_CAM_CALIB_BASE BCT_EXT]),  '\', '\\');
-BCT_CAM_CALIB_PATH = fullfile(BCT_CALIB_DIR, [BCT_CAM_CALIB_BASE BCT_EXT]);  % EDIT-UNSAFE if done locally
+% [BCT_MERGED_CALIB_BASE BCT_EXT]),  '\', '\\');
+BCT_CAM_CALIB_PATH = fullfile(BCT_CALIB_DIR, [BCT_MERGED_CALIB_BASE BCT_EXT]);  % EDIT-UNSAFE if done locally
 
 % Path to the mirror's calibration result files (must be sprintf'd since
 % BCT_MIR_CALIB_BASE_FMT contains formatting identifiers.
