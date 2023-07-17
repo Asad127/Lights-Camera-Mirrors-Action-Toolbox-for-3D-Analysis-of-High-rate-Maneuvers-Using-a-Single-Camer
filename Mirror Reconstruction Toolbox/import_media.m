@@ -204,13 +204,12 @@ else
     else
         vid_filepath = fullfile(vid_dir, vid_file);
     end
-    
-    vid_filepath = abspath(vid_filepath);
 
     if mp4_conversion_applied
 
         if ~strcmp(src_filepath, vid_filepath)
             movefile(src_filepath, vid_filepath);  % move the converted source file and rename it
+            vid_filepath = abspath(vid_filepath);
             fprintf(['Imported MP4-converted copy of original video to project directory.' ...
                 '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
                 'Source Video', src_filepath, 'Imported Video', abspath(vid_filepath) ...
@@ -225,6 +224,7 @@ else
 
         if ~strcmp(src_filepath, vid_filepath)
             copyfile(src_filepath, vid_filepath);  % copy the original source file and rename it
+            vid_filepath = abspath(vid_filepath);
             fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
                 'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
             )
