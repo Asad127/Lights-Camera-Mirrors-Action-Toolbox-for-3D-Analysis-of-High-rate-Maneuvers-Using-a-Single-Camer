@@ -83,14 +83,6 @@ if ~exist('merged_calib_filepath', 'var')  % this carries over from `calib_proce
     else
         merged_calib_filepath = fullfile(merged_calib_dir, merged_calib_file);
     end
-    
-    fprintf('\nExtracting video frames...\n\n\tTo  : %s\n\tFrom: %s\n\n', ...
-        abspath(frames_dir), abspath(vid_filepath) ...
-    )
-    vid_to_frames(vid_filepath, frames_dir, default.VID_FRAMENAME_FMT, frame_extension)
-    
-    fprintf('Done extracting frames.\n\n')
-
 end
 
 view_params = load(merged_calib_filepath);
@@ -104,6 +96,12 @@ view_names = default.VIEW_NAMES_LONG(view_labels);
 
 num_views = numel(view_labels);
 undistorted_img_folders = default.UNDISTORTED_IMG_FOLDERS(view_labels);
+
+fprintf('\nExtracting video frames...\n\n\tTo  : %s\n\tFrom: %s\n\n', ...
+    abspath(frames_dir), abspath(vid_filepath) ...
+)
+vid_to_frames(vid_filepath, frames_dir, default.VID_FRAMENAME_FMT, frame_extension)
+fprintf('Done extracting frames.\n\n')
 
 for j = 1 : num_views
     k = view_labels(j);  % numbering identity preserved
