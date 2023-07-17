@@ -244,13 +244,12 @@ elseif calib_img_or_vid == 'v'
         calib_vid_filepath = fullfile(calib_vid_dir, calib_vid_file);
     end
 
-    calib_vid_filepath = abspath(calib_vid_filepath);
-
     if mp4_conversion_applied
 
         % Move the converted source file and rename it
         if ~strcmp(src_filepath, calib_vid_filepath)
             movefile(src_filepath, calib_vid_filepath);
+            calib_vid_filepath = abspath(calib_vid_filepath);
             fprintf(['Imported MP4-converted copy of original video to project directory.' ...
                 '\n\n\t%-14s: %s\n\t%-14s: %s\n\n'], ...
                 'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
@@ -267,6 +266,7 @@ elseif calib_img_or_vid == 'v'
         % Copy the original source file and rename it
         if ~strcmp(src_filepath, calib_vid_filepath)
             copyfile(src_filepath, calib_vid_filepath);
+            calib_vid_filepath = abspath(calib_vid_filepath);
             fprintf('Imported video to project directory.\n\n\t%-14s: %s\n\t%-14s: %s\n\n', ...
                 'Source Video', src_filepath, 'Imported Video', calib_vid_filepath ...
             )
