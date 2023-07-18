@@ -258,8 +258,6 @@ for j = 1 : num_views
     fprintf('done.\n')
     hold off
 
-    %export_fig(['marked_points_' view_name], '-native', '-c0,NaN,NaN,NaN')
-
     pause(1);
 end
 
@@ -270,13 +268,13 @@ end
     [default.MARKED_POINTS_BASE default.BCT_EXT] ...
 );
 if ~marks_file
-    marks_filepath = fullfile(default.RECONSTRUCTION_DIR, default.MARKED_POINTS_BASE);
+    marks_filepath = fullfile(default.RECONSTRUCTION_DIR, [default.MARKED_POINTS_BASE default.BCT_EXT]);
 else
     marks_filepath = fullfile(marks_dir, marks_file);
 end
 
 save(marks_filepath, 'num_points', 'x')
-fprintf(['\nAll done. Results: %s\n\n\nNEXT STEPS: 3D World Point Estimation and Reconstruction\n\n' ...
+fprintf(['\nAll done. Results: %s\n\nNEXT STEPS: 3D World Point Estimation and Reconstruction\n\n' ...
     '- Run "reconstruct_marked_pts_bct.m" to reconstruct the marked points.\n\n'], ...
     abspath(marks_filepath) ...
 )
