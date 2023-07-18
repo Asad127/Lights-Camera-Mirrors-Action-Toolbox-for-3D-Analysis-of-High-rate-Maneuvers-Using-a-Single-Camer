@@ -131,7 +131,7 @@ for i = 1 : num_pairs
 
 end
 
-fprint('Choosing directory to store results in...')
+fprintf('Choosing directory to store results in...')
 
 % Get the directory to store results, or just use default lcoation.
 results_dir = uigetdir('', 'Select directory to store the results in (cancel = use default directory)');
@@ -271,7 +271,7 @@ epipoles_ref_view = zeros(num_pairs, 2);
 epilines_org_all_view_pairs = zeros(3, num_points * num_pairs);
 epilines_ref_all_view_pairs = zeros(3, num_points * num_pairs);
 
-fprintf('CProcessing %d view pair(s)...\n\n', num_pairs)
+fprintf('Processing %d view pair(s)...\n\n', num_pairs)
 
 for i = 1 : num_pairs
 
