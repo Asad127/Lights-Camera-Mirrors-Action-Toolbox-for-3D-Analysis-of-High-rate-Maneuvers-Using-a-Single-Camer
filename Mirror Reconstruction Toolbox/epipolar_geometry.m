@@ -47,7 +47,6 @@ fprintf('done.\n')
 [img_height, img_width, ~] = size(imread(img_filepath));  % used in plotting epilines
 
 % Load in the merged BCT calibration parameters corresponding to the image.
-
 fprintf('Locating the merged BCT calibration file...')
 
 [merged_calib_file, merged_calib_dir] = uigetfile( ...
