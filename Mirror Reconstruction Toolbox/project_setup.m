@@ -2,37 +2,72 @@
 % the toolbox, this script can be used to create a project structure in the
 % current directory.
 
-fprintf(['Creating a project in the current folder.\nNOTE: You can configure the structure globally '...
-    'by editing "defaults.m" in the toolbox path.\n\n']);
+fprintf('Creating a project in the current folder...\n');
 
 LAUNCHTIME_DIR = pwd;
 toolbox = load('toolbox.mat');
 TOOLBOX_MATLAB_PATH = toolbox.TOOLBOX_MATLAB_PATH;
 
+overwrite_missing_path = false;
+logicmap = dictionary(["y" "n"], [true false]);
 while true
     project_name = input('[PROMPT] Enter the name of the project: ', 's');
     if isempty(project_name)
         fprintf('\nProject name cannot be blank, please try again.\n')
         continue
     end
+
     % Check for duplicates.
     fprintf('\nChecking for duplicate project names...')
     [duplicate_line_num, duplicate_line, ~, ~, project_dirs] = project_dirs_match(project_name);
-    if duplicate_line_num ~= 0  % equivalent to "if duplicate_line_num"
-        fprintf(['\n\n[BAD INPUT] Project with the same name already exists at:\n\t%s\n\t@ Line ' ...
-            '%d in "project_dirs.m": %s\nPlease try again with a unique name.\n\n'], ...
-            project_dirs{duplicate_line_num}, duplicate_line_num, duplicate_line{1} ...
-        )
-        continue
+    
+    if ~duplicate_line_num
+        fprintf('all good.\n')
+    else
+        duplicate_dir = project_dirs{duplicate_line_num};
+        if isfolder(duplicate_dir)
+            fprintf(['\n[DUPLICATE FOUND] Project with the same name already exists at:\n\t%s' ...
+                '\n\t@ Line %d in "project_dirs.m": %s\nPlease provide a unique name for the new ' ...
+                'project, or rename the existing project with "project_rename.m", and try again.\n'], ...
+                duplicate_dir, duplicate_line_num, duplicate_line{1} ...
+            )
+            continue
+        else
+            % Ask to overwrite duplicate path if it does not exist.
+            fprintf(['\n[MISSING DUPLICATE] A project with the same name is listed in "project_dirs.m", but ' ...
+                'appears to be missing.\n\tListed Duplicate (Missing): %s\n\t@ Line %d in ' ...
+                '"project_dirs.m": %s\n'], ...
+                duplicate_dir, duplicate_line_num, duplicate_line{1} ...
+            )
+            while true
+                overwrite_missing_path = input('[PROMPT] Overwriting the missing listed path. Proceed? (y/n): ', 's');
+                if ~ismember(overwrite_missing_path, {'y', 'n'})
+                    fprintf(['\n[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs (w/o quotes). ' ...
+                        'Please try again.\n'] ...
+                    )
+                    continue
+                end
+                overwrite_missing_path = logicmap(overwrite_missing_path);
+                break
+            end
+    
+            if ~overwrite_missing_path
+                fprintf(['[RETRY] Please provide a unique name for the project, or delete the listed ' ...
+                    'missing path with "project_dirs_delete.m" and try again.\nYou may also relocate ' ...
+                    'the missing path if it has been misplaced with "project_dirs_relocate_missing.m", ' ...
+                    'rename it with\n"project_rename.m", and then try again.\n\n'] ...
+                )
+                continue
+            end
+        end
     end
-    fprintf('all good.\n')
     break
 end
 
 if ~isfolder(project_name)
     mkdir(project_name);
     project_dir = dir(project_name).folder;
-    fprintf('Created project folder.\n\n')
+    fprintf('Done creating project folder.\n\n')
 end
 
 fprintf('...changing CWD to project folder...\n')
@@ -102,9 +137,18 @@ if ~isfolder(default.EPIPOLAR_DIR)
     added_entities{end + 1} = sprintf('+ %s', default.EPIPOLAR_DIR);
 end
 
-% Append this directory to the list of project directories in
-% `project_dirs.m` located at tolbox source path.
-project_dirs_append(project_dir);
+% Update existing path (if duplicate and chose to overwrite) or append this 
+% directory path (if unique) to the list of project directories in 
+% `project_dirs.m` located at the toolbox source path.
+if overwrite_missing_path
+    project_dirs_update(duplicate_line_num, project_dir);
+    fprintf('\n%-34s: %s\n%-34s: %s', ...
+        'Listed Duplicate Project (Missing)', duplicate_dir, ...
+        'Replaced With New Project Path', project_dir ...
+    )
+else
+    project_dirs_append(project_dir);
+end
 
 %% PRINTOUTS
 
@@ -113,7 +157,7 @@ fprintf('+ %s\n', project_dir);
 
 newline_after_count = 3;
 if isempty(added_entities)
-    fprintf("Project structure was according to defaults already. Nothing was changed.\n")
+    fprintf('Project structure was according to defaults already. Nothing was changed.\n')
 else
     for i = 1 : numel(added_entities)
         fprintf('%-30s', added_entities{i});
