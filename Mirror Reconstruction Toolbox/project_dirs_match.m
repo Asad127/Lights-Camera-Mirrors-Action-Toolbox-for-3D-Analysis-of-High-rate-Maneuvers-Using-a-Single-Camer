@@ -15,6 +15,10 @@ function [matched_line_nums, matched_lines, projects_file_lines, ...
 % identifiers and the script checks if the provided line number exceeds the
 % total lines in `project_dirs.m`.
 %
+% This script does not check if the matched directories in `project_dirs.m`
+% exist or not. That should be checked immediately after calling this
+% script as project_dirs{matched_line_nums}.
+%
 % TAKES 
 % =====
 % project_identifier:
@@ -108,7 +112,7 @@ elseif isa(project_identifier, 'cell')
     end
     
     % Did it have neither type for all elements? If so, error out.
-    if ~any(identifier_has_all_chars, identifier_has_all_numerics)
+    if ~any([identifier_has_all_chars, identifier_has_all_numerics])
         err_msg = sprintf(['Mixed data types in given cell array of project identifiers.\nFunction ' ...
             'expects a cell array containing only numerics or chars, e.g., {1, 5, 7} or {"D:\\project1, ' ...
             '"D:\\project3"}, etc.'] ...
@@ -151,7 +155,7 @@ elseif isa(project_identifier, 'cell')
                 end
                 % If a match is found, store the current line number, set
                 % the found flag, and break out of file searching loop.
-                curr_line = j;
+                curr_line = i;
                 found_project_dir = true;
                 break
             end
@@ -179,7 +183,7 @@ if ~matched_line_nums
 end
 
 % If we did find a match or matches, we grab the corresponding lines from
-% the matfile.
+% the "project_dirs.m".
 matched_lines = projects_file_lines(matched_line_nums);
 
 end
