@@ -1,6 +1,6 @@
 % Add to path, add the toolbox path to defaults.m, and generate
-% `project_dirs.mat` file. This should be the very first script to run 
-% after downloading the toolbox if you intend to use it anywhere on your 
+% `project_dirs.mat` file. This should be the very first script to run
+% after downloading the toolbox if you intend to use it anywhere on your
 % system. Only call it from within the toolbox and nowhere else.
 % Additionally, paths in project_dirs.mat will be verified and missing
 % paths will have to be relocated (or deleted).
@@ -15,12 +15,12 @@ disp('|                   Intended for use with DLTdv8a and Bouguet Calibration 
 disp('|                           Supports up to 3 views : 1 camera, 2 mirrors                            |')
 disp('=====================================================================================================')
 
-% This script might be called from outside the toolbox directory. Since 
+% This script might be called from outside the toolbox directory. Since
 % the user is supposed to be inside the toolbox directory, if we have the
 % toolbox on path, we can actually save the launchtime directory, jump to
-% the toolbox directory, and then jump back. 
+% the toolbox directory, and then jump back.
 
-% We prompt before doing the jump, just in case 
+% We prompt before doing the jump, just in case
 LAUNCHTIME_DIR = pwd;
 announcements = {};
 
@@ -35,7 +35,7 @@ for i = 1 : numel(paths)
     if ~strcmp(dirname, 'Mirror Reconstruction Toolbox')
         continue
     end
-    
+
     curr_toolbox_matlab_path = paths{i};
 
     if ~isfolder(curr_toolbox_matlab_path)
@@ -47,7 +47,8 @@ for i = 1 : numel(paths)
             choice = input('[PROMPT] Reset path and reinitialize to current directory? (y/n): ', 's');
             if ~ismember(choice, {'y', 'n'})
                 fprintf(['\n[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs (w/o quotes).' ...
-                    'Please try again.\n'])
+                    'Please try again.\n'] ...
+                )
                 continue
             end
             break
@@ -70,7 +71,7 @@ for i = 1 : numel(paths)
 end
 
 % If the toolbox does exist on MATLAB and path and the working directory
-% is not the toolbox directory, ask the user to jump to it directly. 
+% is not the toolbox directory, ask the user to jump to it directly.
 if ~isempty(curr_toolbox_matlab_path) && ~strcmp(curr_toolbox_matlab_path, LAUNCHTIME_DIR)
     while true
         fprintf('HELP: Mirror Reconstruction Toolbox is already on the MATLAB path.\n')
@@ -95,7 +96,7 @@ if isempty(curr_toolbox_matlab_path)
         user_in_toolbox_dir = input(['[PROMPT] Are you currently in the mirror reconstruction toolbox' ...
             ' source directory? (y/n): '], 's');
         if ~ismember(user_in_toolbox_dir, {'y', 'n'})
-            fprintf('[BAD PROMPT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
+            fprintf('\n[BAD PROMPT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
             continue
         end
         break
@@ -117,11 +118,11 @@ end
 toolbox_dir = curr_dir;
 
 if ~isempty(curr_toolbox_matlab_path) && strcmp(curr_toolbox_matlab_path, toolbox_dir)
-    fprintf(['NOTE: Since the toolbox already exists on the path, you are likely looking to (1) ' ...
-        'recreate missing\ninitialization files or (2) reset the path. This does not affect ' ...
-        'the file containing existing project\npaths (project_dirs.m), which may only be ' ...
+    fprintf(['NOTE: Since the toolbox already exists on the path, you are likely trying to (1) ' ...
+        'recreate missing\ninitialization files, or (2) reset the path. Note that the latter does ' ...
+        'not affect the file containing\nexisting project paths (project_dirs.m), which may only be ' ...
         'deleted manually.\n\n'])
-    
+
     while true
         choice = input('[PROMPT] Enter 1 or 2 corresponding to your desired operation: ');
         if ~ismember(choice, [1 2])
@@ -164,7 +165,7 @@ else
         announcements{end + 1} = ['- Toolbox Path File (toolbox.mat): Unchanged as it already exists ' ...
             'and the toolbox paths match.'];
     end
-    
+
 end
 
 % Create the project file if it does not exist, but write nothing to it.
@@ -185,4 +186,4 @@ if ~strcmp(LAUNCHTIME_DIR, toolbox_dir)
     cd(LAUNCHTIME_DIR)
 end
 
-fprintf('NEXT STEPS:\n- Move to any directory and call `project_setup.m` to begin.\n\n') 
+fprintf('NEXT STEPS:\n- Move to any directory and call `project_setup.m` to begin.\n\n')
