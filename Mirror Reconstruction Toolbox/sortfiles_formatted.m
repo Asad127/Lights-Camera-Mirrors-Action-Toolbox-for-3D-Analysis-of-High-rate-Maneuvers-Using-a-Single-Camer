@@ -34,3 +34,4 @@ end
 [~, sorted_indices] = sort(cell2mat(unique_numeric_parts));  % cell2mat(cellarr) = [cellarr{:}]
 sorted_files = basenames(sorted_indices);
 
+end
