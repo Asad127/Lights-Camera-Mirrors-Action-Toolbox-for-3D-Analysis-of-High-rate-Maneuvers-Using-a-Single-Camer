@@ -51,7 +51,7 @@ skipped_dirs = {};
 fprintf('\nRelocating missing project directories...\n\n')
 for i = 1 : numel(missing_dirs)
     skip_this_path = false;
-    fprintf('(%d) Relocating %s...', i, missing_dirs{i});
+    fprintf('%d. Relocating %s...\n', i, missing_dirs{i});
     while true
         relocated_dir = uigetdir( ...
             '', ...
@@ -62,12 +62,12 @@ for i = 1 : numel(missing_dirs)
             skip_this_path = true;
             break
         end
-
+        fprintf('Verifying project structure in selected directory...\n')
         status = check_relocated_dir(relocated_dir);
         if strcmp(status, 'Repairs canceled, nothing changed.')
-            % If user cancels the operation from within project_repair.m,
-            % means they might want to reselect the directory for this path
-            fprintf('Reattempting relocation...\n')
+            % If user cancels the operation from within function, means 
+            % they might want to reselect the directory for this path
+            fprintf('...reattempting relocation...\n')
             continue
         end
         break
@@ -76,7 +76,7 @@ for i = 1 : numel(missing_dirs)
     if skip_this_path
         skipped_dir_lines(end+1) = missing_dir_lines(i);
         skipped_dirs{end+1} = missing_dirs{i};
-        fprintf('relocation skipped.\n\n')
+        fprintf('Relocation skipped.\n\n')
         continue
     end
 
@@ -84,7 +84,7 @@ for i = 1 : numel(missing_dirs)
     % this if not deleting, obviously, which is why this is
     % after all the conditionals that continue. Remove it from
     % missing files list as well.
-    fprintf(['relocation successful.\n\tOld Path: %s\n\tNew Path: %s\n\t' ...
+    fprintf(['Relocation successful.\n\tOld Path: %s\n\tNew Path: %s\n\t' ...
         'Updated "project_dirs.m" accordingly.\n\n'], missing_dirs{i}, relocated_dir ...
     )
     project_dirs_update(missing_dir_lines(i), relocated_dir);
@@ -132,8 +132,6 @@ msg_2 = 'Valid project structure. "project_dir.mat" in project directory had the
 msg_3 = 'Valid project structure. Defaults mfile was refreshed per "defaults.m" in toolbox path.';
 msg_4 = 'Complete. Repaired invalid project structure.';
 msg_5 = 'Repairs canceled, nothing changed.';
-
-fprintf('Verifying project structure...')
 
 added_entities = {};
 
@@ -278,15 +276,15 @@ if isempty(added_entities)
 % If things had to be changed.
 else
     status_msg = msg_4;
-    fprintf('\t%s\n', default.CWLINE_STYLE);
-    fprintf('\t+ %s\n', strrep(project_dir, '\', '\\'))
+    fprintf('%s\n', default.CWLINE_STYLE);
+    fprintf('+ %s\n', strrep(project_dir, '\', '\\'))
     for i = 1 : numel(added_entities)
         fprintf('%-30s', added_entities{i});
         if mod(i, newline_after_count) == 0 && i ~= numel(added_entities)
-            fprintf('\n\t')
+            fprintf('\n')
         end
     end
-fprintf('\n\t%s\n', default.CWLINE_STYLE);
+fprintf('\n%s\n', default.CWLINE_STYLE);
 end
 
 fprintf('\tRepair Status: %s\n', status_msg)
