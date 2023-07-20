@@ -47,8 +47,8 @@ Given below is a list of video tutorials that cover the entire process of workin
     ```
     >> setup_mirror_reconstruction_toolbox
     ```
-
-    > ADD SCREENSHOT OF `Toolbox Initialization.png`.
+    
+	![Toolbox Initialization](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4c315b11-4e5f-41a0-bf3a-091db0f76e4a)
 
 5. Create a project in any directory by navigating to it inside MATLAB and running the following in the command window:
 
@@ -56,7 +56,7 @@ Given below is a list of video tutorials that cover the entire process of workin
 	>> project_setup
 	```
 
-    > ADD SCREENSHOT OF `Project Setup.png`.
+    ![Project Setup](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/36e9a18d-4920-4e58-bdca-7c587e7cd531)
 
 This should create a project in the current folder and automatically move to its root directory. In our case, this is `D:/Dev/checker/`, and we call it `{project-root}` for the rest of the tutorial. It has the following structure of files and folders:
 
@@ -511,17 +511,25 @@ The latter step is only relevant if you are working with videos in DLTdv8a, but 
 
 4. (UI Browser) Locate each view's calibration file. These would normally be manually renamed in the default expected format `Calib_Results_{view-name}.mat`, though it could be any name. Clicking **Cancel** will skip that view (it won't be used in reconstruction). At least 2 views are required for this to work.
 
-    > ADD SCREENSHOT HERE
+    ![UI Prompt BCT Calibration Result for Camera](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/71c2888d-5eca-497b-8d85-7efb12ba0a1e)
+
+   ![UI Prompt BCT Calibration Result for Mirror 1](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/bd6c5f3f-6a44-401b-bb99-6c19e498d00b)
+
+	![UI Prompt BCT Calibration Result for Mirror 2 - Cancel](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fac6166a-6ed8-413f-bb7f-5ba65cf58002)
 
     > For `{view-name}`, we prefer using {`cam`, `mir1`, `mir2`} for each view.
 
-5. (UI Browser) Choose path to save the merged calibration result in the UI browser, or use the default location by pressing the **Cancel** button.
+6. (UI Browser) Choose path to save the merged calibration result in the UI browser, or use the default location by pressing the **Cancel** button.
 
-    > ADD SCREENSHOT HERE
+    ![UI Prompt Save Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/c3357a09-3da2-44db-aabc-cdf50fa08e62)
 
-6. (UI Browser) Choose path to save the 11 DLT coefficients for DLTdv8a that are also computed in this step, or use the default location by pressing the **Cancel** button.
+7. (UI Browser) Choose path to save the 11 DLT coefficients for DLTdv8a that are also computed in this step, or use the default location by pressing the **Cancel** button.
 
-    > ADD SCREENSHOT HERE
+    ![UI Prompt Save DLT Coefs file](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4a886073-b347-441a-baba-1dcdc2b1586b)
+
+That's it. The command window output is given below:
+
+![Merging BCT Files and DLT Coefs File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/da144bb3-28c0-4a47-bd1a-031c8ff13490)
 
 This will generate the consolidated BCT parameters file and the DLT coefficients file. By default, the merged calibration file is named `bct_params.mat` and the DLT coefficients file is named `dlt_coefs.csv`, and both of them are stored in the `calibration` folder within the project root.
 
@@ -596,7 +604,7 @@ Proceed to marking points on the image as detailed in Step VI.
 
 A UI browser should pop up. Here, locate the merged BCT calibration parameters file created earlier in Step IV, or click cancel to look for it in the default save path `{project-root}/calibration/bct_params.mat`.
 
-> ADD SCREENSHOT HERE
+![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
 
 > If you did not clear the workspace after Step IV and ran `import_media.m`, this UI prompt will not appear as the location is already recorded in the workspace.
 
@@ -607,6 +615,10 @@ Wait until all the images are undistorted w.r.t. the distortion coefficients fro
 The undistortions are visualized below:
 
 ![Undistortion Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e9e1798b-8395-45b0-b76a-bf80226e58bf)
+
+And the command window should output the following:
+
+![Import Media Output for Images](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/95ea0c9b-710a-4d49-b3db-373c17e20a91)
 
 ### **B. Video Route**
 
@@ -645,7 +657,7 @@ Assuming a total of F frames in the video, the frames are named as {Frame1.jpg, 
 
 - (UI Browser) Locate the merged BCT calibration parameters file from Step IV, or click **Cancel** to look for it in the default save path `{project-root}/calibration/bct_params.mat`.
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
 
     > If you did not clear the workspace after Step IV and ran `import_media.m`, this UI prompt will not appear as the location is already recorded in the workspace.
 
@@ -671,6 +683,12 @@ Finally, these undistorted frames are stitched back into undistorted videos that
 
 ![Undistorted Videos](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/b3e4105d-8292-4655-a3f9-a09695a94c5e)
 
+The command window output is given below:
+
+![Import Media Output for Videos 1](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/aa9100b4-087c-4329-b184-58c6f925df0b)
+
+![Import Media Output for Videos 2](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/0c31510f-27d9-4d02-b148-237686ae58ea)
+
 ## **Step VI: Marking Points on Imported Test Media for Each View**
 
 There are two ways to approach this. The first is to mark the points on the object of interest in a **single image** for each view manually and store the results. The second is to mark AND track the points in a **video** for each view via DLTdv8a, and then export the trackfiles. We cover both of them below.
@@ -683,13 +701,13 @@ There are two ways to approach this. The first is to mark the points on the obje
     >> point_marker
     ```
 
-2. (UI Browser) Locate the test image containing the object of interest that was imported in Step V. This may be a video frame as well.
+2. (UI Browser) Locate the test image containing the object of interest that you imported in Step V. This may be a video frame as well.
 
-    > ADD SCREENSHOT HERE
+    ![UI Prompt Locate Imported Test Image](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/c858d81e-f1cc-4d8e-9e1c-8751bf9198ca)
 
 3. (UI Browser) Locate the merged BCT calibration file created in Step IV.
 
-    > ADD SCREENSHOT HERE
+    ![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
 
 4. Enter the number of points to mark in the image. For example, if you want to mark four points in each view, enter `4` in the command window:
 
@@ -721,7 +739,7 @@ The saved variables are:
 
 The full command window output is attached below:
 
-> ADD SCREENSHOT here
+![Point Marker Output](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/c6e2f97b-1dc8-45e8-b6de-9765f4a601ab)
 
 The correspondence between physical points in two different views is visualized below.
 
@@ -826,19 +844,19 @@ Based on whether you followed Step VI-A (single image with manually marked point
 
 2. (UI Browser) Locate the image on which you marked the points in Step VI-A.
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Locate Imported Test Image](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/c858d81e-f1cc-4d8e-9e1c-8751bf9198ca)
 
 3. (UI Browser) Locate the marked points file created in Step VI-A, or click **Cancel** to use the default save location `reconstruction/marked_points.mat` in the project root.
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Locate Marked Points](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/65dff37e-9645-41fd-8e36-3d3f6acbcb54)
 
 4. (UI Browser) Locate the merged BCT calibration file created in Step IV, or click **Cancel** to use the default save location, i.e., `calibration/bct_params.mat` in the project root.
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
 
 5. (UI Browser) Choose the directory where you want to save the results of the reconstruction, or click **Cancel** to use the default save path `reconstruction/{x}.mat` in the project root, where `{x}` is the basename of the image selected in Step 2 (basename means filename w/o extension).
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Save Reconstruction Results for Images](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/c5101e9d-f3ec-4228-b98d-950869a03b6a)
 
 6. When prompted to use undistorted images for reprojections, enter `y` to do so, and `n` otherwise. Only enter `y` if you undistorted the images in Step V.
 
@@ -882,7 +900,6 @@ The 3D scene reconstruction WITHOUT cameras present is visualized below:
     <img alt="Error Histogram" src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg">
 </p>
 
-
 ## **B. Reconstructing Multiple Video Frames From DLTdv8a Trackfiles**
 
 1. Navigate to the project root within MATLAB (`D:/Dev/moving_checker` in this case) and run the followign reconstruction script from the command window:
@@ -893,17 +910,29 @@ The 3D scene reconstruction WITHOUT cameras present is visualized below:
 
 2. (UI Browser) Locate the merged BCT calibration file created in Step IV, or click **Cancel** to use the default save location `{project-root}/calibration/bct_params.mat`.
 
+	![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
+
 3. (UI Browser) Locate the 2D points trackfile generated by DLTdv8a in Step VI-B, or click **Cancel** to use the default save location `{project-root}/trackfiles/xypts.csv`.
+
+	![UI Prompt Locate Trackfile](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/355e258c-22d4-4987-95c4-23402e15bffa)
 
 4. (UI Browser) Choose the path to save the estimated 3D world points to, or click **Cancel** to save to the default location `{project_root}/reconstruction/{prefix}xyzpts.csv`.
 
     > The prefix is determined automatically from the 2D trackfile name `{prefix}xypts.csv`.
 
+	![UI Prompt Save Reconstruction Results for Video](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/8adc1846-295e-47c8-9575-470b8053fa5b)
+
 5. (UI Browser) Locate the directory containing the video frames, or click **Cancel** to use the default directory `{project-root}/media/frames/`.
+
+	![UI Prompt Locate Test Video Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/7a3757ca-30a9-4471-a368-6c0938c2379f)
 
 6. When prompted to use undistorted images for reprojections, enter `y` to do so, and `n` otherwise. Only enter `y` if you undistorted the images in Step V.
 
 That's it. The script will then perform the computations as in Step VII-A, but this time for all the frames containing tracked points. A point is only reconstructed if it is visible in at least 2 views for a given frame. The 3D estimated points are further exported in DLTdv8 format.
+
+The command window output is attached below (it's quite lengthy due to the no. of frames, so it's truncated).
+
+![Reconstruction Output - Video](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/04ebc4fa-5b7b-4f90-adac-a8cb2c42dcbd)
 
 ![Estimating World Coordinates of Tracked Points and Reconstructing Them](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6a167a49-ea79-4832-a1a7-cd56eaa5d1c4)
 
@@ -919,7 +948,7 @@ Feel free to test out the toolbox on other images we have included in this repo.
 
 ## **(OPTIONAL) Step VIII: Extrinsics Verification With Epipolar Geometry**
 
-1. Navigate to the project root (either `D:/Dev/checker` for images or `D:/Dev/moving_checker` for video frames, in our case) within MATLAB and run `epipolar_geometry.m` from the command window:
+1. Navigate to the project root within MATLAB (either `D:/Dev/checker` for images or `D:/Dev/moving_checker` for video frames, in our case) and run `epipolar_geometry.m` from the command window:
 
     ```
     >> epipolar_geometry
@@ -933,11 +962,11 @@ Feel free to test out the toolbox on other images we have included in this repo.
 
 4. (UI Browser) Locate the merged BCT calibration parameters file from Step II. Clicking the **Cancel** button will attempt to find the file in the default location, and throw an error if it is not found.
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
 
-5. (UI Browser) Choose a directory to save the results to (i.e., point line distances, images with epilines drawn, etc.). Clicking **Cancel** will store them at: `{project-root}/epipolar/set_{x}` in the project root, where x is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
+5. (UI Browser) Choose a directory to save the results to, or click **Cancel** to store them at: `{project-root}/epipolar/set_{x}`, where {x} is the first natural number starting from 1 that corresponds to a non-existing folder in the directory. Thus, previous result sets are not replaced.
 
-    > ADD SCREENSHOT here
+    ![UI Prompt Locate Epipolar Results Folder](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/407524cd-d4e2-49ef-abaf-851ee97f2f21)
 
 6. Choose whether to use the original or undistorted images to mark points and show the epilines on. This is recommended, as the BCT extrinsics are intended to be used with undistorted images. However, if your image does not have much distortion, you can get fairly accurate results even without undistortion.
 
@@ -962,7 +991,7 @@ Feel free to test out the toolbox on other images we have included in this repo.
 
 Once all the views are done, the script will compute the required parameters, i.e., fundamental matrix, epipoles, epilines, epiline to corresponding point distance (point-line distances) and plot them for all combinations of view pairs. The results are saved in the directory selected in Step 4.
 
-> ADD SCREENSHOT here
+![Epipolar Output](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/011e38e2-dc82-45b4-864a-e9dcf1c857d7)
 
 Suppose `{1}` represents the **name** of the image selected in Step 2. `{2}` represents the name of the view that acts as the **original image**. Finally, let `{3}` represents the **reference image**. The difference between the original and reference image is that for points $\mathsf{x}$ in the original image, $\mathsf{l' = Fx}$ gives the epiline in the reference image, whereas for points $\mathsf{x'}$ in reference image, the $\mathsf{F}$ matrix is **transposed**, i.e., $\mathsf{l = F'x}$ gives the epilines in the original image.
 
