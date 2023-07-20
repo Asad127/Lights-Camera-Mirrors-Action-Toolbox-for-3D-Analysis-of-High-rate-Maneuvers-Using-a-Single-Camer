@@ -105,7 +105,7 @@ fprintf('Done extracting frames.\n\n')
 
 for j = 1 : num_views
     k = view_labels(j);  % numbering identity preserved
-    fprintf('|-- Undistorting Video w.r.t %s View --|\n\n', view_names{j})
+    fprintf('|-- Undistorting Video w.r.t %s View --|\n', view_names{j})
     fprintf('Undistorting extracted frames...');
 
     dist_coefs = view_params.(sprintf('kc_%d', k));

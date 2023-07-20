@@ -32,7 +32,7 @@ curr_toolbox_matlab_path = '';
 for i = 1 : numel(paths)
 
     [~, dirname] = fileparts(paths(i));
-    if ~strcmp(dirname, 'Mirror Reconstruction Toolbox')
+    if ~strcmp(dirname, 'Mirror Assisted Reconstruction Toolbox')
         continue
     end
 

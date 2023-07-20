@@ -12,9 +12,9 @@ function convert_vid_to_mp4(input_vid, output_vid)
 % TAKES
 % =========================================================================
 % input_vid (required, filepath):
-%   The input video.
+%   The input video filepath.
 % output_vid (optional, default = input_dir/input_name.mp4):
-%   The output video filepath (erither relative or absolute). If empty
+%   The output video filepath (either relative or absolute). If empty
 %   input or not provided and the UI browser is canceled, defaults to input
 %   directory with the same name as input video + mp4 extension.
 %

@@ -29,7 +29,7 @@ img_filter = cellfun(@(extension) ['*' extension], default.SUPPORTED_IMG_EXTS, '
 
 [img_file, img_dir] = uigetfile( ...
     img_filter, ...
-    'Locate non-undistorted image containing the object you marked the points on' ...
+    'Locate non-undistorted image containing the object you want to reconstruct' ...
 );
 
 if ~img_file
@@ -151,7 +151,7 @@ fprintf('done.\n\n')
 % Ask if user wants to use undistorted images.
 fprintf('HELP: Only enter "y" if you have the undistorted images/video frames.\n');
 while true
-	choice = input('[PROMPT] Use undistorted images for reprojections and reconstruction? (y/n): ', 's');
+	choice = input('[PROMPT] Use undistorted images for reprojections? (y/n): ', 's');
     
     if ~ismember(choice, {'y', 'n'})
 		fprintf('\n[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')

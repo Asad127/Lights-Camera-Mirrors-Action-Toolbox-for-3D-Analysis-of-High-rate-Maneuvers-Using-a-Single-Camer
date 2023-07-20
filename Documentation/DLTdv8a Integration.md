@@ -30,7 +30,7 @@ Exactly the same as in the repo root `README.md` file. Please refer to that for 
 
 This step is fairly straightforward. Extensive video tutorials as well as written manuals on how to work with DLTdv8a are provided by the authors of the software. If you are just starting with the tool, we recommend that you start learning from the [official DLTdv8a online manual](https://biomech.web.unc.edu/dltdv8_manual/). You can also clone their [git repository](https://github.com/tlhedrick/dltdv) which contains additional information and the codebase.
 
-> ***The toolbox has only been tested with the app version of DLTdv8a.***
+***The toolbox has only been tested with the app version of DLTdv8, i.e. DLTdv8a.***
 
 1. Open up the DLTdv8a app in the project root.
 
