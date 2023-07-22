@@ -165,7 +165,9 @@ if calib_img_or_vid == 'i'
         calib_img_filepath = fullfile(calib_imgs_dir, calib_img_file);
 
         if strcmp(src_filepath, calib_img_filepath)
-            copy_path_conflict = true;
+            if ~copy_path_conflict
+                copy_path_conflict = true;
+            end
             continue
         end
         copyfile(src_filepath, calib_img_filepath);
@@ -237,9 +239,38 @@ elseif calib_img_or_vid == 'v'
         'Choose location to import calibration video into (cancel = use default location)', ...
         [default.BCT_CALIB_VID_BASE default.VID_EXT] ...
     );
-
+    
+    % Use default path. We wouldn't normally need to process it, but if the
+    % user already imported the video and feels lazy to call the right
+    % scripts afterwards, he can just unga bunga this script due to
+    % copy/move conflict safety, which requires the processing for
+    % absolute pathing below.
+    
     if ~calib_vid_file
-        calib_vid_filepath = default.BCT_CALIB_VID_PATH;
+
+        % Need to absolutify path.
+        [calib_vid_dir, calib_vid_base, calib_vid_extension] = fileparts(default.BCT_CALIB_VID_PATH);
+        
+        % If default path has no directories.
+        if isempty(calib_vid_dir) && ~isempty(calib_vid_base) && ~isempty(calib_vid_extension)  
+            calib_vid_filepath = fullfile(pwd, [calib_vid_base calib_vid_extension]);  % this is already absolute by nature of pwd
+        
+        % If default path has directories.
+        elseif ~isempty(calib_vid_dir) && ~isempty(calib_vid_base) && ~isempty(calib_vid_extension)
+
+            if ~isfolder(calib_vid_dir)
+                mkdir(calib_vid_dir);
+            end
+            
+            % Since file does not exist yet, we absolutify the dirpath that
+            % we just created and append the name of imported video to it.
+            calib_vid_dir = abspath(calib_vid_dir);  
+            calib_vid_filepath = fullfile(calib_vid_dir, [calib_vid_base calib_vid_extension]);
+
+        else
+            error('Default import path does not have a defined basename and extension for the imported video file.')
+        end
+
     else
         calib_vid_filepath = fullfile(calib_vid_dir, calib_vid_file);
     end

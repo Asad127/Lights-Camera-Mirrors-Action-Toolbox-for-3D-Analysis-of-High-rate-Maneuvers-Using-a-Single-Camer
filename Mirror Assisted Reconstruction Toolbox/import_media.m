@@ -101,8 +101,9 @@ if img_or_vid == 'i'
 
     % Now, we know all images are the same format, so copy them over.
     fprintf('Copying image(s) to selected directory...')
-    copy_file_conflict = false;
+    copy_path_conflict = false;
     img_filepaths = cell(1, num_src_imgs);
+    
     for i = 1 : num_src_imgs
         src_filepath = src_filepaths{i};
         [~, src_base, src_ext] = fileparts(src_filepath);
@@ -112,20 +113,24 @@ if img_or_vid == 'i'
         img_filepaths{i} = img_filepath;
 
         if strcmp(src_filepath, img_filepath)
-            if ~copy_file_conflict
-                copy_file_conflict = true;
+            if ~copy_path_conflict
+                copy_path_conflict = true;
             end 
             continue
         end
+
         copyfile(src_filepath, img_filepath);
+
     end
 
+    fprintf('done.\n')
+    
     if copy_path_conflict
         fprintf(['[WARNING] Attempted to copy one or more files onto themselves.\n' ...
-            'Copy instruction was skipped for these paths.\n\n'])
+            'Copy instruction was skipped for these paths.\n'])
     end
-
-    fprintf('done.\n\n\t%-17s: %s\n\t%-17s: %s\n\n', ...
+    
+    fprintf('\n\t%-17s: %s\n\t%-17s: %s\n\n', ...
         'Source Imgs Dir', abspath(src_dir), 'Imported Imgs Dir', abspath(imgs_dir) ...
     )
 
@@ -150,7 +155,6 @@ if img_or_vid == 'i'
             'mark target points on object of interest over all views in a single image.\n\n'] ...
         )
     end
-
 
 % User is importing video
 else
@@ -200,7 +204,29 @@ else
     );
     
     if ~vid_file
-        vid_filepath = default.VID_PATH;
+        
+        % Need to absolutify path.
+        [vid_dir, vid_base, vid_extension] = fileparts(default.VID_PATH);
+        
+        % If default path has no directories.
+        if isempty(vid_dir) && ~isempty(vid_base) && ~isempty(vid_extension)  
+            vid_filepath = fullfile(pwd, [vid_base vid_extension]);  % this is already absolute due to pwd
+        
+        % If default path has directories.
+        elseif ~isempty(vid_dir) && ~isempty(vid_base) && ~isempty(vid_extension)
+
+            if ~isfolder(vid_dir)
+                mkdir(vid_dir);
+            end
+
+            % Since file does not exist yet, we absolutify the dirpath that
+            % we just created and append the name of imported video to it.
+            vid_dir = abspath(vid_dir);  
+            vid_filepath = fullfile(vid_dir, [vid_base vid_extension]);
+        else
+            error('Default import path does not have a defined basename and extension for the imported video file.')
+        end
+    
     else
         vid_filepath = fullfile(vid_dir, vid_file);
     end

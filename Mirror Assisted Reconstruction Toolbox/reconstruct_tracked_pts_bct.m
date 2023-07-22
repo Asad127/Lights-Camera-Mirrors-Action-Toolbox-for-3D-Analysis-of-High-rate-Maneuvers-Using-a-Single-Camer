@@ -113,7 +113,7 @@ fprintf('Locating DLTdv8a exported trackfile containing tracked points...')
 while true
     [trackfile_file, trackfile_dir] = uigetfile( ...
         ['*' default.DLTDV_EXT], ...
-        'Select DLTdv8a exported flat-format file of tracked pixels w/o extension (cancel = use default location)' ...
+        'Select DLTdv8a exported flat-format file of tracked pixels (cancel = use default location)' ...
     );
     if ~trackfile_file
         trackfile = fullfile(default.DLTDV_TRACKFILES_DIR, ...
@@ -162,10 +162,7 @@ trackfile_3d_filename = [trackfile_name_prefix default.DLTDV_TRACKFILE_3D_BASE d
 );
 
 if ~file
-    reconstructed_world_pts_filepath = fullfile( ...
-        default.RECONSTRUCTION_DIR, ...
-        [trackfile_3d_filename default.DLTDV_EXT] ...
-    );
+    reconstructed_world_pts_filepath = fullfile(default.RECONSTRUCTION_DIR, trackfile_3d_filename);
 else
     reconstructed_world_pts_filepath = fullfile(directory, file);
 end
@@ -235,7 +232,7 @@ end
 % Ask if user wants to use undistorted images.
 fprintf('HELP: Only enter "y" if you have the undistorted images or video frames.\n');
 while true
-	choice = input('[PROMPT] Use undistorted video frames for point marking? (y/n): ', 's');
+	choice = input('[PROMPT] Use undistorted video frames for reprojections? (y/n): ', 's');
     
     if ~ismember(choice, {'y', 'n'})
 		fprintf('[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
