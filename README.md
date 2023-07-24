@@ -177,7 +177,7 @@ This section explains how to use the **Bouguet Calibration Toolbox (BCT)** to ca
 
 > For BCT's input prompts that have `[]` as an option, you can just leave them blank and press enter to provide an 'empty' input, which uses the default value as suggested by the toolbox.
 
-### **1. Loading Calibration Images**
+### **i. Loading Calibration Images**
 
 1. Assuming that BCT has been added to the MATLAB path, run `calib_gui` from the command window to launch the calibration GUI.
 
@@ -214,7 +214,7 @@ At this point, you should be presented with the following figure (a mosaic of th
 
 ![Image Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/80b19d0c-faa0-45cf-9116-93391a5ecdfd)
 
-### **2. Extract the Grid Corners**
+### **ii. Extract the Grid Corners**
 
 1. Click on the highlited button of **Extract Grid Corners** in the calibration GUI.
 
@@ -262,11 +262,11 @@ Once corner extraction is complete, BCT generates a file `calib_data.mat` contai
 
 ![Clicked Corners MATLAB Workspace (`calib_data.mat`)](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/351c6791-d1c4-42a7-8ec5-c2dceefa3944)
 
-This is helpful to keep as it allows you to skip the corner extraction and proceed directly to Step 3 (Main Calibration Step) for any future re-calibrations.
+This is helpful to keep as it allows you to skip the corner extraction and proceed directly to Step iii (Main Calibration Step) for any future re-calibrations.
 
-> **Extract Grid Corners** will automatically call the image loading routine if no images are detected in the workspace. Thus, after launching `calib_gui`, you can directly click on **Extract Grid Corners** and BCT will begin the image loading process described in Step 1, immediately followed by the corner extraction prompts of Step 2.
+> **Extract Grid Corners** will automatically call the image loading routine if no images are detected in the workspace. Thus, after launching `calib_gui`, you can directly click on **Extract Grid Corners** and BCT will begin the image loading process described in Step i, immediately followed by the corner extraction prompts of Step ii.
 
-### **3. Main Calibration Step**
+### **iii. Main Calibration Step**
 
 Click the **Calibration** button on the calibration GUI to run the main camera calibration procedure.
 
@@ -301,7 +301,7 @@ Note: The numerical errors are approximately three times the standard deviations
 
 The calibration parameters are stored in a number of variables in the workspace.
 
-### **4. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
+### **iv. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
 
 Click the **Reproject On Images** button in the calibration GUI to show the reprojections of the grids onto all or a subset of the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
 
@@ -328,7 +328,7 @@ The reprojection error is also shown in the form of color-coded crosses. Each co
     <img alt="Reprojection Errors Camera View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d4e2b763-fffd-4627-a71b-cb98cc01b71f">
 </p>
 
-### **5. (OPTIONAL) Plot the Camera and Checkers In 3D Space**
+### **v. (OPTIONAL) Plot the Camera and Checkers In 3D Space**
 
 Click the **Show Extrinsic** button in BCT's GUI.
 
@@ -344,7 +344,7 @@ To switch from a "camera-centered" view to a "world-centered" view, click on the
 
 ![World Centered Extrinsics Visual](https://user-images.githubusercontent.com/65610334/212271620-ba55ff88-e193-4bd2-9fcd-66547ce13fa1.jpg)
 
-### **6. Saving the Calibration Results**
+### **vi. Saving the Calibration Results**
 Click on the highlighted button of **Save** on the calibration GUI.
 
 <p align="center" width="100%">
@@ -366,14 +366,14 @@ This section explains how to calibrate the mirror view using the reflection of t
 
 This process must be repeated carefully for each mirror view you involve. Our toolbox currently supports a maximum of two mirrors. If continuing directly from a previous view's calibration (whether a camera or mirror), remember to clear the workspace, close all figures, and restart `calib_gui` before proceeding to avoid issues with existing workspace variables.
 
-### **1. Loading Calibration Images**
+### **i. Loading Calibration Images**
 
 The procedure remains exactly the same as in the camera's calibration, and we can use the same images (assuming the checker is visible in the relvant mirror view).
 
 ![Clicker Figure](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/3a415ef3-39dd-4255-a841-661dc20a5a11)
 
 
-### **2. Extracting the Grid Corners**
+### **ii. Extracting the Grid Corners**
 
 The only change in this step is the **clicking order**, and that the points must be marked in the mirror reflections of the checker. Everything else remains the same.
 
@@ -413,7 +413,7 @@ Just like before, the tooblox first guesses the corner locations, prompts for th
 
 > Repeat the same process for the rest of images in the calibration set. Again, BCT only prompts for the distortion guess for all images after the first.
 
-### **3. Main Calibration Step**
+### **iii. Main Calibration Step**
 
 The main calibration step for the mirror view is the same as described for the **original view**.
 
@@ -442,7 +442,7 @@ Pixel error:          err = [ 0.29234   0.26648 ]
 Note: The numerical errors are approximately three times the standard deviations (for reference).
 ```
 
-### **4. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
+### **iv. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
 
 This procedure is also the **same** as in the **original view**.
 
@@ -457,7 +457,7 @@ Pixel error:      err = [0.23616   0.25538] (all active images)
     <img alt="Reprojection Errors Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/5b96398b-6abd-4b6d-8e2b-93321b6cebe4">
 </p>
 
-### **5. (OPTIONAL) Plot the Camera and Checkers In 3D Space**
+### **v. (OPTIONAL) Plot the Camera and Checkers In 3D Space**
 
 Again, the process remains the same as discussed in the original view.
 
@@ -465,7 +465,7 @@ Again, the process remains the same as discussed in the original view.
 
 ![World Centered Extrinsics (Mirror View)](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
-### **6. Saving the Calibration Results**
+### **vi. Saving the Calibration Results**
 
 Repeat the same procedure as in the original view calibration to save the calibration results.
 
@@ -487,11 +487,11 @@ If you are interested in special cases or the flexibility of the visiblity and s
 
 > You can remove the checker pattern at this stage. However, the camera and mirrors should remain stationary for the rest of the steps.
 
-## **Step IV: Merging BCT Result and Simultaneously Converting to DLT Coefficients**
+## **Step IV: Processing the Calibration Results**
 
-This section discusses how to merge the variables necessary for reconstruction from each view's calibration results into one mat-file. The process simultaneously computes the normalized 11-DLT coefficients form of the calibration result for each view and merges them into one CSV file.
+This section discusses how to merge the variables necessary for reconstruction from each view's calibration results into one mat-file, which makes the coming steps much simpler.
 
-The latter step is only relevant if you are working with videos in DLTdv8a, but this is the most reasonable time to calculate them whether you plan to use DLTdv8a or not.
+The process simultaneously computes the normalized 11-DLT coefficients form of the calibration result for each view and merges them into one CSV file. This step is only relevant if you are working with videos in DLTdv8a, but this is the most reasonable time to calculate them whether you plan to use DLTdv8a or not. If your purpose is to just reconstruct objects on images, you do not need the DLT coefficients file generated in the next step.
 
 1. Navigate to the project's root directory from within MATLAB. Again, in our example case, this is `D:/Dev/checker/` for images and `D:/Dev/moving_checker` for videos.
 
@@ -525,7 +525,7 @@ The latter step is only relevant if you are working with videos in DLTdv8a, but 
 
 7. (UI Browser) Choose path to save the 11 DLT coefficients for DLTdv8a that are also computed in this step, or use the default location by pressing the **Cancel** button.
 
-    ![UI Prompt Save DLT Coefs file](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4a886073-b347-441a-baba-1dcdc2b1586b)
+    ![UI Prompt To Save DLT Coefs file](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/4a886073-b347-441a-baba-1dcdc2b1586b)
 
 That's it. The command window output is given below:
 
@@ -549,9 +549,9 @@ And the DLT coefficients file (viewed in MS Excel). Note that the tags CAMERA an
     <img alt="DLT Coefs File In Excel" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/b8d73158-14e5-44bc-ab06-2a92883d520e" height="400px">
 </p>
 
-## **Step V: Creating, Importing, and Undistorting a Test Image or Video**
+## **Step V: Creating, Importing, and Optinally Undistorting a Test Image or Video**
 
-This section describes how to gather testing media (images or videos) containing the target object to reconstruct. We can also optionally undistort the imported media, which is recommended to improve the result accuracy.
+This section describes how to gather testing media (images or videos) containing the target object to reconstruct. We can also optionally undistort the imported media, which is recommended to improve the result accuracy, but not required if your cameras do not have much distortion in the first place. The original images remain unchanged, so you can try out if the distortion improves the result, and if it does not, fall back to the original set.
 
 ### **1. Creating Test Media**
 
@@ -828,7 +828,7 @@ DLTdv8a will generate around 4&ndash;5 files in the current directory. The main 
 
 Finally, you can optionally save the entire DLTdv8a project as a matfile (*Project Tab > Save as...*) if you wish to do more work later or keep the full state of the project.
 
-## **Step VII: 3D Reconstruction of Marked Points**
+## **Step VII: 3D Reconstruction of Objects With Marked Points**
 
 By now, you have the poses, the intrinsics, and the 2D corresponding points in multiple views. Thus, you are ready to begin reconstruction of the object's physical points in 3D world coordinates.
 
@@ -1010,6 +1010,51 @@ For each view pair, the script saves:
 <p align="center" width="100%">
   <img alt="Matfile Containing Saved Variables" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fcd93fbb-a2b6-49b8-b3a0-1879a427afcd">
 </p>
+
+### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
+
+A very important operation in Step IV (within `calib_process_results.m`) is a permutation transform to correctly convert the mirror view world frames from the right-handed to left-handed convention, as is the case with mirror reflections.
+
+**BCT forces right-handedness** of the estimated world frames on the checker (after marking the internal corner points). While this is a valid constraint for real cameras since they are rigid bodies, it remains that mirror reflection of a typical right-handed frame ***swaps*** the handedness, so that it becomes left-handed. This is clearly not the case with BCT, as mirror reflections of the checker are forced to be right-handed.
+
+This essentially creates the problem that there are two different world reference frames that share the same world Z-axis (pointing up, i.e., out of the checker plane), but the world X and Y-axis (on the checker plane) are swapped depending on whether we have the actual checker (camera view) or its reflection (mirror view). The swapping in reflected views occurs to preserve the right-handedness and keep Z-axis pointing up.
+
+Thus, when estimating world coordinates via some optimization technique, **the optimization would simply fail to converge** as the original world frame's X is the reflected frame's Y, and vice versa, so that they never agree. To fix this, we have two options:
+
+1. In each optimization iteration, only for the reflected views, swap the XY coordinates of the current state of the world points vector. This tricks the optimization into thinking the world coordinates are in the same frame convention as the original camera view, and it proceeds smoothly.
+
+```math
+\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} \rightarrow \begin{bmatrix} Y \\ X \\ Z \end{bmatrix}
+```
+
+2. Apply a **permutation transformation** to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
+
+We have tested both approaches, and both work. However, **approach 1** is cumbersome in that **(a)** it requires the swap operation in every step of the optimization, and **(b)** when reprojecting points to the reflected views, we need to re-swap the estimated world coordinates back to the original form.
+
+On the other hand, **method 2** is much more permanent as it addresses the root cause of the issue, i.e., the **misalignment of coordinates in the rotation matrix**. Note that we do not need to permute translation vector $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to rotation matrix $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
+
+Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the required permutation matrix $T_\text{permutation}$ is:
+
+```math
+T_\text{permutation} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+```
+```math
+R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{zX} & r_{zY} & r_{zZ} \end{bmatrix} \cdot \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{xY} & r_{xX} & r_{xZ} \\ r_{yY} & r_{yX} & r_{yZ} \\ r_{zY} & r_{zX} & r_{zZ} \end{bmatrix}
+```
+
+In effect, the permutation operation essentially makes the rotation matrix as if the world's X was its Y, and Y was X, and so it is now defined w.r.t. the world frame in the original camera view.
+
+Below, we provide a side-by-side comparison of the variables in the workpsace to show that the first and second columns are swapped. The images correspond to the tutorial we have been following so far, so the reference extrinsics image suffix was `3`. Additionally, in the merged BCT file, we follow the view labels {1, 2, 3} for {Camera, Mirror 1 (Left Mirror), and Mirror 2 (Right Mirror)}.
+
+Keeping the above in mind, the image on the left (with variable `Rc_calibration`) corresponds to `Rc_3` from BCT calibration result file `Calib_Results_mir1.mat`, and the image on the right (with variable `Rc_permuted`) corresponds to `Rc_2` from the merged BCT calibration file created in Step II (by default, `bct_params.mat`).
+
+<p align="center" width="100%">
+    <img alt="Rotation at Calibration Time (Rc_3 in Calib_Results.mat file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6a4199ef-2588-4ab4-a8f1-313e3c46371b" width="48%">
+	&nbsp; &nbsp;
+	<img alt="Rotation Permuted On Process (Rc_2 in merged BCT file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fd081270-9df0-4e4d-a2b4-ba431ed615c8" width="48%">
+</p>
+
+This swapping only happens for mirror views, so in the case of camera view, `Rc_3` from `Calib_Results_cam.mat` and `Rc_1` (corresponding to camera view) from merged BCT calibration file (default, `bct_params.mat`) are both exactly the same.
 
 ## **Final Notes**
 For more comprehensive information and instructions, please take a look inside the Documentation folder, which has much more detail for each step.
