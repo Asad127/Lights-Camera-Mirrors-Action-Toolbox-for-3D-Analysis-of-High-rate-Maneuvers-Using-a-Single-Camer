@@ -1,6 +1,6 @@
-# **Capturing High Speed Maneuvers Using a Single Camera and Planar Mirrors**
+# **Capturing High-Speed Maneuvers Using a Single Camera and Planar Mirrors**
 
-### **Reconstructing Manually Tracked 3D Motion of Housefly**
+### **Reconstructing 3D Trajectory of Housefly**
 
 https://user-images.githubusercontent.com/65610334/221478255-8cf1ea76-92bf-4a1c-9693-54b65a3b086c.mp4
 
