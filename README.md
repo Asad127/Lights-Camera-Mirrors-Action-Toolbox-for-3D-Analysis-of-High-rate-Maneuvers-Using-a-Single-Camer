@@ -26,11 +26,9 @@ The mirror reconstruction toolbox has been tested on MATLAB R2023a on Windows, U
 
 Given below is a list of video tutorials that cover the entire process of working with and reconstructing single images from scratch:
 
-1. [Toolbox Initialization + Project Setup + Calibrating Setup With BCT](https://youtu.be/jj8qtrYcpmg)
-2. [Merging BCT Result + Image Undistortion](https://youtu.be/m7j7KHaHQjQ)
-3. [Manually Marking Corresponding Points In Views](https://youtu.be/KPzqxeG_P4Q)
-4. [Estimating 3D World Points + Reconstructing + Exporting Marked Points](https://youtu.be/MqHf93R815U)
-5. [Verifying Extrinsics With Epipolar Geometry](https://youtu.be/clQF8QTfbyg)
+1. [Project Setup + Calibration](https://youtu.be/jj8qtrYcpmg) | [Merging Calibrations + Undistortion](https://youtu.be/m7j7KHaHQjQ)
+2. [Point Marking](https://youtu.be/KPzqxeG_P4Q) | [Reconstruction](https://youtu.be/MqHf93R815U)
+3. [Verifying Extrinsics With Epipolar Geometry](https://youtu.be/clQF8QTfbyg)
 
 > All the scripts can be called directly from the command window from anywhere after initializing the toolbox which adds it to the MATLAB path.
 
@@ -74,7 +72,7 @@ The following section explains how to setup the system for capturing multiple vi
 
 ![Experimental Setup](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1a441f87-5c4e-4080-8dd7-59c13374ca84)
 
-1. Print a checker pattern and measure the dimensions (x and y) of any one square on the checker.
+1. Print a checker pattern and measure the dimensions (x and y) of any one square on it.
 
     ![Checker Pattern](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 
@@ -82,21 +80,21 @@ The following section explains how to setup the system for capturing multiple vi
 
     ![Camera To Checker Distance](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/815ef573-3669-4f71-8c0a-2b5b1987179b)
 
-3. Place the checker in the mirror container and make sure it can be seen in all three views, i.e., original and both the mirror views.
+3. Place the checker pattern in the mirror container and make sure it can be seen in all three views, i.e., original and both the mirror views.
 
     ![Image With Checker Visisble In All Views](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d794dc09-3ea2-4412-9865-e4e9c24b01ef)
 
-4. Take a picture of the checker from the camera. From this point on, the camera and mirrors must remain stationary.
+4. Take a picture of the checker pattern from the camera. From this point on, the camera and mirrors must remain stationary.
 
-5. Change the position of the checker in a limited region to ensure that the pattern can be seen in all relevant views, i.e., the original and both the mirror views, and capture an image.
+5. Change the position of the checker pattern in a limited region to ensure that the pattern can be seen in all relevant views, i.e., the original and both the mirror views, and capture an image.
 
-6. Repeat 4&ndash;5 to capture at least 15&ndash;20 images of the checker pattern at different positions. Make sure the checker's pose varies considerably between images in order to get a good calibration.
+6. Repeat 4&ndash;5 to capture at least 15&ndash;20 images of the checker pattern at different positions. Make sure it's pose varies considerably between images in order to get a good calibration.
 
 The following set is taken for 2 views (camera and left mirror).
 
 ![Calibration Images Mosaic](https://user-images.githubusercontent.com/65610334/212243538-0619adad-a8d8-41ab-a801-c1aee23537e4.png)
 
-Note that you may also record a video in which the checker is moved around in the mirror container instead of capturing separate images. In this case, you will have to extract the frames from the video and use a suitable subset of those as calibration images. Our toolbox provides some functions for that as explained in the next step.
+Note that you may also record a video in which the checker pattern is moved around in the mirror container instead of capturing separate images. In this case, you will have to extract the frames from the video and use a suitable subset of those as calibration images. Our toolbox provides some functions for that as explained in the next step.
 
 You can download the calibration images shown in the figure above from this repository's [`Calibration`](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/tree/main/Calibration) folder. A calibration video `calibvid.mp4` is also located in this folder.
 
@@ -165,7 +163,7 @@ Depending on your choice, view the relevant subsection below.
 
 Now we have the calibration media ready, we can begin the calibration process. The toolbox will automatically move you to the calibration directory within MATLAB so you can get started right away.
 
-## **Step III - Calibrating Camera and Mirrors With Bouguet Calibration Toolbox (BCT)**
+## **Step III - Calibrating Camera and Mirrors**
 
 Download BCT from the [official webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) and add it to your MATLAB path to be able to use it in any directory within your computer. If you are new to the toolbox, we recommend trying out the first few examples on the webpage to familiarize yourself with the general process.
 
@@ -226,13 +224,13 @@ At this point, you should be presented with the following figure (a mosaic of th
 
     ![Command Window With Highlighted Input Fields](https://user-images.githubusercontent.com/65610334/213191980-d15f847a-52db-4f7a-9357-22a4f2dfc577.jpg)
 
-3. Mark the four extreme internal checker corners on the figure that pops up after Step 2.
+3. Mark the four extreme internal checker pattern corners on the figure that pops up after Step 2.
 
     ![Clicker Figure](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/667b1f32-1492-461b-9d26-90264ea50986)
 
 #### **Clicking Order for Extreme Internal Corners**
 
-The **first** clicked point is selected as the **origin** of the world reference frame attached to the checker grid. The **second** click defines the direction of the **Y-axis** of the reference frame from **(1st click &rarr; 2nd click)**. The **third** click defines the direction of the **X-axis** of the reference frame **(2nd click &rarr; 3rd click)**. The fourth click will complete the **plane's definition** as **1st click &rarr; 2nd click &rarr; 3rd click &rarr; 4th click &rarr; 1st click**.
+The **first** clicked point is selected as the **origin** of the world reference frame attached to the checker pattern. The **second** click defines the direction of the **Y-axis** of the reference frame from **(1st click &rarr; 2nd click)**. The **third** click defines the direction of the **X-axis** of the reference frame **(2nd click &rarr; 3rd click)**. The fourth click will complete the **plane's definition** as **1st click &rarr; 2nd click &rarr; 3rd click &rarr; 4th click &rarr; 1st click**.
 
 > As you mark these four extreme corners in the first image, note the clicking order and follow it for the rest of the images. We will need it to associate the reflected points properly when calibrating the mirror images.
 
@@ -250,7 +248,7 @@ The planar boundary of the calibration grid is then shown below.
 
 5. (OPTIONAL) Enter a guess for the distortion parameters, which can help with corner detection if your camera suffers from extreme distortion. However, this is empirical and you would have to fiddle around a little bit to get the right results. You may completely skip this step with an empty input.
 
-BCT will proceed to first guess all the checker corner locations within the plane defined in Step 3, and then refine them to subpixel accuracy.
+BCT will proceed to first guess all the checker pattern corner locations within the plane defined in Step 3, and then refine them to subpixel accuracy.
 
 ![Guessed Corners Camera View](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d32ca298-f2be-4e5c-8aa5-3e7ff3c73b80)
 
@@ -328,7 +326,7 @@ The reprojection error is also shown in the form of color-coded crosses. Each co
     <img alt="Reprojection Errors Camera View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d4e2b763-fffd-4627-a71b-cb98cc01b71f">
 </p>
 
-### **v. (OPTIONAL) Plot the Camera and Checkers In 3D Space**
+### **v. (OPTIONAL) Plot the Camera and Checker Patterns In 3D Space**
 
 Click the **Show Extrinsic** button in BCT's GUI.
 
@@ -336,7 +334,7 @@ Click the **Show Extrinsic** button in BCT's GUI.
     <img alt="Show Extrinsic Button" src="https://user-images.githubusercontent.com/65610334/212663777-fa2082bb-9bd2-4e5c-8ff5-215286a4739c.png">
 </p>
 
-This will plot the camera and checkers using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid represents the camera.
+This will plot the camera and checker patterns using the estimated extrinsics from the calibration step, as shown in the figure below. On this figure, the frame (Oc, Xc, Yc, Zc) is the camera reference frame. The red pyramid represents the camera.
 
 ![Camera Centered Extrinsics Visual](https://user-images.githubusercontent.com/65610334/212271252-c6ea1ed7-6e7b-4539-b9c6-5a6faf816d34.jpg)
 
@@ -362,20 +360,20 @@ We are now done calibrating the first view (the actual camera).
 
 ## **B. Calibrating the Mirror View(s)**
 
-This section explains how to calibrate the mirror view using the reflection of the checker in the mirrors (either one or two mirrors). The procedure is exactly the same as described for the calibration of the camera view (Step III-A). The only difference is the **clicking order** because, in the mirror, the points are **reflected**.
+This section explains how to calibrate the mirror view using the reflection of the checker pattern in the mirrors (either one or two mirrors). The procedure is exactly the same as described for the calibration of the camera view (Step III-A). The only difference is the **clicking order** because, in the mirror, the points are **reflected**.
 
 This process must be repeated carefully for each mirror view you involve. Our toolbox currently supports a maximum of two mirrors. If continuing directly from a previous view's calibration (whether a camera or mirror), remember to clear the workspace, close all figures, and restart `calib_gui` before proceeding to avoid issues with existing workspace variables.
 
 ### **i. Loading Calibration Images**
 
-The procedure remains exactly the same as in the camera's calibration, and we can use the same images (assuming the checker is visible in the relvant mirror view).
+The procedure remains exactly the same as in the camera's calibration, and we can use the same images (assuming the checker pattern is visible in the relvant mirror view).
 
 ![Clicker Figure](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/3a415ef3-39dd-4255-a841-661dc20a5a11)
 
 
 ### **ii. Extracting the Grid Corners**
 
-The only change in this step is the **clicking order**, and that the points must be marked in the mirror reflections of the checker. Everything else remains the same.
+The only change in this step is the **clicking order**, and that the points must be marked in the mirror reflections of the checker pattern. Everything else remains the same.
 
 #### **Clicking Order for Extreme Internal Corners**
 
@@ -457,7 +455,7 @@ Pixel error:      err = [0.23616   0.25538] (all active images)
     <img alt="Reprojection Errors Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/5b96398b-6abd-4b6d-8e2b-93321b6cebe4">
 </p>
 
-### **v. (OPTIONAL) Plot the Camera and Checkers In 3D Space**
+### **v. (OPTIONAL) Plot the Camera and Checker Patterns In 3D Space**
 
 Again, the process remains the same as discussed in the original view.
 
@@ -548,6 +546,51 @@ And the DLT coefficients file (viewed in MS Excel). Note that the tags CAMERA an
 <p align="center">
     <img alt="DLT Coefs File In Excel" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/b8d73158-14e5-44bc-ab06-2a92883d520e" height="400px">
 </p>
+
+### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
+
+A very important operation in Step IV (within `calib_process_results.m`) is a permutation transform to correctly convert the mirror view world frames from the right-handed to left-handed convention, as is the case with mirror reflections.
+
+**BCT forces right-handedness** of the estimated world frames on the checker pattern (after marking the internal corner points). While this is a valid constraint for real cameras since they are rigid bodies, it remains that mirror reflection of a typical right-handed frame ***swaps*** the handedness, so that it becomes left-handed. This is clearly not the case with BCT, as mirror reflections of the checker pattern are forced to be right-handed.
+
+This essentially creates the problem that there are two different world reference frames that share the same world Z-axis (pointing up, i.e., out of the checker pattern plane), but the world X and Y-axis (on the same plane) are swapped depending on whether we have the actual checker pattern (camera view) or its reflection (mirror view). The swapping in reflected views occurs to preserve the right-handedness and keep Z-axis pointing up.
+
+Thus, when estimating world coordinates via some optimization technique, **the optimization would simply fail to converge** as the original world frame's X is the reflected frame's Y, and vice versa, so that they never agree. To fix this, we have two options:
+
+1. In each optimization iteration, only for the reflected views, swap the XY coordinates of the current state of the world points vector. This tricks the optimization into thinking the world coordinates are in the same frame convention as the original camera view, and it proceeds smoothly.
+
+```math
+\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} \rightarrow \begin{bmatrix} Y \\ X \\ Z \end{bmatrix}
+```
+
+2. Apply a **permutation transformation** to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
+
+We have tested both approaches, and both work. However, **approach 1** is cumbersome in that **(a)** it requires the swap operation in every step of the optimization, and **(b)** when reprojecting points to the reflected views, we need to re-swap the estimated world coordinates back to the original form.
+
+On the other hand, **method 2** is much more permanent as it addresses the root cause of the issue, i.e., the **misalignment of coordinates in the rotation matrix**. Note that we do not need to permute translation vector $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to rotation matrix $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
+
+Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the required permutation matrix $T_\text{permutation}$ is:
+
+```math
+T_\text{permutation} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+```
+```math
+R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{zX} & r_{zY} & r_{zZ} \end{bmatrix} \cdot \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{xY} & r_{xX} & r_{xZ} \\ r_{yY} & r_{yX} & r_{yZ} \\ r_{zY} & r_{zX} & r_{zZ} \end{bmatrix}
+```
+
+In effect, the permutation operation essentially makes the rotation matrix as if the world's X was its Y, and Y was X, and so it is now defined w.r.t. the world frame in the original camera view.
+
+Below, we provide a side-by-side comparison of the variables in the workpsace to show that the first and second columns are swapped. The images correspond to the tutorial we have been following so far, so the reference extrinsics image suffix was `3`. Additionally, in the merged BCT file, we follow the view labels {1, 2, 3} for {Camera, Mirror 1 (Left Mirror), and Mirror 2 (Right Mirror)}.
+
+Keeping the above in mind, the image on the left (with variable `Rc_calibration`) corresponds to `Rc_3` from BCT calibration result file `Calib_Results_mir1.mat`, and the image on the right (with variable `Rc_permuted`) corresponds to `Rc_2` from the merged BCT calibration file created in Step II (by default, `bct_params.mat`).
+
+<p align="center" width="100%">
+    <img alt="Rotation at Calibration Time (Rc_3 in Calib_Results.mat file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6a4199ef-2588-4ab4-a8f1-313e3c46371b" width="48%">
+	&nbsp; &nbsp;
+	<img alt="Rotation Permuted On Process (Rc_2 in merged BCT file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fd081270-9df0-4e4d-a2b4-ba431ed615c8" width="48%">
+</p>
+
+This swapping only happens for mirror views, so in the case of camera view, `Rc_3` from `Calib_Results_cam.mat` and `Rc_1` (corresponding to camera view) from merged BCT calibration file (default, `bct_params.mat`) are both exactly the same.
 
 ## **Step V: Creating, Importing, and Optinally Undistorting a Test Image or Video**
 
@@ -956,7 +999,7 @@ Feel free to test out the toolbox on other images we have included in this repo.
 
 2. (UI Browser) Locate the image on which you want to mark points and verify extrinsics via epilines. Usually, this will be an image you imported in Step V.
 
-    Note that this may be a calibration image or any other image containing any object (not necessarily a checker), as long as it is visible in all the required views. For example, the following image is visible in 2 views (camera and mirror 1 - location: `{this-repo}/Test Media/3.jpg` in this repo).
+    Note that this may be a calibration image or any other image containing any object (not necessarily a checker pattern), as long as it is visible in all the required views. For example, the following image is visible in 2 views (camera and mirror 1 - location: `{this-repo}/Test Media/3.jpg` in this repo).
 
 	![Test Image Example](https://user-images.githubusercontent.com/65610334/212613772-6859659b-80d0-4e0b-9f01-360d90cae2f0.jpg)
 
@@ -1010,51 +1053,6 @@ For each view pair, the script saves:
 <p align="center" width="100%">
   <img alt="Matfile Containing Saved Variables" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fcd93fbb-a2b6-49b8-b3a0-1879a427afcd">
 </p>
-
-### **Correcting BCT's Forced World Frame Right-Handedness in the Mirror Images**
-
-A very important operation in Step IV (within `calib_process_results.m`) is a permutation transform to correctly convert the mirror view world frames from the right-handed to left-handed convention, as is the case with mirror reflections.
-
-**BCT forces right-handedness** of the estimated world frames on the checker (after marking the internal corner points). While this is a valid constraint for real cameras since they are rigid bodies, it remains that mirror reflection of a typical right-handed frame ***swaps*** the handedness, so that it becomes left-handed. This is clearly not the case with BCT, as mirror reflections of the checker are forced to be right-handed.
-
-This essentially creates the problem that there are two different world reference frames that share the same world Z-axis (pointing up, i.e., out of the checker plane), but the world X and Y-axis (on the checker plane) are swapped depending on whether we have the actual checker (camera view) or its reflection (mirror view). The swapping in reflected views occurs to preserve the right-handedness and keep Z-axis pointing up.
-
-Thus, when estimating world coordinates via some optimization technique, **the optimization would simply fail to converge** as the original world frame's X is the reflected frame's Y, and vice versa, so that they never agree. To fix this, we have two options:
-
-1. In each optimization iteration, only for the reflected views, swap the XY coordinates of the current state of the world points vector. This tricks the optimization into thinking the world coordinates are in the same frame convention as the original camera view, and it proceeds smoothly.
-
-```math
-\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} \rightarrow \begin{bmatrix} Y \\ X \\ Z \end{bmatrix}
-```
-
-2. Apply a **permutation transformation** to the rotation matrices of the mirror views, so that the first two columns corresponding to X and Y coordinates are swapped. We get the rotation matrices for a certain checker position in an image from the calibration step (either directly via calibration or from BCT's **Comp. Extrinsic** function), so this is a one-time operation.
-
-We have tested both approaches, and both work. However, **approach 1** is cumbersome in that **(a)** it requires the swap operation in every step of the optimization, and **(b)** when reprojecting points to the reflected views, we need to re-swap the estimated world coordinates back to the original form.
-
-On the other hand, **method 2** is much more permanent as it addresses the root cause of the issue, i.e., the **misalignment of coordinates in the rotation matrix**. Note that we do not need to permute translation vector $T$ as it is already defined w.r.t. the camera frame and the camera frame is not the issue &ndash; only the world frame is. This is in contrast to rotation matrix $R$, which is defined such that it takes points defined w.r.t. world frame to the camera frame.
-
-Let's consider $xyz$ the camera frame and $XYZ$ the world frame. Then, the required permutation matrix $T_\text{permutation}$ is:
-
-```math
-T_\text{permutation} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-```
-```math
-R = \begin{bmatrix} r_{xX} & r_{xY} & r_{xZ} \\ r_{yX} & r_{yY} & r_{yZ} \\ r_{zX} & r_{zY} & r_{zZ} \end{bmatrix} \cdot \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{xY} & r_{xX} & r_{xZ} \\ r_{yY} & r_{yX} & r_{yZ} \\ r_{zY} & r_{zX} & r_{zZ} \end{bmatrix}
-```
-
-In effect, the permutation operation essentially makes the rotation matrix as if the world's X was its Y, and Y was X, and so it is now defined w.r.t. the world frame in the original camera view.
-
-Below, we provide a side-by-side comparison of the variables in the workpsace to show that the first and second columns are swapped. The images correspond to the tutorial we have been following so far, so the reference extrinsics image suffix was `3`. Additionally, in the merged BCT file, we follow the view labels {1, 2, 3} for {Camera, Mirror 1 (Left Mirror), and Mirror 2 (Right Mirror)}.
-
-Keeping the above in mind, the image on the left (with variable `Rc_calibration`) corresponds to `Rc_3` from BCT calibration result file `Calib_Results_mir1.mat`, and the image on the right (with variable `Rc_permuted`) corresponds to `Rc_2` from the merged BCT calibration file created in Step II (by default, `bct_params.mat`).
-
-<p align="center" width="100%">
-    <img alt="Rotation at Calibration Time (Rc_3 in Calib_Results.mat file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6a4199ef-2588-4ab4-a8f1-313e3c46371b" width="48%">
-	&nbsp; &nbsp;
-	<img alt="Rotation Permuted On Process (Rc_2 in merged BCT file)" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fd081270-9df0-4e4d-a2b4-ba431ed615c8" width="48%">
-</p>
-
-This swapping only happens for mirror views, so in the case of camera view, `Rc_3` from `Calib_Results_cam.mat` and `Rc_1` (corresponding to camera view) from merged BCT calibration file (default, `bct_params.mat`) are both exactly the same.
 
 ## **Final Notes**
 For more comprehensive information and instructions, please take a look inside the Documentation folder, which has much more detail for each step.
