@@ -18,7 +18,7 @@ https://user-images.githubusercontent.com/65610334/218389932-b286dba1-9ee0-41da-
 
 ## **Requirements**
 
-The mirror reconstruction toolbox has been tested on MATLAB R2023a on Windows, Unix and Linux systems. It does not require any other MATLAB toolbox, except for the Computer Vision Toolbox for plotting the camera view in the reconstructed scene. The toolbox should also work on any other platform that supports MATLAB R2023a.
+The mirror reconstruction toolbox has been tested on MATLAB R2023a on Windows, Unix, and Linux systems. It does not require any other MATLAB toolbox, except for the Computer Vision Toolbox for plotting the camera view in the reconstructed scene. The toolbox should also work on any other platform that supports MATLAB R2023a.
 
 > The dependency on the Computer Vision Toolbox will likely be removed in the future.
 
@@ -36,7 +36,7 @@ Given below is a list of video tutorials that cover the entire process of workin
 
 1. Clone this repository on your computer. The cloned location is called `{cloned-repo}` in the rest of the tutorial.
 
-2. Open MATLAB and navigate to the cloned repo.
+2. Open MATLAB and navigate to the `cloned repo`.
 
 3. Open up the `Mirror Assisted Reconstruction Toolbox` folder.
 
@@ -163,7 +163,7 @@ Depending on your choice, view the relevant subsection below.
 
 Now we have the calibration media ready, we can begin the calibration process. The toolbox will automatically move you to the calibration directory within MATLAB so you can get started right away.
 
-## **Step III - Calibrating Camera and Mirrors**
+## **Step III - Calibrating Camera and Mirror setup**
 
 Download BCT from the [official webpage](http://robots.stanford.edu/cs223b04/JeanYvesCalib/) and add it to your MATLAB path to be able to use it in any directory within your computer. If you are new to the toolbox, we recommend trying out the first few examples on the webpage to familiarize yourself with the general process.
 
