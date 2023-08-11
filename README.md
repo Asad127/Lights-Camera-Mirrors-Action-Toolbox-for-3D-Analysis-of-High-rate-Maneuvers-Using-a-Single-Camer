@@ -116,19 +116,19 @@ You can place the gathered dataset anywhere on your computer.
 
 Depending on your choice, view the relevant subsection below.
 
-### **A. Images Route**
+### **3. Images Route**
 
-- (UI Browser) Locate the calibration images on your computer. Here, we import the images in the directory `{cloned-repo}/Calibration`.
+1. (UI Browser) Locate the calibration images on your computer. Here, we import the images in the directory `{cloned-repo}/Calibration`.
 
 	![11 Calibration Images In Repo Calibration Folder](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/374b6226-9ff0-4dc3-9b01-f1597e776a69)
 
-- (UI Browser) Choose the folder to put the images in relative to the project's root directory, or click **Cancel** to place them in the default location `{project-root}/calibration/images/`. The script will automatically rename them in a format suitable for Bouguet Calibration Toolbox, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
+2. (UI Browser) Choose the folder to put the images in relative to the project's root directory, or click **Cancel** to place them in the default location `{project-root}/calibration/images/`. The script will automatically rename them in a format suitable for Bouguet Calibration Toolbox, e.g., from {img1.jpg, img5.jpg, ..., imgK.jpg} &rarr; {Image1.jpg, Image2.jpg, ..., ImageN.jpg}.
 
 	![11 Calibration Images Imported to Project Directory](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/8deecb57-6486-4891-b6f5-92848745faec)
 
-### **B. Video Route**
+### **4. Video Route**
 
-- (UI Browser) Locate the calibration video on your computer. The script will copy and auto-convert it to MP4 if it is in any other format. Here, we import the video in the directory `{cloned-repo}/Calibration/calibvid.mp4`.
+1. (UI Browser) Locate the calibration video on your computer. The script will copy and auto-convert it to MP4 if it is in any other format. Here, we import the video in the directory `{cloned-repo}/Calibration/calibvid.mp4`.
 
 	![Calibration Video in Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e8e4590a-8cc0-4fae-9367-97c8849e0f98)
 
@@ -136,16 +136,16 @@ Depending on your choice, view the relevant subsection below.
 
 	![Calibration Video Imported](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f7f1c0ca-d7fb-4706-81f8-60e519c94feb)
 
-- (UI Browser) Select the directory to extract the video frames into. Alternatively, click **Cancel** to use the default directory `{project-root}/calibration/frames/`.
+2. (UI Browser) Select the directory to extract the video frames into. Alternatively, click **Cancel** to use the default directory `{project-root}/calibration/frames/`.
 
-- Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (i.e., blank inputs) the whole video is used.
+3. Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (i.e., blank inputs) the whole video is used.
 
     ```
     [PROMPT] Enter start timestamp in H:M:S format (blank = from video start):
     [PROMPT] Enter stop timestamp in H:M:S format (blank = until video end):
     ```
 
-- Enter the format in which to extract the frames (by default, JPG). You may enter the abbreviation or the full extension name (e.g., "j" or ".jpg" without the quotes).
+4. Enter the format in which to extract the frames (by default, JPG). You may enter the abbreviation or the full extension name (e.g., "j" or ".jpg" without the quotes).
 
     ```
     Supported Image Formats = .jpg, .png, .tif, .bmp
@@ -157,7 +157,7 @@ Depending on your choice, view the relevant subsection below.
 
 	![Calibration Video Extracted Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/91886e3c-8d0e-4f64-848f-019df148196f)
 
-- Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
+5. Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
 
 	![Calbration Images From Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/29bc0ee0-464e-48c3-883f-18602e09a793)
 
