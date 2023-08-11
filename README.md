@@ -68,7 +68,7 @@ Note that in this tutorial, there are two projects: `checker` (that we just crea
 
 ### **1. Collecting Calibration Dataset**
 
-The following section explains how to setup the system for capturing multiple views using a single camera fixed on a tripod and reflective mirrors present in the field of view. In the figure below, we show the **mirror container, the tripod, and the light source** we have used to capture our images.
+The following section explains how to setup the system for capturing multiple views using a single camera fixed on a tripod and reflective mirrors present in the field of view. In the figure below, we show the **mirror setup, the tripod, and the light source** we have used to capture our images.
 
 ![Experimental Setup](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1a441f87-5c4e-4080-8dd7-59c13374ca84)
 
@@ -76,19 +76,19 @@ The following section explains how to setup the system for capturing multiple vi
 
     ![Checker Pattern](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
 
-2. Place the camera on the tripod and place it at a suitable distance from the mirror setup/container.
+2. Place the camera on the tripod and place it at a suitable distance from the mirror setup.
 
     ![Camera To Checker Distance](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/815ef573-3669-4f71-8c0a-2b5b1987179b)
 
-3. Place the checker pattern in the mirror container and make sure it can be seen in all three views, i.e., original and both the mirror views.
+3. Place the checker pattern in the mirror setup and make sure it can be seen in all three views, i.e., the original and the mirror which you want to calibrate.
 
     ![Image With Checker Visisble In All Views](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d794dc09-3ea2-4412-9865-e4e9c24b01ef)
 
-4. Take a picture of the checker pattern from the camera. From this point on, the camera and mirrors must remain stationary.
+4. Take a picture of the checker pattern from the camera. From this point on, the camera and mirror must remain stationary.
 
-5. Change the position of the checker pattern in a limited region to ensure that the pattern can be seen in all relevant views, i.e., the original and both the mirror views, and capture an image.
+5. Change the position of the checker pattern to ensure that the pattern can be seen in all relevant views, i.e., the original and the mirror view, and capture an image.
 
-6. Repeat 4&ndash;5 to capture at least 15&ndash;20 images of the checker pattern at different positions. Make sure it's pose varies considerably between images in order to get a good calibration.
+6. Repeat 4&ndash;5 to capture at least 15&ndash;20 images of the checker pattern at different positions. Make sure its pose varies considerably between images in order to get a good calibration.
 
 The following set is taken for 2 views (camera and left mirror).
 
