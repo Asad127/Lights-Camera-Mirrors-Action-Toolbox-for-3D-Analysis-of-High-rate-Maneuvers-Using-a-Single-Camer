@@ -132,20 +132,20 @@ Depending on your choice, view the relevant subsection below.
 
 	![Calibration Video in Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/e8e4590a-8cc0-4fae-9367-97c8849e0f98)
 
-- (UI Browser) Select the path to save the video to within the project directory, or click **Cancel** to import it into the default location as `{project-root}/calibration/calib.mp4`. The script will then auto-run another script `calib_extract_vid_frames.m` to extract the video frames.
+2. (UI Browser) Select the path to save the video to within the project directory, or click **Cancel** to import it into the default location as `{project-root}/calibration/calib.mp4`. The script will then auto-run another script `calib_extract_vid_frames.m` to extract the video frames.
 
 	![Calibration Video Imported](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f7f1c0ca-d7fb-4706-81f8-60e519c94feb)
 
-2. (UI Browser) Select the directory to extract the video frames into. Alternatively, click **Cancel** to use the default directory `{project-root}/calibration/frames/`.
+3. (UI Browser) Select the directory to extract the video frames into. Alternatively, click **Cancel** to use the default directory `{project-root}/calibration/frames/`.
 
-3. Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (i.e., blank inputs) the whole video is used.
+4. Enter the starting and stopping times for the video in HMS format when prompted. E.g., for 15&ndash;30 seconds, enter `00:00:15` for start and `00:00:30` for stop time. By default (i.e., blank inputs) the whole video is used.
 
     ```
     [PROMPT] Enter start timestamp in H:M:S format (blank = from video start):
     [PROMPT] Enter stop timestamp in H:M:S format (blank = until video end):
     ```
 
-4. Enter the format in which to extract the frames (by default, JPG). You may enter the abbreviation or the full extension name (e.g., "j" or ".jpg" without the quotes).
+5. Enter the format in which to extract the frames (by default, JPG). You may enter the abbreviation or the full extension name (e.g., "j" or ".jpg" without the quotes).
 
     ```
     Supported Image Formats = .jpg, .png, .tif, .bmp
@@ -157,7 +157,7 @@ Depending on your choice, view the relevant subsection below.
 
 	![Calibration Video Extracted Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/91886e3c-8d0e-4f64-848f-019df148196f)
 
-5. Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
+6. Select a subset of the extracted frames to use as calibration images. These frames will be renamed in consecutive order sequetntially, so if you selected {Frame40, Frame80, Frame100, Frame180}, these would be renamed to {Image1, Image2, Image3, Image4} respectively.
 
 	![Calbration Images From Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/29bc0ee0-464e-48c3-883f-18602e09a793)
 
@@ -169,13 +169,13 @@ Download BCT from the [official webpage](http://robots.stanford.edu/cs223b04/Jea
 
 ***Trying out the examples on the official webpage is highly recommended for anyone who has not used the toolbox before.***
 
-## A. **Calibrating the Camera View**
+## 1. **Calibrating the Camera View**
 
 This section explains how to use the **Bouguet Calibration Toolbox (BCT)** to calibrate the actual camera's view using a set of calibration images.
 
 > For BCT's input prompts that have `[]` as an option, you can just leave them blank and press enter to provide an 'empty' input, which uses the default value as suggested by the toolbox.
 
-### **i. Loading Calibration Images**
+### **1. Loading Calibration Images**
 
 1. Assuming that BCT has been added to the MATLAB path, run `calib_gui` from the command window to launch the calibration GUI.
 
@@ -212,7 +212,7 @@ At this point, you should be presented with the following figure (a mosaic of th
 
 ![Image Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/80b19d0c-faa0-45cf-9116-93391a5ecdfd)
 
-### **ii. Extract the Grid Corners**
+### **2. Extract the Grid Corners**
 
 1. Click on the highlited button of **Extract Grid Corners** in the calibration GUI.
 
@@ -264,7 +264,7 @@ This is helpful to keep as it allows you to skip the corner extraction and proce
 
 > **Extract Grid Corners** will automatically call the image loading routine if no images are detected in the workspace. Thus, after launching `calib_gui`, you can directly click on **Extract Grid Corners** and BCT will begin the image loading process described in Step i, immediately followed by the corner extraction prompts of Step ii.
 
-### **iii. Main Calibration Step**
+### **3. Main Calibration Step**
 
 Click the **Calibration** button on the calibration GUI to run the main camera calibration procedure.
 
@@ -299,7 +299,7 @@ Note: The numerical errors are approximately three times the standard deviations
 
 The calibration parameters are stored in a number of variables in the workspace.
 
-### **iv. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
+### **4. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
 
 Click the **Reproject On Images** button in the calibration GUI to show the reprojections of the grids onto all or a subset of the original images. These projections are computed based on the estimated intrinsic and extrinsic parameters from the calibration step.
 
@@ -326,7 +326,7 @@ The reprojection error is also shown in the form of color-coded crosses. Each co
     <img alt="Reprojection Errors Camera View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/d4e2b763-fffd-4627-a71b-cb98cc01b71f">
 </p>
 
-### **v. (OPTIONAL) Plot the Camera and Checker Patterns In 3D Space**
+### **5. (OPTIONAL) Plot the Camera and Checker Patterns In 3D Space**
 
 Click the **Show Extrinsic** button in BCT's GUI.
 
@@ -358,20 +358,20 @@ We only require the matfile, so rename `Calib_Results.mat` to `Calib_Results_cam
 
 We are now done calibrating the first view (the actual camera).
 
-## **B. Calibrating the Mirror View(s)**
+## **6. Calibrating the Mirror View(s)**
 
 This section explains how to calibrate the mirror view using the reflection of the checker pattern in the mirrors (either one or two mirrors). The procedure is exactly the same as described for the calibration of the camera view (Step III-A). The only difference is the **clicking order** because, in the mirror, the points are **reflected**.
 
 This process must be repeated carefully for each mirror view you involve. Our toolbox currently supports a maximum of two mirrors. If continuing directly from a previous view's calibration (whether a camera or mirror), remember to clear the workspace, close all figures, and restart `calib_gui` before proceeding to avoid issues with existing workspace variables.
 
-### **i. Loading Calibration Images**
+### **1. Loading Calibration Images**
 
 The procedure remains exactly the same as in the camera's calibration, and we can use the same images (assuming the checker pattern is visible in the relvant mirror view).
 
 ![Clicker Figure](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/3a415ef3-39dd-4255-a841-661dc20a5a11)
 
 
-### **ii. Extracting the Grid Corners**
+### **2. Extracting the Grid Corners**
 
 The only change in this step is the **clicking order**, and that the points must be marked in the mirror reflections of the checker pattern. Everything else remains the same.
 
@@ -379,19 +379,19 @@ The only change in this step is the **clicking order**, and that the points must
 
 We visually explain the **reflected clicking order** in the mirror images below. Note that the clicking order here depends on the clicking order from when the original set was calibrated.
 
-- The 1st point which is the origin in the mirror view is the reflected version of the 1st point clicked in the original view.
+1. The 1st point which is the origin in the mirror view is the reflected version of the 1st point clicked in the original view.
 
 ![First Reflected Click](https://user-images.githubusercontent.com/65610334/213103299-0d84a03f-df85-4905-ae81-a4593c1b468b.png)
 
-- The 2nd point in the mirror view is the reflected version of the 2nd point clicked in the original view.
+2. The 2nd point in the mirror view is the reflected version of the 2nd point clicked in the original view.
 
 ![Second Reflected Click](https://user-images.githubusercontent.com/65610334/213103667-cbc71cc0-1f07-4626-9380-795f8a7eef3b.png)
 
-- The 3rd point in the mirror view is the reflected version of the 3rd point clicked in the original view.
+3. The 3rd point in the mirror view is the reflected version of the 3rd point clicked in the original view.
 
 ![Third Reflected Click](https://user-images.githubusercontent.com/65610334/213103941-cbd1bdbd-d32e-4bcb-8b93-3dfaaf59e7f0.png)
 
-- The 4th point in the mirror view is the reflected version of the 4th point clicked in the original view.
+4. The 4th point in the mirror view is the reflected version of the 4th point clicked in the original view.
 
 ![Fourth Reflected Click](https://user-images.githubusercontent.com/65610334/213104939-e41129f9-e726-4329-b810-3d7503ce9821.png)
 
@@ -411,7 +411,7 @@ Just like before, the tooblox first guesses the corner locations, prompts for th
 
 > Repeat the same process for the rest of images in the calibration set. Again, BCT only prompts for the distortion guess for all images after the first.
 
-### **iii. Main Calibration Step**
+### **3. Main Calibration Step**
 
 The main calibration step for the mirror view is the same as described for the **original view**.
 
@@ -440,7 +440,7 @@ Pixel error:          err = [ 0.29234   0.26648 ]
 Note: The numerical errors are approximately three times the standard deviations (for reference).
 ```
 
-### **iv. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
+### **4. (OPTIONAL) Reprojection Using Estimated Camera Parameters**
 
 This procedure is also the **same** as in the **original view**.
 
@@ -455,7 +455,7 @@ Pixel error:      err = [0.23616   0.25538] (all active images)
     <img alt="Reprojection Errors Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/5b96398b-6abd-4b6d-8e2b-93321b6cebe4">
 </p>
 
-### **v. (OPTIONAL) Plot the Camera and Checker Patterns In 3D Space**
+### **5. (OPTIONAL) Plot the Camera and Checker Patterns In 3D Space**
 
 Again, the process remains the same as discussed in the original view.
 
@@ -463,7 +463,7 @@ Again, the process remains the same as discussed in the original view.
 
 ![World Centered Extrinsics (Mirror View)](https://user-images.githubusercontent.com/65610334/212606469-06ea4d63-1fd7-4d36-91d9-511b0091f3a8.jpg)
 
-### **vi. Saving the Calibration Results**
+### **6. Saving the Calibration Results**
 
 Repeat the same procedure as in the original view calibration to save the calibration results.
 
@@ -622,28 +622,28 @@ The process to import the testing media as well as undistort it is detailed belo
     [PROMPT] Import images or video? ("i" = imgs, "v" = vid): i
     ```
 
-### **A. Image(s) Route**
+### **3. Image(s) Route**
 
-- (UI Browser) Locate the images containing the object of interest on your computer. 4 such test images are provided in the directory `{cloned-repo}/Test Media/`.
+1. (UI Browser) Locate the images containing the object of interest on your computer. 4 such test images are provided in the directory `{cloned-repo}/Test Media/`.
 
 	![Test Images In Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/1db1c305-1773-4d97-873e-e145f322f280)
 
-- (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the project's `{project-root}/media/images/` folder by default.
+2. (UI Browser) Choose which directory of the project to copy them to. Clicking **Cancel** here will place them in the project's `{project-root}/media/images/` folder by default.
 
 	![Imported Test Image](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f7a7c5cb-033f-47b3-918a-bce08208379b)
 
-- Enter `y` in the following prompt to begin the undistortion procedure for the imported images. Otherwise, enter `n` to finish the import process.
+3. Enter `y` in the following prompt to begin the undistortion procedure for the imported images. Otherwise, enter `n` to finish the import process.
 
     ```
     NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
     Undistort the imported images? (y/n): y
     ```
 
-#### **i. No Undistortion Sub-Route**
+#### **4. No Undistortion Sub-Route**
 
 Proceed to marking points on the image as detailed in Step VI.
 
-#### **ii. Undistortion Sub-Route**
+#### **5. Undistortion Sub-Route**
 
 A UI browser should pop up. Here, locate the merged BCT calibration parameters file created earlier in Step IV, or click cancel to look for it in the default save path `{project-root}/calibration/bct_params.mat`.
 
@@ -663,28 +663,28 @@ And the command window should output the following:
 
 ![Import Media Output for Images](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/95ea0c9b-710a-4d49-b3db-373c17e20a91)
 
-### **B. Video Route**
+### **6. Video Route**
 
-- (UI Browser) Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4.
+1. (UI Browser) Locate the video containing the object to be tracked on your computer. The video could be in the various formats accepted by MATLAB's VideoReader, but the import process will convert a copy of it to MP4.
 
 	![Test Video in Repository](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/6ad786d5-0cf0-442e-ab1d-e18d9fee6481)
 
-- (UI Browser) Choose the path to import the video into. Clicking **Cancel** will place it in the default location `{project-root}/media/videos/`.
+2. (UI Browser) Choose the path to import the video into. Clicking **Cancel** will place it in the default location `{project-root}/media/videos/`.
 
 	![Imported Test Video](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/7f6baed5-41c6-4e2f-85b5-876494921175)
 
-- When prompted to undistort the video, type `y` in the command window to begin the undistortion process. Otherwise, type `n` to skip directly to frame extraction without undistortion.
+3. When prompted to undistort the video, type `y` in the command window to begin the undistortion process. Otherwise, type `n` to skip directly to frame extraction without undistortion.
 
     ```
     NOTE: Undistortion requires distortion coefficients from BCT in merged format as produced by "calib_process_results.m".
     Undistort the imported video? (y/n): n
     ```
 
-#### **i. No Undistortion Sub-Route**
+#### **7. No Undistortion Sub-Route**
 
-- (UI Browser) Choose directory into which you wish to extract the video frames, or click **Cancel** to place them in the default directory `{project-root}/media/frames/`.
+1. (UI Browser) Choose directory into which you wish to extract the video frames, or click **Cancel** to place them in the default directory `{project-root}/media/frames/`.
 
-- Choose the extension of the extracted frames.
+2. Choose the extension of the extracted frames.
 
     ```
     Supported Image Formats = .jpg, .png, .tif, .bmp
@@ -696,17 +696,17 @@ Assuming a total of F frames in the video, the frames are named as {Frame1.jpg, 
 
 ![Extracted Test Video Frames](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/f0da4212-5e73-4dd1-b980-4ed6044ec4fb)
 
-#### **ii. Undistortion Sub-Route**
+#### **8. Undistortion Sub-Route**
 
-- (UI Browser) Locate the merged BCT calibration parameters file from Step IV, or click **Cancel** to look for it in the default save path `{project-root}/calibration/bct_params.mat`.
+1. (UI Browser) Locate the merged BCT calibration parameters file from Step IV, or click **Cancel** to look for it in the default save path `{project-root}/calibration/bct_params.mat`.
 
     ![UI Prompt Locate Merged BCT File](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/fb8a282b-87a3-4c9c-b314-06bfa839292b)
 
     > If you did not clear the workspace after Step IV and ran `import_media.m`, this UI prompt will not appear as the location is already recorded in the workspace.
 
-- (UI Browser) Choose a directory to extract the video frames into, or click **Cancel** to place them in the default directory `{project-root}/media/frames/`.
+2. (UI Browser) Choose a directory to extract the video frames into, or click **Cancel** to place them in the default directory `{project-root}/media/frames/`.
 
-- Select the extension of the extracted frames.
+3. Select the extension of the extracted frames.
 
     ```
     Supported Image Formats = .jpg, .png, .tif, .bmp
@@ -736,7 +736,7 @@ The command window output is given below:
 
 There are two ways to approach this. The first is to mark the points on the object of interest in a **single image** for each view manually and store the results. The second is to mark AND track the points in a **video** for each view via DLTdv8a, and then export the trackfiles. We cover both of them below.
 
-## **A. Marking Points in a Single Image or Video Frame**
+## **1. Marking Points in a Single Image or Video Frame**
 
 1. Run `point_marker.m` from the project root (`D:/Dev/checker` in this case) in the command window.
 
@@ -809,7 +809,7 @@ Below, we have attached a picture of an included `marked_points.mat` file with t
 	<img alt="140 Marked Points Mirror View" src="https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/084d7fd4-5f35-4927-bca2-01b4f1b0f326" width="48%">
 </p>
 
-## **B. Marking and Tracking Points in a Video With DLTdv8a**
+## **2. Marking and Tracking Points in a Video With DLTdv8a**
 
 Extensive video tutorials as well as written manuals on how to work with DLTdv8a are provided by the authors of the software. If you are just starting with the tool, we recommend that you start learning from the [official DLTdv8a online manual](https://biomech.web.unc.edu/dltdv8_manual/). You can also clone their [git repository](https://github.com/tlhedrick/dltdv) which contains additional information and the codebase.
 
@@ -877,7 +877,7 @@ By now, you have the poses, the intrinsics, and the 2D corresponding points in m
 
 Based on whether you followed Step VI-A (single image with manually marked points) or VI-B (tracked points in video file with DLTdv8a), we have two separate routes to follow since route A has an image, and route B has multiple images (video frames). However, the core functionality of both scripts is the same.
 
-## **A. Reconstructing a Single Image**
+## **1. Reconstructing a Single Image**
 
 1. Navigate to the project root within MATLAB (`D:/Dev/checker` in this case), and run the following reconstruction script from the command window:
 
@@ -943,7 +943,7 @@ The 3D scene reconstruction WITHOUT cameras present is visualized below:
     <img alt="Error Histogram" src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg">
 </p>
 
-## **B. Reconstructing Multiple Video Frames From DLTdv8a Trackfiles**
+## **2. Reconstructing Multiple Video Frames From DLTdv8a Trackfiles**
 
 1. Navigate to the project root within MATLAB (`D:/Dev/moving_checker` in this case) and run the followign reconstruction script from the command window:
 
