@@ -74,7 +74,8 @@ The following section explains how to setup the system for capturing multiple vi
 
 1. Print a checker pattern and measure the dimensions (x and y) of any one square on it.
 
-    ![Checker Pattern](https://user-images.githubusercontent.com/65610334/213092640-4103b6af-ab70-4ce6-b13a-1a96a0c0a437.jpg)
+    !![chcker patter](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/65610334/bc5aba44-a9bb-4357-87d1-a701659b566c)
+
 
 2. Place the camera on the tripod and place it at a suitable distance from the mirror setup.
 
