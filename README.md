@@ -937,12 +937,7 @@ The 3D scene reconstruction WITH cameras present is visualized below:
 
 ![Reconstruction With Cameras Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/45c978d4-783a-4ff7-bbd6-fff7fff9a009)
 
-The 3D scene reconstruction WITHOUT cameras present is visualized below:
-![Reconstruction Without Cameras Mosaic](https://github.com/Asad127/Lights-Camera-Mirrors-Action-Toolbox-for-3D-Analysis-of-High-rate-Maneuvers-Using-a-Single-Camer/assets/94681976/717fe70c-4d97-4ffc-a35f-d3bb66e92ed3)
 
-<p align="center" width="100%">
-    <img alt="Error Histogram" src="https://user-images.githubusercontent.com/65610334/212619373-74e057af-ee18-4eb2-b671-9f77acc565dc.jpg">
-</p>
 
 ## **2. Reconstructing Multiple Video Frames From DLTdv8a Trackfiles**
 
