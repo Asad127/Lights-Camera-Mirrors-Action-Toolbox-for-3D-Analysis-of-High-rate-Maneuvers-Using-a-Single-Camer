@@ -346,13 +346,15 @@ for i = 1 : num_pairs
     % the title.
     org_fig_win_name = [win_name_view_pair sprintf('Epilines in %s View', org_view_name)];
     org_fig = figure('Name', org_fig_win_name, 'Units', 'normalized', 'Position', [0 0.2 0.4 0.8]);
-    imshow(img_org); hold on;
+    imshow(img_org); hold on
+    %im1 = imshow(img_org); im1.AlphaData = 0.5; hold on; % alpha adjust
     set(gcf, 'Color', 'w');
     set(findall(gcf,'-property','FontSize'),'FontSize', 12)
 
     ref_fig_win_name = [win_name_view_pair sprintf('Epilines in %s View', ref_view_name)];
     ref_fig = figure('Name', ref_fig_win_name, 'Units', 'normalized', 'Position', [0.4 0.2 0.8 0.8]);
-    imshow(img_ref); hold on;
+    imshow(img_ref); hold on
+    %im2 = imshow(img_ref); im2.AlphaData = 0.5; hold on; % alpha adjust
     set(gcf, 'Color', 'w');
     set(findall(gcf,'-property','FontSize'),'FontSize', 12)
 

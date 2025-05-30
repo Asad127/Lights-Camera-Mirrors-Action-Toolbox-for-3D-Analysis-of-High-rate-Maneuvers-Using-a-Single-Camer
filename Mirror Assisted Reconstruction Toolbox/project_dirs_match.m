@@ -46,6 +46,7 @@ function [matched_line_nums, matched_lines, projects_file_lines, ...
 % project_vars:
 %   The variables that contain the project directories. Part of the
 %   variable name is created with the project's name, which is the last
+%   part of the absolute dirpath.
 % project_dirs:
 %   The absolute paths to the project directories.
 

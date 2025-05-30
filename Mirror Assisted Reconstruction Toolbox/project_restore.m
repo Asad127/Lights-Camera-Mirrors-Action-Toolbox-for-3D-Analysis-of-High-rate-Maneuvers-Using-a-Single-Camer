@@ -70,7 +70,7 @@ else
         % project. In this case, `project_dirs.m` does not require update.
         fprintf(['Selected directory successfully matched to an existing project directory in "project_dirs.m".' ...
             '\n\tMatched Project: %s\n\t@ Line %d in "project_dirs.m": %s\n'], ...
-            matched_dir, matched_line_num, matched_line ...
+            matched_dir, matched_line_num, matched_line{1} ...
         )
 
     else
@@ -251,14 +251,14 @@ total_entities = [voluntary_entities missing_entities];
 newline_after_count = 3;
 
 fprintf('%s\n', default.CWLINE_STYLE);
-fprintf('+ %s\n', strrep(project_dir, '\', '\\'))
+fprintf('+ %s\n', project_dir)
 for i = 1 : numel(total_entities)
     fprintf('%-30s', total_entities{i});
-    if mod(i, newline_after_count) == 0 || i ~= numel(total_entities)
+    if mod(i, newline_after_count) == 0 && i ~= numel(total_entities)
         fprintf('\n')
     end
 end
-fprintf('%s\n', default.CWLINE_STYLE);
+fprintf('\n%s\n', default.CWLINE_STYLE);
 
 if relocate
     project_dirs_update(matched_line_num, project_dir);

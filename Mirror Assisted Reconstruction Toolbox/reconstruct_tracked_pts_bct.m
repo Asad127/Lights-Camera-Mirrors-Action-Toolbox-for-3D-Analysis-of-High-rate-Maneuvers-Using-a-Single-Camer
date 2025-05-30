@@ -233,7 +233,7 @@ end
 fprintf('HELP: Only enter "y" if you have the undistorted images or video frames.\n');
 while true
 	choice = input('[PROMPT] Use undistorted video frames for reprojections? (y/n): ', 's');
-    
+
     if ~ismember(choice, {'y', 'n'})
 		fprintf('[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
 		continue
@@ -255,20 +255,20 @@ if use_undistorted_frames
 
     % Check that the directories exist, and contain images.
     for i = 1 : numel(undistorted_frame_dirs)  % should be equal to num_views
-    
+
         if ~isfolder(undistorted_frame_dirs{i})
-    
+
             error(['An undistorted frames folder was not found in the expected location:' ...
                 '\n\t%s\nIn general, they are expected in the same directory as the original image ' ...
                 'in separate folders folders.\nTo ensure proper undistortion setup, run ' ...
                 '"create_undistorted_vid_and_fames.m" (videos) or\n"create_undistorted_imgs.m" ' ...
                 '(images).'], undistorted_frame_dirs{i} ...
             );
-    
+
         else
             % List all image files in the directory.
             img_listing = dir(fullfile(undistorted_frame_dirs{i}, ['*' frame_extension]));
-    
+
             % Check if directory even has images.
             if isempty(img_listing(~ismember({img_listing.name}, {'.', '..'})))
                 error('Undistorted frames folder was found, but has no images.\n\t%s', ...
@@ -408,7 +408,7 @@ for j = 1 : num_views
     legend('est WC reprojections',  'org WC reprojections')
     hold off;
 end
-mean_reproj_error = mean(per_view_reproj_error, 'all'); 
+mean_reproj_error = mean(per_view_reproj_error, 'all');
 fprintf('done.\n')
 
 %% 3D VISUALIZATION - RECONSTRUCTION %%

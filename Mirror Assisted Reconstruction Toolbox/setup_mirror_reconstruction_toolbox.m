@@ -159,11 +159,13 @@ else
     toolbox = load('toolbox.mat');
 
     if ~strcmp(toolbox_dir, toolbox.TOOLBOX_MATLAB_PATH)
+        TOOLBOX_MATLAB_PATH = toolbox_dir;
+        save('toolbox.mat', 'TOOLBOX_MATLAB_PATH')
         announcements{end + 1} = ['o Toolbox Path File (toolbox.mat): Updated to match the current ' ...
             'toolbox path.'];
     else
         announcements{end + 1} = ['- Toolbox Path File (toolbox.mat): Unchanged as it already exists ' ...
-            'and the toolbox paths match.'];
+            'and existing path matches current one.'];
     end
 
 end
