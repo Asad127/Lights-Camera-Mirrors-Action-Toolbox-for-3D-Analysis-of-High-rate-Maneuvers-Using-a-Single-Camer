@@ -3,13 +3,13 @@ function [framewise_tracked_pixels_converted, num_frames, mask_nan_rows, ...
 %{
 Reads the 2D tracked points (pixels) as exported from DLTdv8a in "flat"
 (csv, table-like) format. The returned format is intended for use with the
-script `reconstruct_3d_from_dltdv_2d.m`.
+script `reconstruct_tracked_pts_bct.m`.
 
 DLTdv8a exports pixel coordinates for all tracked points in the format:
 pt1_cam1_X, pt1_cam1_Y, pt1_cam2_X, pt1_cam2_Y, pt2_cam1_X, ...
 Each row of the csv has length (2*num_views*num_points).
 
-`reconstruct_3d_from_dltdv_2d.m` assumes the form:
+`reconstruct_tracked_pts_bct.m` assumes the form:
 pt1_cam1, pt2_cam1, pt1_cam2, pt2_cam2, ...
 
 where each element is a column vector of size 3x1 (third element being

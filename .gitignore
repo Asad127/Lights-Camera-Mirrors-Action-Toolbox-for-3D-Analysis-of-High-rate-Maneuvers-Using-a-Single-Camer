@@ -1,0 +1,9 @@
+Data/
+evaluation/
+normal/
+
+Mirror Assisted Reconstruction Toolbox/toolbox.mat
+Mirror Assisted Reconstruction Toolbox/project_dirs.m
+
+*.zip
+*.ply

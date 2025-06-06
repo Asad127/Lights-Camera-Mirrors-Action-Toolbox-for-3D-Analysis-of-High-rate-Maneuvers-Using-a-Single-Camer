@@ -1,5 +1,9 @@
-function undistort_imgs(distorted_filepaths_or_dir, dist_coefs,  ...
-     intrinsics, undistorted_dir)
+function undistort_imgs( ...
+    distorted_filepaths_or_dir, ...
+    dist_coefs, ...
+    intrinsics, ...
+    undistorted_dir ...
+)
 % Undistort a given set of images in the form of a single directory, or a
 % sorted cell array of image filepaths. In the case of a directory, the
 % function uses natsort from MATLAB File Exchange if set, and otherwise
@@ -12,12 +16,12 @@ function undistort_imgs(distorted_filepaths_or_dir, dist_coefs,  ...
 % script automatically undistorts w.r.t. all views' distortion coefs,
 % whereas this function only does it for one view at a time.
 %
-% TAKES
+% INPUTS
 % =========================================================================
 % distorted_filepaths_or_dir (required):
 %   Either a directory or cell array of image filepaths. In case of the
 %   former, it is assumed the directory contains images and, based on value
-%   of `GUESS_IMG_EXT_WHEN_POSSIBLE` in project's `defaults.m` file, the 
+%   of `GUESS_IMG_EXT_WHEN_POSSIBLE` in project's `defaults.m` file, the
 %   image extension is either guessed or the user is asked for it.
 % dist_coefs (required):
 %   The distortion coefficients to use for image undistortion.
@@ -26,7 +30,7 @@ function undistort_imgs(distorted_filepaths_or_dir, dist_coefs,  ...
 % undistorted_dir (optional, default = fullfile(input_imgs_dir, rect)):
 %   Output directory where the undistorted images are stored. If not
 %   provided and input is a directory, the undistorted images are stored
-%   in a folder 'rect' within the input directory. If the input path is a 
+%   in a folder 'rect' within the input directory. If the input path is a
 %   cell array of filepaths, it treats their common directory as the input
 %   directory.
 %
@@ -35,28 +39,34 @@ function undistort_imgs(distorted_filepaths_or_dir, dist_coefs,  ...
 % undistort_img.m:
 %   Contains the math implementing the undistortion transformation. Returns
 %   the undistorted image that this function proceeds to save.
-% undistort_img_gray.m:
-%   Grayscale version of `undistort_img.m`.
 
-switch nargin
-    case 0
-        err_msg = sprintf( ...
-            ['Require input images or directory of images to undistort.' ...
-            '\nRequire distortion coefficients and camera intrinsics for undistortion.']);
-        error(err_msg)
-    case 1
-        err_msg = sprintf('Require distortion coefficients and camera intrinsics for undistortion.');
-        error(err_msg)
-    case 2
-        err_msg = sprintf('Require camera intrinsics for undistortion.');
-        error(err_msg);
-    case 3
-        if isfolder(distorted_filepaths_or_dir)
-            undistorted_dir = fullfile(distorted_filepaths_or_dir, 'rect');
-        else
-            [undistorted_dir, ~, ~] = distorted_filepaths_or_dir{1};
-            undistorted_dir = fullfile(undistorted_dir, 'rect');
-        end
+if nargin == 0
+    err_msg = sprintf( ...
+        ['Require input images or directory of images to undistort.' ...
+        '\nRequire distortion coefficients and camera intrinsics for ' ...
+        'undistortion.'] ...
+    );
+    error(err_msg)
+elseif nargin == 1
+    err_msg = sprintf( ...
+        ['Require distortion coefficients and camera intrinsics ' ...
+        'for undistortion.'] ...
+    );
+    error(err_msg)
+elseif nargin == 2
+    err_msg = sprintf( ...
+        ['Require camera intrinsics for undistortion.' ...
+        '\nRequire distortion coefficients and camera intrinsics for ' ...
+        'undistortion.'] ...
+    );
+    error(err_msg);
+elseif nargin == 3
+    if isfolder(distorted_filepaths_or_dir)
+        undistorted_dir = fullfile(distorted_filepaths_or_dir, 'rect');
+    else
+        [undistorted_dir, ~, ~] = distorted_filepaths_or_dir{1};
+        undistorted_dir = fullfile(undistorted_dir, 'rect');
+    end
 end
 
 default = load('defaults.mat');
@@ -109,17 +119,9 @@ for i = 1 : total_imgs
     % Read the image file.
     img_file = img_filepaths{i};
     img = imread(img_file);
-    dims = size(img);
     [~, img_name, img_extension] = fileparts(img_file);
 
-    if ndims(img) == 2
-        % Image is grayscale.
-        undistorted_img = undistort_img_gray(img, dist_coefs, intrinsics);
-    elseif ndims(img) == 3 && dims(3) == 3
-        % Image is RGB.
-        undistorted_img = undistort_img(img, dist_coefs, intrinsics);
-    end
-
+    undistorted_img = undistort_img(img, dist_coefs, intrinsics);
     undistorted_file = [img_name img_extension];
     undistorted_filepath = fullfile(undistorted_dir, undistorted_file);
 

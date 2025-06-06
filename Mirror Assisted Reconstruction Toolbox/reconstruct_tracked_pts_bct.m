@@ -367,7 +367,8 @@ fprintf('done.\n')
 %% PIXEL REPROJECTION WITH ESTIMATED WORLD POINTS %%
 
 fprintf('Reprojecting using the estimated world coordinates... ')
-per_view_reproj_error = Inf(1, num_views);
+per_view_mean_reproj_error = Inf(1, num_views);
+per_view_rms_reproj_error = Inf(1, num_views);
 
 for j = 1 : num_views
     % True pixel locations for all physical points as marked.
@@ -392,9 +393,14 @@ for j = 1 : num_views
         );
     end
 
-    % Calculate reprojection error.
-    reproj_error = mean(abs(proj_pixels_org - proj_pixels_est), 'all');
-    per_view_reproj_error(1, j) = reproj_error;
+    % Calculate mean reprojection error as well as RMS reprojection error over all points.
+    sum_of_squared_pixel_diff_vec = sum((proj_pixels_org - proj_pixels_est).^2, 1);
+    reproj_error_vec = sqrt(sum_of_squared_pixel_diff_vec);
+    mean_reproj_error = mean(reproj_error_vec);
+    rms_reproj_error = sqrt(mean(sum_of_squared_pixel_diff_vec));
+
+    per_view_mean_reproj_error(1, j) = mean_reproj_error;
+    per_view_rms_reproj_error(1, j) = rms_reproj_error;
 
     % Plot the pixels.
     set(0, 'currentfigure', figH(j));
@@ -408,7 +414,8 @@ for j = 1 : num_views
     legend('est WC reprojections',  'org WC reprojections')
     hold off;
 end
-mean_reproj_error = mean(per_view_reproj_error, 'all');
+mean_reproj_error_overall = mean(per_view_mean_reproj_error);
+rms_reproj_error_overall = mean(per_view_rms_reproj_error);
 fprintf('done.\n')
 
 %% 3D VISUALIZATION - RECONSTRUCTION %%
@@ -468,9 +475,12 @@ drawnow()
 %% METRIC PRINTOUT %%
 
 fprintf('\t*** ERRORS ***\n');
-fprintf('\tMean Reprojection Error (OVERALL): %f\n', mean(per_view_reproj_error(1, :), 'all'));
-fmt = ['\tMean Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_reproj_error(1, :)) - 1), '%f\n'];
-fprintf(fmt, per_view_reproj_error(1, :));
+fprintf('\tMean Reprojection Error (OVERALL): %f\n', mean_reproj_error_overall);
+fmt = ['\tMean Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_mean_reproj_error(1, :)) - 1), '%f\n'];
+fprintf(fmt, per_view_mean_reproj_error(1, :));
+fprintf('\tRMS Reprojection Error (OVERALL): %f\n', rms_reproj_error_overall);
+fmt = ['\tRMS Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_rms_reproj_error(1, :)) - 1), '%f\n'];
+fprintf(fmt, per_view_rms_reproj_error(1, :));
 fmt = ['\tEstimated 3D Points: ', repmat('(%4.4f, %4.4f, %4.4f), ', 1, num_points - 1), '(%4.4f, %4.4f, %4.4f)\n'];
 fprintf(fmt, X_est);
 

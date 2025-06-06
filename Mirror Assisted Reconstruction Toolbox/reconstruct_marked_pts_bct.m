@@ -1,8 +1,6 @@
-% Script to reconstruct manually marked pixels for all points in an image.
-% Mark points with `point_marker.m`.
+% Script to reconstruct manually marked pixels for all points in an image. Mark points with `point_marker.m`.
 %
-% If you want to reconstruct manually marked points on a still image, use
-% `reconstruction_marked_pts_bct.m` instead.
+% If you want to reconstruct manually marked points on a still image, use `reconstruction_marked_pts_bct.m` instead.
 
 %% SETUP %%
 
@@ -92,24 +90,19 @@ view_labels = view_params.view_labels;
 num_views = numel(view_labels);
 view_names = default.VIEW_NAMES_LONG(view_labels);  % keep only the view names whose labels are available
 
-% NOTE: like in `calib_process_results.m`, j is relative in the sense
-% that it represents the number of views without care for the view label.
-% k preserves the exact view label. Since the merged calbiration file
-% provides the view labels and indexes into the cam params accordingly,
-% we need to use them to extract information. However, our arrays are
-% contiguous, and that means, for example, if there are 2 views, even if
-% it was view 1 and view 3, there will always be 6 columns in the rot
-% matrix instead of 9, where 1:3 would have been view 1's, 4:6 being nan
-% for view 2, and 7:9 being view 3's. Thus, we need the relative count
-% still in order to slice into our arrays properly.
+% NOTE: like in `calib_process_results.m`, j is relative in the sense that it represents the number of views without
+% care for the view label. k preserves the exact view label. Since the merged calbiration file provides the view labels
+% and indexes into the cam params accordingly, we need to use them to extract information. However, our arrays are
+% contiguous, and that means, for example, if there are 2 views, even if it was view 1 and view 3, there will always be
+% 6 columns in the rot matrix instead of 9, where 1:3 would have been view 1's, 4:6 being nan for view 2, and 7:9 being
+% view 3's. Thus, we need the relative count still in order to slice into our arrays properly.
 
-% Load in the camera extrinsics and intrinsics for each view from the
-% merged calibration file.
+% Load in the camera extrinsics and intrinsics for each view from the merged calibration file.
 
 KK = zeros(3, 3 * num_views); R = zeros(3, 3 * num_views); T = zeros(3, num_views);
 for j = 1 : num_views
-    % Get label k of the j'th view (camera = 1, mirror 1 = 2, mirror 2 = 3)
-    % If only had mirrors 1 and 2, k would be 2 and 3.
+    % Get label k of the j'th view (camera = 1, mirror 1 = 2, mirror 2 = 3) If only had mirrors 1 and 2, k would be 2
+    % and 3.
     k = view_labels(j);
 
     KK(:, 3*(j-1)+1 : 3*j) = view_params.(sprintf('KK_%d', k));
@@ -152,7 +145,7 @@ fprintf('done.\n\n')
 fprintf('HELP: Only enter "y" if you have the undistorted images/video frames.\n');
 while true
 	choice = input('[PROMPT] Use undistorted images for reprojections? (y/n): ', 's');
-    
+
     if ~ismember(choice, {'y', 'n'})
 		fprintf('\n[BAD INPUT] Only "y" (yes) and "n" (no) are accepted inputs. Please try again.\n')
 		continue
@@ -163,7 +156,7 @@ while true
     else
         use_undistorted_imgs = false;
     end
-    
+
 	break
 end
 
@@ -176,20 +169,20 @@ else
 
     % Check that the directories exist, and contain images.
     for i = 1 : numel(undistorted_img_dirs)  % should be equal to num_views
-    
+
         if ~isfolder(undistorted_img_dirs{i})
-    
+
             error(['An undistorted image folder was not found in the expected location:' ...
                 '\n\t%s\nIn general, they are expected in the same directory as the original image ' ...
                 'in separate folders folders.\nTo ensure proper undistortion setup, run ' ...
                 '"create_undistorted_vid_and_fames.m" (videos) or\n"create_undistorted_imgs.m" ' ...
                 '(images).'], undistorted_img_dirs{i} ...
             );
-    
+
         else
             % List all image files in the directory.
             img_listing = dir(fullfile(undistorted_img_dirs{i}, ['*' img_extension]));
-    
+
             % Check if directory even has images.
             if isempty(img_listing(~ismember({img_listing.name}, {'.', '..'})))
                 error('Undistorted images folder was found, but has no images.\n\t%s', undistorted_img_dirs{i});
@@ -233,9 +226,9 @@ figH(num_views + 1) = figure( ...
 % Everything below is in homogenous coordinates.
 fprintf('\nEstimating world coordinates with lsqnonlin...')
 
-X_init = ones(4, 1);       % initial guess for optimizer
+X_init = ones(4, 1);                % initial guess for optimizer
 X_est_homo = zeros(4, num_points);  % to store the estimated 3D world coordinates
-xpp = zeros(3, num_views); % to store pixel corresponding to i'th physical point in all views
+xpp = zeros(3, num_views);          % to store pixel corresponding to i'th physical point in all views
 
 for i = 1 : num_points
     for j = 1 : num_views
@@ -259,7 +252,8 @@ X_est = X_est_homo(1:3, :);
 
 %% PIXEL REPROJECTION VISUALIZATION %%
 fprintf('Reprojecting using the estimated world coordinates... ')
-per_view_reproj_error = Inf(1, num_views);
+per_view_mean_reproj_error = Inf(1, num_views);
+per_view_rms_reproj_error = Inf(1, num_views);
 
 for j = 1 : num_views
     % True pixel locations for all physical points as marked.
@@ -268,11 +262,15 @@ for j = 1 : num_views
     % Projected pixel locations from estimated world coordinates.
     proj_pixels_est = KK(:, 3*(j-1)+1 : 3*j) * [R(:, 3*(j-1)+1 : 3*j) T(:, j)] * X_est_homo;
     proj_pixels_est = proj_pixels_est./proj_pixels_est(3, :);
-
-    % Calculate mean reprojection error over all points.
-    reproj_error = mean(abs(proj_pixels_org - proj_pixels_est), 'all');
-    per_view_reproj_error(1, j) = reproj_error;
-
+    
+    % Calculate mean reprojection error as well as RMS reprojection error over all points.
+    sum_of_squared_pixel_diff_vec = sum((proj_pixels_org - proj_pixels_est).^2, 1);
+    reproj_error_vec = sqrt(sum_of_squared_pixel_diff_vec);
+    mean_reproj_error = mean(reproj_error_vec);
+    rms_reproj_error = sqrt(mean(sum_of_squared_pixel_diff_vec));
+    
+    per_view_rms_reproj_error(1, j) = rms_reproj_error;
+    per_view_mean_reproj_error(1, j) = mean_reproj_error;
     if use_undistorted_imgs
 	    img = imread(fullfile(undistorted_img_dirs{j}, img_file));
     end
@@ -282,17 +280,18 @@ for j = 1 : num_views
     image(img);
     axis off
     hold on;
-    
+
     title(sprintf('%s - Pixel Projections for Estimated World Coordinates', view_names{j}));
     % xlabel('x (pixel)'); ylabel('y (pixel)');
     plot(proj_pixels_est(1, :), proj_pixels_est(2, :), 'r*', 'linewidth', 1, 'MarkerSize', 7);
     plot(proj_pixels_org(1, :), proj_pixels_org(2, :), 'bo', 'linewidth', 1, 'MarkerSize', 8);
     legend('est WC reprojections',  'org WC reprojections')
     hold off;
-    
+
 end
 
-mean_reproj_error = mean(per_view_reproj_error, 'all');
+mean_reproj_error_overall = mean(per_view_mean_reproj_error);
+rms_reproj_error_overall = mean(per_view_rms_reproj_error);
 
 fprintf("done.\n")
 
@@ -322,9 +321,8 @@ for j = 1 : num_views
         % Original view. Can use plotCamera since +ve det rotation matrix.
         pose_cam = rigidtform3d(R(:, 3*(j-1)+1 : 3*j), T(:, j));
 
-        % pose_cam is the camera pose in CAMERA coordinates, pose_world is
-        % the camera's pose in WORLD coordinates (inversion of pose_cam).
-        % Note that invert(pose_cam) is equivalent to extr2pose(pose_cam).
+        % pose_cam is the camera pose in CAMERA coordinates, pose_world is the camera's pose in WORLD coordinates
+        % (inversion of pose_cam). Note that invert(pose_cam) is equivalent to extr2pose(pose_cam).
         pose_world = invert(pose_cam);
 
         plotCamera( ...
@@ -337,8 +335,8 @@ for j = 1 : num_views
         );
 
     else
-        % Virtual mirror view. Can't use plotCamera since negative
-        % determinant on rotation matrix (permutation -> left handed frame)
+        % Virtual mirror view. Can't use plotCamera since negative determinant on rotation matrix (permutation -> left
+        % handed frame)
 
         % Get camera position and orientation w.r.t. the world frame.
         R_world = inv(R_cam);
@@ -388,36 +386,26 @@ fprintf('\n*** ERRORS ***\n');
 fprintf(output_txtfile, '*** ERRORS ***\n');
 
 fmt = ['Mean Reprojection Error (PER-VIEW): ', ...
-    repmat('%.6f, ', 1, numel(per_view_reproj_error(1, :))-1), ...
+    repmat('%.6f, ', 1, numel(per_view_mean_reproj_error(1, :))-1), ...
     '%.6f\n' ...
 ];
 
-fprintf(fmt, per_view_reproj_error(1, :));
-fprintf(output_txtfile, fmt, per_view_reproj_error(1, :));
+fprintf(fmt, per_view_mean_reproj_error(1, :));
+fprintf(output_txtfile, fmt, per_view_mean_reproj_error(1, :));
 
-fprintf('Mean Reprojection Error (OVERALL): %f\n\n', mean_reproj_error);
-fprintf(output_txtfile, 'Mean Reprojection Error (OVERALL): %f\n', mean_reproj_error);
+fprintf('Mean Reprojection Error (OVERALL): %f\n\n', mean_reproj_error_overall);
+fprintf(output_txtfile, 'Mean Reprojection Error (OVERALL): %f\n', mean_reproj_error_overall);
 
-% est_dist = NaN(1, num_points - 1);
-% for i = 1 : num_points - 1
-%     est_dist(i) = norm(X_est(:, i) - X_est(:, i+1), 2);
-% end
-% fmt = ['\tNormed Distance Between Neighboring Points: ', repmat('%4.4f, ', 1, numel(est_dist) - 1), '%4.4f\n'];
-% fprintf(fmt, est_dist);
-% dd=mean(est_dist);
-% %fprintf("Mean of est dis is\n:",dd);
-% error_dist = est_dist - org_dist;
-% fmt = ['\tErrors w.r.t Original Distances: ', repmat('%4.4f, ', 1, numel(est_dist) - 1), '%4.4f\n'];
-% fprintf(fmt, error_dist);
-% disp(dd)
-% fprintf('\n\tMean Distance Error: %4.4f\n', mean(error_dist, 'all'))
-% orignan_2d = sqrt(sum((proj_pixels_org - proj_pixels_est).^2));
-% set(0, 'CurrentFigure', figH(num_views + 2))
-% %histogram(error_dist, 20);
-% %D=sqrt((y(1)-x(1))^2+(y(2)-x(2))^2);
-% histogram(orignan_2d, 110);
-% xlabel('X (mm)'); ylabel('Y (mm)');
-% hold on;
+fmt = ['RMS Reprojection Error (PER-VIEW): ', ...
+    repmat('%.6f, ', 1, numel(per_view_rms_reproj_error(1, :))-1), ...
+    '%.6f\n' ...
+];
+
+fprintf(fmt, per_view_rms_reproj_error(1, :));
+fprintf(output_txtfile, fmt, per_view_rms_reproj_error(1, :));
+
+fprintf('RMS Reprojection Error (OVERALL): %f\n\n', rms_reproj_error_overall);
+fprintf(output_txtfile, 'Mean Reprojection Error (OVERALL): %f\n', rms_reproj_error_overall);
 
 fprintf(output_txtfile, '\n*** ESTIMATED WORLD COORDS ***\n');
 for i = 1 : num_points
@@ -430,7 +418,7 @@ fclose(output_txtfile);
 copyfile(img_filepath, fullfile(saveloc_dir, img_file))
 
 save(fullfile(saveloc_dir, ['xyzpts' default.BCT_EXT]), 'X_est');
-save(fullfile(saveloc_dir, 'reprojection_errors.mat'), 'per_view_reproj_error', 'mean_reproj_error');
+save(fullfile(saveloc_dir, 'reprojection_errors.mat'), 'per_view_mean_reproj_error', 'mean_reproj_error');
 
 savefig(fullfile(saveloc_dir, 'reconstruction.fig'))
 
@@ -465,18 +453,16 @@ fprintf('Saved results to: %s\n\n', abspath(saveloc_dir));
 %% FUNCTIONS %%
 function error = reconst_coords_per_px(X, n_views, x, K, R, T)
 %{
-We go point-by-point and pixel-by-pixel, so we get three reprojection
-errors (one per view). LSQNONLIN requires a vectored error function and
-not a scalar value. So, we vectorize all three.
+We go point-by-point and pixel-by-pixel, so we get three reprojection errors (one per view). LSQNONLIN requires a
+vectored error function and not a scalar value. So, we vectorize all three.
 %}
     vector_err = [];
     for j = 1 : n_views
 
-        % Get the actual pixel location of the i'th point in the k'th view.
+        % Get the actual pixel location of the i'th point in the j'th view.
         true = x(:, j);
 
-        % Use current guess of 3D world points to get the pixel
-        % projections from the forward projection equation.
+        % Use current guess of 3D world points to get the pixel projections from the forward projection equation.
         pred = K(:, 3*(j-1)+1 : j*3) * [R(:, 3*(j-1)+1 : j*3) T(:, j)] * X;
 
         % Normalize w.r.t. homogenous coordinate.
