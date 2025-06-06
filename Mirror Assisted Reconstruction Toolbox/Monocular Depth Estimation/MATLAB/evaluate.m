@@ -393,6 +393,15 @@ for mde_approach_idx = 1 : length(MDE_APPROACHES_LIST)
             proj_pixels_est_all(:, start_idx:end_idx) = registered_mde_projected_pixels;
             marked_pixels_all(:, start_idx:end_idx) = view_marked_pixels;
 
+            % Save registered 3D world points for this view.
+            mde_save_dir = fullfile(LCMART_ROOT, 'reconstruction', current_img_name);
+            if ~exist(mde_save_dir, 'dir')
+                mkdir(mde_save_dir);
+            end
+            save( ...
+                fullfile(mde_save_dir, sprintf('%s_%s_xyzpts.mat', mde_current_approach, current_view)), 'X_est' ...
+            );
+
             % Debug print for view 1.
             if strcmp(current_view, 'cam_rect')
                 fprintf('\nDEBUG - View 1 (cam_rect) points:\n');
