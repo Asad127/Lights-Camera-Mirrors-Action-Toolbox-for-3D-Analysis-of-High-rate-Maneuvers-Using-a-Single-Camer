@@ -255,6 +255,9 @@ fprintf('Reprojecting using the estimated world coordinates... ')
 per_view_mean_reproj_error = Inf(1, num_views);
 per_view_rms_reproj_error = Inf(1, num_views);
 
+% Initialize array to store projected points for all views.
+proj_pixels_est_all = zeros(2, num_points * num_views);
+
 for j = 1 : num_views
     % True pixel locations for all physical points as marked.
     proj_pixels_org = x(:, num_points*(j-1)+1 : j*num_points);
@@ -262,13 +265,16 @@ for j = 1 : num_views
     % Projected pixel locations from estimated world coordinates.
     proj_pixels_est = KK(:, 3*(j-1)+1 : 3*j) * [R(:, 3*(j-1)+1 : 3*j) T(:, j)] * X_est_homo;
     proj_pixels_est = proj_pixels_est./proj_pixels_est(3, :);
-    
+
+    % Store projected points for this view.
+    proj_pixels_est_all(:, num_points*(j-1)+1 : j*num_points) = proj_pixels_est(1:2, :);
+
     % Calculate mean reprojection error as well as RMS reprojection error over all points.
     sum_of_squared_pixel_diff_vec = sum((proj_pixels_org - proj_pixels_est).^2, 1);
     reproj_error_vec = sqrt(sum_of_squared_pixel_diff_vec);
     mean_reproj_error = mean(reproj_error_vec);
     rms_reproj_error = sqrt(mean(sum_of_squared_pixel_diff_vec));
-    
+
     per_view_rms_reproj_error(1, j) = rms_reproj_error;
     per_view_mean_reproj_error(1, j) = mean_reproj_error;
     if use_undistorted_imgs
@@ -419,30 +425,26 @@ copyfile(img_filepath, fullfile(saveloc_dir, img_file))
 
 save(fullfile(saveloc_dir, ['xyzpts' default.BCT_EXT]), 'X_est');
 save(fullfile(saveloc_dir, 'reprojection_errors.mat'), 'per_view_mean_reproj_error', 'mean_reproj_error');
+save(fullfile(saveloc_dir, 'xypts.mat'), 'proj_pixels_est_all');
 
 savefig(fullfile(saveloc_dir, 'reconstruction.fig'))
+
 
 for j = 1 : num_views
     save_filepath = fullfile(saveloc_dir, sprintf('pixel_reprojections_%s.png', view_names{j}));
     figure(figH(j))
+    % Hide the axes toolbar.
+    set(gcf, 'toolbar', 'none');
+
     if default.FEX_USE_EXPORTFIG && default.FEX_USE_TIGHTFIG
         tightfig;
-        tightfig;
         export_fig(save_filepath, '-native');
-        export_fig(save_filepath, '-native');
-
     elseif default.FEX_USE_EXPORTFIG
         export_fig(save_filepath, '-native');
-        export_fig(save_filepath, '-native');
-
     elseif default.FEX_USE_TIGHTFIG
         tightfig;
-        tightfig;
         saveas(gcf, save_filepath);
-        saveas(gcf, save_filepath);
-
     else
-        saveas(gcf, save_filepath);
         saveas(gcf, save_filepath);
     end
 

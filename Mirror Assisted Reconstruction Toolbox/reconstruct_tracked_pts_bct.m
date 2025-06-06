@@ -484,33 +484,6 @@ fprintf(fmt, per_view_rms_reproj_error(1, :));
 fmt = ['\tEstimated 3D Points: ', repmat('(%4.4f, %4.4f, %4.4f), ', 1, num_points - 1), '(%4.4f, %4.4f, %4.4f)\n'];
 fprintf(fmt, X_est);
 
-%% 3D RECONSTRUCTION ERROR: Comment if not required. %%
-% Distance between consecutive physical points in real-world units. Comment
-% out if not interested in 3D reconstruction error. If n points marked, it
-% should be a n-1 element vector [1->2, 2->3, ..., i->i+1, ..., n-1->n].
-% org_dists = [];
-
-% est_dist = NaN(1, n_pts - 1);
-% for i = 1 : n_pts - 1
-%     est_dist(i) = norm(X_est(:, i) - X_est(:, i+1), 2);
-% end
-% fmt = ['\tNormed Distance Between Neighboring Points: ', repmat('%4.4f, ', 1, numel(est_dist) - 1), '%4.4f\n'];
-% fprintf(fmt, est_dist);
-% dd=mean(est_dist);
-% %fprintf('Mean of est dis is\n:',dd);
-% error_dist = est_dist - org_dist;
-% fmt = ['\tErrors w.r.t Original Distances: ', repmat('%4.4f, ', 1, numel(est_dist) - 1), '%4.4f\n'];
-% fprintf(fmt, error_dist);
-% disp(dd)
-% fprintf('\n\tMean Distance Error: %4.4f\n', mean(error_dist, 'all'))
-% orignan_2d = sqrt(sum((proj_pixels_org - proj_pixels_est).^2));
-% figure(5);
-% %histogram(error_dist, 20);
-% %D=sqrt((y(1)-x(1))^2+(y(2)-x(2))^2);
-% histogram(orignan_2d, 110);
-% xlabel('X (mm)'); ylabel('Y (mm)');
-% hold on;
-
 end
 
 %% FINAL STEPS %%

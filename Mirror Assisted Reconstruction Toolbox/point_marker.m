@@ -327,7 +327,7 @@ function handles = display_history_points(fig, ax, history, use_undist, cam_para
 
             % Initialize history display
             count = getappdata(fig, 'marked_points_in_current_view_count');
-            update_history_display(fig, ax, count);
+            update_history_display(fig, count);
         end
     else
         setappdata(fig, 'history_exists_this_view', false);
@@ -371,7 +371,7 @@ function dynamic_marking(fig, ax, view_name)
             count = getappdata(fig, 'marked_points_in_current_view_count');
             history_mode = getappdata(fig, 'history_display_mode');
             update_ui(fig, ax, view_name, count, Inf, history_mode);
-            update_history_display(fig, ax, count);
+            update_history_display(fig, count);
         end
         if getappdata(fig, 'ContinueDynamicMarkingFlag')
             if count > 0
@@ -387,9 +387,14 @@ end
 
 function fixed_marking(fig, ax, view_name, target)
     count = getappdata(fig, 'marked_points_in_current_view_count');
+    just_started = true;
     while count < target && ishandle(fig)
-        history_mode = getappdata(fig, 'history_display_mode');
-        update_ui(fig, ax, view_name, count, target, history_mode);
+        if just_started
+            just_started = false;
+            history_mode = getappdata(fig, 'history_display_mode');
+            update_ui(fig, ax, view_name, count, target, history_mode);
+            update_history_display(fig, count);
+        end
         if ~ishandle(fig), break; end
         action = waitforbuttonpress;
         if ~ishandle(fig), break; end
@@ -398,7 +403,7 @@ function fixed_marking(fig, ax, view_name, target)
             count = getappdata(fig, 'marked_points_in_current_view_count');
             history_mode = getappdata(fig, 'history_display_mode');
             update_ui(fig, ax, view_name, count, target, history_mode);
-            update_history_display(fig, ax, count);
+            update_history_display(fig, count);
         end
         if getappdata(fig, 'ContinueDynamicMarkingFlag')
             if count > 0
@@ -428,12 +433,22 @@ function add_point(fig, ax, view_name, target)
         % Update UI and history
         history_mode = getappdata(fig, 'history_display_mode');
         update_ui(fig, ax, view_name, count, target, history_mode);
-        update_history_display(fig, ax, count);
+        update_history_display(fig, count);
         drawnow;
     end
 end
 
 function update_ui(fig, ax, view_name, count, target, history_mode)
+    % Get the call stack
+    % [st, ~] = dbstack;
+    % caller = '';
+    % if length(st) > 1
+    %     caller = st(2).name;
+    % end
+
+    view_idx = getappdata(fig, 'current_view_idx');
+    % fprintf('\n[DEBUG] update_ui called from: %s with count: %d for view_idx: %d\n', caller, count, view_idx);
+
     % Update console message
     console_msg = sprintf("%d", count);
     if ~isinf(target)
@@ -448,15 +463,33 @@ function update_ui(fig, ax, view_name, count, target, history_mode)
     setappdata(fig, 'num_chars_on_console', strlength(console_msg));
 
     % Update title
-    title_str = sprintf('%s - Dynamic: %d marked (u:undo, c:continue, r:reset zoom, h:history toggle | %s)', view_name, count);
-    if ~isinf(target)
-        view_idx = getappdata(fig, 'current_view_idx');
+    if isinf(target)
         if view_idx > 1
-            title_str = sprintf('%s - Fixed: Corresponding %d/%d (u:undo, c:continue, r:reset zoom, h:history toggle | %s)', view_name, count, target, history_mode);
+            title_str = sprintf( ...
+                '%s - Dynamic: %d marked (u: undo, c: continue, r: reset zoom, h: history toggle [mode: %s] )', ...
+                view_name, ...
+                max(0, count), ...
+                lower(history_mode) ...
+            );
         else
-            title_str = sprintf('%s - Fixed: Marking %d/%d (u:undo, c:continue, r:reset zoom, h:history toggle)', view_name, count, target);
+            title_str = sprintf('%s - Dynamic: %d marked (u: undo, c: continue, r: reset zoom)', view_name, max(0, count));
+        end
+    else
+        if view_idx > 1
+            title_str = sprintf( ...
+                '%s - Fixed: Corresponding %d/%d (u: undo, c: continue, r: reset zoom, h: history toggle [mode: %s] )', ...
+                view_name, ...
+                max(0, count), ...
+                target, ...
+                lower(history_mode) ...
+            );
+        else
+            title_str = sprintf( ...
+                '%s - Fixed: Marking %d/%d (u: undo, c: continue, r: reset zoom)', view_name, max(0, count), target ...
+            );
         end
     end
+    setappdata(fig, 'current_title', title_str);
     title(ax, title_str);
 end
 
@@ -661,7 +694,7 @@ function handleKeyPress(fig, evt)
                 next_idx = mod(current_idx, length(modes)) + 1;
                 setappdata(fig, 'history_display_mode', modes{next_idx});
                 count = getappdata(fig, 'marked_points_in_current_view_count');
-                update_history_display(fig, ax, count);
+                update_history_display(fig, count);
                 % fprintf('\n[INFO] History display mode changed to: %s\n', modes{next_idx});
             else
                 % fprintf('\n[INFO] No history available for this view.\n');
@@ -680,10 +713,14 @@ function handleKeyPress(fig, evt)
                 count = size(updated_pts, 2);
                 setappdata(fig, 'marked_points_in_current_view_count', count);
 
-                % Update UI and history
+                % Get current view info
+                view_name = getappdata(fig, 'current_view_name_str');
+                target = getappdata(fig, 'session_target_num_points');
                 history_mode = getappdata(fig, 'history_display_mode');
-                update_ui(fig, ax, getappdata(fig, 'current_view_name_str'), count, getappdata(fig, 'session_target_num_points'), history_mode);
-                update_history_display(fig, ax, count);
+
+                % Update UI and history
+                update_ui(fig, ax, view_name, count, target, history_mode);
+                update_history_display(fig, count);
             end
         case 'c'
             count = getappdata(fig, 'marked_points_in_current_view_count');
@@ -713,7 +750,15 @@ function handleKeyPress(fig, evt)
     end
 end
 
-function update_history_display(fig, ax, count)
+function update_history_display(fig, count)
+    % % Get the call stack
+    % [st, ~] = dbstack;
+    % caller = '';
+    % if length(st) > 1
+    %     caller = st(2).name;
+    % end
+    % fprintf('\n[DEBUG] update_history_display called from: %s\n', caller);
+
     history_handles = getappdata(fig, 'history_graphics_handles');
     if ~isempty(history_handles) && all(ishandle(history_handles))
         data = getappdata(fig, 'prepared_history_pixel_data');
@@ -774,18 +819,5 @@ function update_history_display(fig, ax, count)
             set(history_handles(1), 'XData', [], 'YData', []);
             set(history_handles(2), 'XData', [], 'YData', []);
         end
-
-        % Update title to show current mode
-        title_str = get(get(ax, 'Title'), 'String');
-        mode_str = sprintf(' [History: %s]', mode);
-        if ~contains(title_str, '[History:')
-            title_str = [title_str, mode_str];
-        else
-            title_str = regexprep(title_str, '\[History:.*\]', mode_str);
-        end
-        title(ax, title_str);
-
-        % Force redraw
-        drawnow;
     end
 end
