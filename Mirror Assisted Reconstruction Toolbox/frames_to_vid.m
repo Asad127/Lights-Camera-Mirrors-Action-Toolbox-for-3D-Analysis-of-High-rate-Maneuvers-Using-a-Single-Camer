@@ -18,7 +18,7 @@ end
 
 if isfolder(input_frame_filepaths_or_dir)
     input_dir = input_frame_filepaths_or_dir;
-    
+
     % Either ask the user to input image extension, or guess it based on
     % directory contents.
     if default.GUESS_IMG_EXT_WHEN_POSSIBLE
@@ -26,14 +26,14 @@ if isfolder(input_frame_filepaths_or_dir)
     else
         img_extension = prompt_img_extension('[PROMPT] Enter the extension of images to undistort: ');
     end
-    
+
     % Read all image files from the directory.
     img_filepaths = dir(fullfile(input_dir, ['*' img_extension]));
 
     % Get the basenames of the image files and convert from dir struct
     % to standard fullfile format of filepaths (cell row vector).
     img_filepaths = fullfile(input_dir, {img_filepaths.name});
-    
+
     % Sort them to maintain correct sequential ordering.
     if default.FEX_USE_NATSORT
         img_filepaths = natsortfiles(img_filepaths);
@@ -70,7 +70,7 @@ for i = 1 : numel(img_filepaths)
     % Read the current image file
     image_path = img_filepaths{i};
     frame = imread(image_path);
-    
+
     % Write the frame to the video
     writeVideo(output_video, frame);
 

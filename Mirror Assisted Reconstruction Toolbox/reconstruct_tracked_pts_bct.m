@@ -74,13 +74,13 @@ num_views = numel(view_labels);
 num_fields = numel(fieldnames(view_params));
 
 % Check: Can't have more than 3 or less than 2 cams (views)
-if num_fields < min_cam_vars || num_fields > max_cam_vars
-    error('Expected at least %d field vars, and at most %d.\n', min_cam_vars, max_cam_vars);
-elseif num_views < default.MIN_VIEWS || num_views > default.MAX_VIEWS
-    error('Number of views (%d) disagrees with the maximum (%d) and minimum number of views (%d).\n', ...
-        num_views, default.MAX_VIEWS, default.MIN_VIEWS ...
-    )
-end
+% if num_fields < min_cam_vars || num_fields > max_cam_vars
+%     error('Expected at least %d field vars, and at most %d.\n', min_cam_vars, max_cam_vars);
+% elseif num_views < default.MIN_VIEWS || num_views > default.MAX_VIEWS
+%     error('Number of views (%d) disagrees with the maximum (%d) and minimum number of views (%d).\n', ...
+%         num_views, default.MAX_VIEWS, default.MIN_VIEWS ...
+%     )
+% end
 
 fprintf('Determined no. of cameras/views: %d\n', num_views)
 fprintf('Expected Field Variables: %d | Received Field Variables: %d\n', ...
@@ -279,40 +279,121 @@ if use_undistorted_frames
     end
 end
 
+% Create colormap for frame visualization.
+% All frames will use the colormap for consistency and flexibility.
+if num_valid_frames > 1
+    % Create colormap for all frames.
+    all_frames_colors = colormap('nebula');
+    % Interpolate colors for all frames.
+    color_indices = linspace(1, size(all_frames_colors, 1), num_valid_frames);
+    all_frames_colors_interp = interp1(1:size(all_frames_colors, 1), all_frames_colors, color_indices);
+else
+    all_frames_colors_interp = [1, 0, 0]; % Default red for single frame.
+end
+
 % Set optimizer options.
 options = optimoptions('lsqnonlin', 'display', 'off');
 options.Algorithm = 'levenberg-marquardt';
 
-figpos_reprojection = { ...
-    [0,0.459259259259259,0.384895833333333,0.540740740740741], ...
-    [0,0, 0.384895833333333,0.542592592592593], ...
-    [0.384895833333333,0.542592592592593,0.384895833333333,0.44] ...
+% 2x2 layout positions to fill the screen with margins.
+% Top row: 2D reprojection plots
+% Bottom row: 3D reconstruction plots
+% Adding 5% margin on all sides (0.05 = 5% margin)
+margin = 0.05;
+fig_width = 0.40; % 0.5 - 2*margin
+fig_height = 0.40; % 0.5 - 2*margin
+
+% Calculate center position and spacing for tight grouping
+center_x = 0.5 - fig_width/2;
+center_y = 0.5 - fig_height/2;
+spacing_h = 0.0005; % Horizontal spacing between figures
+spacing_v = 0.052; % Vertical spacing between figures
+
+figpos_2x2 = { ...
+    [center_x - fig_width/2 - spacing_h/2, center_y + fig_height/2 + spacing_v/2, fig_width, fig_height], ...     % Top-left: First 2D reprojection
+    [center_x + fig_width/2 + spacing_h/2, center_y + fig_height/2 + spacing_v/2, fig_width, fig_height], ...     % Top-right: Second 2D reprojection (if exists)
+    [center_x - fig_width/2 - spacing_h/2, center_y - fig_height/2 - spacing_v/2, fig_width, fig_height], ...     % Bottom-left: 3D reconstruction
+    [center_x + fig_width/2 + spacing_h/2, center_y - fig_height/2 - spacing_v/2, fig_width, fig_height] ...      % Bottom-right: 3D points only
 };
 
-figpos_reconstruction = [0.375,0,0.493229166666667,0.961111111111111];
 
 % Initialize figures for 2D pixel reprojections.
 figH = zeros(1, num_views + 1);
+
+% Close any existing figures to start fresh.
+close all;
 
 for j = 1 : num_views
     figH(j) = figure( ...
         'Name', sprintf('%s - Pixel Reprojections', view_names{j}), ...
         'Units', 'Normalized',...
-        'Position', figpos_reprojection{j} ...
+        'Position', figpos_2x2{j}, ...
+        'NumberTitle', 'off' ...
     );
 end
 
 % Figure for 3D reconstruction.
 figH(num_views + 1) = figure( ...
+    'Name', '3D Reconstruction w/ Cameras', ...
+    'Units', 'Normalized', ...
+    'Position', figpos_2x2{3}, ...
+    'NumberTitle', 'off' ...
+);
+
+% Figure for 3D points only.
+figH(num_views + 2) = figure( ...
     'Name', '3D Reconstruction', ...
     'Units', 'Normalized', ...
-    'Position', figpos_reconstruction ...
+    'Position', figpos_2x2{4}, ...
+    'NumberTitle', 'off' ...
 );
 
 % f x 2 cell vector to store estimated world coordinates of all tracked
 % physical points in each frame. Each cell contains a 3 x n_pts array
 % corresponding to the 3D world coordinates of the tracked points.
 framewise_tracked_world_pts = cell(num_frames, 1);
+last_valid_frame = valid_frame_idxs(end);
+
+% Open output file for writing metadata and metrics.
+output_txtfile = fopen(fullfile(reconstruction_dir, 'output.txt'), 'w');
+
+% Initialize arrays to store error statistics for CSV output.
+overall_mean_errors = zeros(1, num_valid_frames);
+overall_rms_errors = zeros(1, num_valid_frames);
+per_view_mean_errors = zeros(num_views, num_valid_frames);
+per_view_rms_errors = zeros(num_views, num_valid_frames);
+
+% Pre-allocate arrays for 3D reconstruction visualization.
+all_X_est = zeros(3, num_points, num_valid_frames);
+all_frame_colors = zeros(num_valid_frames, 3);
+all_marker_styles = cell(1, num_valid_frames);
+all_marker_sizes = zeros(1, num_valid_frames);
+
+% Pre-allocate per-view error arrays.
+per_view_mean_reproj_errors = zeros(num_views, num_valid_frames);
+per_view_rms_reproj_errors = zeros(num_views, num_valid_frames);
+
+% Print metadata at the start.
+fprintf(output_txtfile, '[%s]\n', datetime('now'));
+fprintf(output_txtfile, 'Number of Views: %d\n', num_views);
+fprintf(output_txtfile, 'Total Frames: %d\n', num_frames);
+fprintf(output_txtfile, 'Valid Frames: %d (%d-%d)\n', num_valid_frames, valid_frame_idxs(1), valid_frame_idxs(end));
+fprintf(output_txtfile, 'Number of Points per Frame: %d\n', num_points);
+fprintf(output_txtfile, 'Use Undistorted Images: %s\n\n', string(use_undistorted_frames));
+
+% Create colormap for frame visualization.
+% Start and end frames will be special (blue crosses and red crosses).
+% Middle frames will use 'nebula' colormap with circles.
+if num_valid_frames > 2
+    % Create colormap for middle frames (excluding first and last).
+    middle_frames_colors = colormap('nebula');
+    % Interpolate colors for the number of middle frames.
+    middle_frame_indices = 2:(num_valid_frames-1);
+    color_indices = linspace(1, size(middle_frames_colors, 1), length(middle_frame_indices));
+    middle_frames_colors_interp = interp1(1:size(middle_frames_colors, 1), middle_frames_colors, color_indices);
+else
+    middle_frames_colors_interp = [];
+end
 
 for f = 1 : num_valid_frames
 %% OPTIMIZATION PER POINT FOR N-VIEW WORLD COORDINATE ESTIMATION %%
@@ -367,8 +448,11 @@ fprintf('done.\n')
 %% PIXEL REPROJECTION WITH ESTIMATED WORLD POINTS %%
 
 fprintf('Reprojecting using the estimated world coordinates... ')
-per_view_mean_reproj_error = Inf(1, num_views);
-per_view_rms_reproj_error = Inf(1, num_views);
+
+% Pre-allocate arrays for reprojection data.
+all_proj_pixels_org = zeros(3, num_points, num_views, num_valid_frames);
+all_proj_pixels_est = zeros(3, num_points, num_views, num_valid_frames);
+all_images = cell(num_views, num_valid_frames);
 
 for j = 1 : num_views
     % True pixel locations for all physical points as marked.
@@ -382,13 +466,13 @@ for j = 1 : num_views
     if use_undistorted_frames
 	    img = imread(fullfile( ...
             undistorted_frame_dirs{j}, ...
-            sprintf(default.VID_FRAMENAME_FMT, f, frame_extension)) ...
+            sprintf(default.VID_FRAMENAME_FMT, valid_frame_idxs(f), frame_extension)) ...
         );
     else
         img = imread( ...
             fullfile( ...
                 frames_dir, ...
-                sprintf(default.VID_FRAMENAME_FMT, f, frame_extension) ...
+                sprintf(default.VID_FRAMENAME_FMT, valid_frame_idxs(f), frame_extension) ...
             ) ...
         );
     end
@@ -399,13 +483,20 @@ for j = 1 : num_views
     mean_reproj_error = mean(reproj_error_vec);
     rms_reproj_error = sqrt(mean(sum_of_squared_pixel_diff_vec));
 
-    per_view_mean_reproj_error(1, j) = mean_reproj_error;
-    per_view_rms_reproj_error(1, j) = rms_reproj_error;
+    per_view_mean_reproj_errors(j, f) = mean_reproj_error;
+    per_view_rms_reproj_errors(j, f) = rms_reproj_error;
+
+    % Store data for later use.
+    all_proj_pixels_org(:, :, j, f) = proj_pixels_org;
+    all_proj_pixels_est(:, :, j, f) = proj_pixels_est;
+    all_images{j, f} = img;
 
     % Plot the pixels.
     set(0, 'currentfigure', figH(j));
-    imshow(img); hold on;
-    % xlabel('x (pixel)'); ylabel('y (pixel)');
+
+    % Use imagesc instead of imshow to prevent automatic figure resizing.
+    imagesc(img); axis image; axis off;
+    hold on;
     title(sprintf('%s: Pixel Reprojections for Estimated World Coordinates\nFrame %d/%d', ...
         view_names{j}, frame_num, num_frames) ...
     );
@@ -413,80 +504,244 @@ for j = 1 : num_views
     plot(proj_pixels_org(1, :), proj_pixels_org(2, :), 'bo', 'linewidth', 1, 'MarkerSize', 8);
     legend('est WC reprojections',  'org WC reprojections')
     hold off;
+
+    % Store error statistics for CSV output.
+    per_view_mean_errors(j, f) = mean_reproj_error;
+    per_view_rms_errors(j, f) = rms_reproj_error;
 end
-mean_reproj_error_overall = mean(per_view_mean_reproj_error);
-rms_reproj_error_overall = mean(per_view_rms_reproj_error);
+mean_reproj_error_overall = mean(per_view_mean_reproj_errors(:, f));
+rms_reproj_error_overall = mean(per_view_rms_reproj_errors(:, f));
+
+% Store overall error statistics for CSV output.
+overall_mean_errors(f) = mean_reproj_error_overall;
+overall_rms_errors(f) = rms_reproj_error_overall;
+
 fprintf('done.\n')
 
 %% 3D VISUALIZATION - RECONSTRUCTION %%
 
+% Store current frame data for later visualization.
+all_X_est(:, :, f) = X_est;
+
+% Determine marker style and color based on frame position.
+if f == 1
+    % First frame: colored cross using colormap.
+    frame_color = all_frames_colors_interp(f, :);
+    marker_style = 'x';
+    marker_size = 18;
+elseif f == num_valid_frames
+    % Last frame: colored cross using colormap.
+    frame_color = all_frames_colors_interp(f, :);
+    marker_style = 'x';
+    marker_size = 18;
+else
+    % Middle frames: colored circles using nebula colormap.
+    frame_color = all_frames_colors_interp(f, :);
+    marker_style = 'o';
+    marker_size = 6;
+end
+
+% Store visualization parameters.
+all_frame_colors(f, :) = frame_color;
+all_marker_styles{f} = marker_style;
+all_marker_sizes(f) = marker_size;
+
 % Switch to reconstruction figure.
 set(0, 'currentfigure', figH(num_views + 1))
 
-% Mark first point in red for reference; rest in blue.
-plot3(X_est(1, 1), X_est(2, 1), X_est(3, 1), 'r*');
-
-title('3D Reconstruction')
-xlabel('X_{est} (mm)'); ylabel('Y_{est} (mm)'); zlabel('Z_{est} (mm)');
-hold on; grid on;
-
-plot3(X_est(1, 2 : num_points), X_est(2, 2 : num_points), X_est(3, 2 : num_points), 'b*');
-
+% Only clear and set up the figure on the first frame.
 if f == 1
-    % Plot the cameras (original + virtual).
-    colors = {'red', 'blue', 'green'};
-    labels = {'C', 'M1', 'M2'};
+    clf; % Clear the figure only once at the beginning.
 
+    % Set up the figure properties first.
+    title('3D Reconstruction w/ Cameras')
+    xlabel('X_{est} (mm)'); ylabel('Y_{est} (mm)'); zlabel('Z_{est} (mm)');
+    axis equal
+    hold on; % Keep the figure open for adding points.
+
+    % Plot the cameras (original + virtual) only once, after figure setup.
     for j = 1 : num_views
         k = view_labels(j);
-
-        % Get the current view's rotation and translation. Technically, we
-        % need the camera w.r.t world, but Computer Vision Toolbox's
-        % plotCamera function automatically handles that.
         R_cam = R(:, 3*(j-1)+1 : 3*j);
         T_cam = T(:, j);
+
         if k == 1
-            plot_cam( ...
-                R_cam, ...
-                T_cam, ...
-                30, ...         % size of plotted camera
-                colors{k}, ...  % color of plotted camera
-                labels{k}, ...  % label of plotted camera (annotation)
-                true, ...       % whether the camera XYZ frame is shown
-                0 ...           % opacity of camera, 0 = transparent
+            % Original view. Can use plotCamera since +ve det rotation matrix.
+            pose_cam = rigidtform3d(R_cam, T_cam);
+
+            % pose_cam is the camera pose in CAMERA coordinates, pose_world is the camera's pose in WORLD coordinates
+            % (inversion of pose_cam). Note that invert(pose_cam) is equivalent to extr2pose(pose_cam).
+            pose_world = invert(pose_cam);
+
+            plotCamera( ...
+                'AbsolutePose', pose_world, ...
+                'Size', 30, ...
+                'Color', 'red', ...
+                'Label', 'C', ...
+                'AxesVisible', true, ...
+                'Opacity', 0.10 ...
             );
+
         else
-            % This does not use plotCamera, and just plots the camera axes.
-            % red = x, green = y, blue = z axes. In the function, you'll
-            % find the aforementioned inversion to get the camera in world
-            % coordinates reference.
-            plot_virtual_cam(R_cam, T_cam)
+            % Virtual mirror view. Can't use plotCamera since negative determinant on rotation matrix.
+            % Use the enhanced plot_virtual_cam function for better visualization.
+            plot_virtual_cam(R_cam, T_cam);
         end
     end
 end
 
-% for i = 1 : numel(figH)
-%     tightfig(figH(i));
-% end
+% Plot all points for current frame with appropriate styling.
+if f == 1 || f == num_valid_frames
+    % For start/end frames, use crosses with colormap color.
+    for i = 1:num_points
+        plot3(X_est(1, i), X_est(2, i), X_est(3, i), marker_style, 'Color', frame_color, 'MarkerSize', marker_size, 'LineWidth', 2);
+    end
+else
+    % For middle frames, use colored circles.
+    for i = 1:num_points
+        plot3(X_est(1, i), X_est(2, i), X_est(3, i), marker_style, 'Color', frame_color, 'MarkerSize', marker_size, 'LineWidth', 1);
+    end
+end
 
-axis equal
+grid on;
 drawnow()
 
-%% METRIC PRINTOUT %%
+%% 3D POINTS-ONLY VISUALIZATION %%
 
+% Switch to points-only figure.
+set(0, 'currentfigure', figH(num_views + 2))
+
+% Only clear and set up the figure on the first frame.
+if f == 1
+    clf; % Clear the figure only once at the beginning.
+
+    % Set up the figure properties first.
+    title('3D Reconstruction')
+    xlabel('X_{est} (mm)'); ylabel('Y_{est} (mm)'); zlabel('Z_{est} (mm)');
+    axis equal
+    hold on; % Keep the figure open for adding points.
+end
+
+% Use pre-allocated data for consistency.
+frame_color = all_frame_colors(f, :);
+marker_style = all_marker_styles{f};
+marker_size = all_marker_sizes(f);
+
+% Adjust marker size for points-only plot (larger crosses).
+if f == 1 || f == num_valid_frames
+    marker_size = 18;
+end
+
+% Plot all points for current frame with appropriate styling.
+if f == 1 || f == num_valid_frames
+    % For start/end frames, use crosses with colormap color.
+    for i = 1:num_points
+        plot3(X_est(1, i), X_est(2, i), X_est(3, i), marker_style, 'Color', frame_color, 'MarkerSize', marker_size, 'LineWidth', 2);
+    end
+else
+    % For middle frames, use colored filled circles.
+    for i = 1:num_points
+        plot3(X_est(1, i), X_est(2, i), X_est(3, i), marker_style, 'Color', frame_color, 'MarkerSize', marker_size, 'LineWidth', 1, 'MarkerFaceColor', frame_color);
+    end
+end
+
+% Dynamically adjust the plot to ensure all drawn points are visible.
+if f == 1
+    % Set initial view limits based on first frame.
+    xlim([min(X_est(1, :)) - 10, max(X_est(1, :)) + 10]);
+    ylim([min(X_est(2, :)) - 10, max(X_est(2, :)) + 10]);
+    zlim([min(X_est(3, :)) - 10, max(X_est(3, :)) + 10]);
+else
+    % Update limits to include new points.
+    current_xlim = xlim;
+    current_ylim = ylim;
+    current_zlim = zlim;
+
+    new_xlim = [min(current_xlim(1), min(X_est(1, :)) - 10), max(current_xlim(2), max(X_est(1, :)) + 10)];
+    new_ylim = [min(current_ylim(1), min(X_est(2, :)) - 10), max(current_ylim(2), max(X_est(2, :)) + 10)];
+    new_zlim = [min(current_zlim(1), min(X_est(3, :)) - 10), max(current_zlim(2), max(X_est(3, :)) + 10)];
+
+    xlim(new_xlim);
+    ylim(new_ylim);
+    zlim(new_zlim);
+end
+
+grid on;
+drawnow()
+
+% Save 3D reconstruction figures as .fig files for later viewing.
+if f == num_valid_frames
+    % Save the main 3D reconstruction figure (with cameras).
+    fig_3d_cameras_filename = '3d_reconstruction_with_cameras.fig';
+    fig_3d_cameras_filepath = fullfile(reconstruction_dir, fig_3d_cameras_filename);
+    saveas(figH(num_views + 1), fig_3d_cameras_filepath);
+
+    % Save the 3D points-only figure.
+    fig_3d_points_filename = '3d_reconstruction_points_only.fig';
+    fig_3d_points_filepath = fullfile(reconstruction_dir, fig_3d_points_filename);
+    saveas(figH(num_views + 2), fig_3d_points_filepath);
+end
+
+%% METRIC PRINTOUT %%
+fprintf('\nFRAME %d / %d (relative) ; %d / %d (absolute)\n', f, num_valid_frames, frame_num, last_valid_frame);
+fprintf(output_txtfile, '\nFRAME %d / %d (relative) ; %d / %d (absolute)\n', f, num_valid_frames, frame_num, last_valid_frame);
 fprintf('\t*** ERRORS ***\n');
+fprintf(output_txtfile, '\t*** ERRORS ***\n');
 fprintf('\tMean Reprojection Error (OVERALL): %f\n', mean_reproj_error_overall);
-fmt = ['\tMean Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_mean_reproj_error(1, :)) - 1), '%f\n'];
-fprintf(fmt, per_view_mean_reproj_error(1, :));
+fprintf(output_txtfile, '\tMean Reprojection Error (OVERALL): %f\n', mean_reproj_error_overall);
+fmt = ['\tMean Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_mean_reproj_errors(:, f)) - 1), '%f\n'];
+fprintf(fmt, per_view_mean_reproj_errors(:, f));
+fprintf(output_txtfile, fmt, per_view_mean_reproj_errors(:, f));
 fprintf('\tRMS Reprojection Error (OVERALL): %f\n', rms_reproj_error_overall);
-fmt = ['\tRMS Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_rms_reproj_error(1, :)) - 1), '%f\n'];
-fprintf(fmt, per_view_rms_reproj_error(1, :));
+fprintf(output_txtfile, '\tRMS Reprojection Error (OVERALL): %f\n', rms_reproj_error_overall);
+fmt = ['\tRMS Reprojection Error (PER-VIEW): ', repmat('%f, ', 1, numel(per_view_rms_reproj_errors(:, f)) - 1), '%f\n'];
+fprintf(fmt, per_view_rms_reproj_errors(:, f));
+fprintf(output_txtfile, fmt, per_view_rms_reproj_errors(:, f));
 fmt = ['\tEstimated 3D Points: ', repmat('(%4.4f, %4.4f, %4.4f), ', 1, num_points - 1), '(%4.4f, %4.4f, %4.4f)\n'];
 fprintf(fmt, X_est);
+fprintf(output_txtfile, fmt, X_est);
 
 end
 
 %% FINAL STEPS %%
+
+% Close the output file.
+fclose(output_txtfile);
+
+% Save reprojection error statistics to CSV files.
+% Overall errors CSV with statistics
+[overall_variances, overall_std_devs] = calculate_error_statistics(overall_mean_errors, overall_rms_errors);
+overall_errors_table = table((1:num_valid_frames)', overall_mean_errors', overall_rms_errors', overall_variances', overall_std_devs', ...
+    'VariableNames', {'Frame', 'MeanError', 'RMSError', 'Variance', 'StdDev'});
+writetable(overall_errors_table, fullfile(reconstruction_dir, 'reprojection_errors.csv'));
+
+% Per-view errors CSV with statistics
+% Pre-allocate: num_valid_frames * num_views rows × 6 columns (Frame, View, MeanError, RMSError, Variance, StdDev)
+per_view_errors_data = zeros(num_valid_frames * num_views, 6);
+row_idx = 1;
+
+for f = 1:num_valid_frames
+    for j = 1:num_views
+        % Get the mean and RMS errors for this frame and view
+        view_mean_error = per_view_mean_errors(j, f);
+        view_rms_error = per_view_rms_errors(j, f);
+        if view_rms_error > 0
+            view_variance = view_rms_error^2 - view_mean_error^2;
+            view_std_dev = sqrt(view_variance);
+        else
+            view_variance = 0;
+            view_std_dev = 0;
+        end
+
+        % Add statistics for this frame and view
+        per_view_errors_data(row_idx, :) = [valid_frame_idxs(f), j, view_mean_error, view_rms_error, view_variance, view_std_dev];
+        row_idx = row_idx + 1;
+    end
+end
+
+per_view_errors_table = array2table(per_view_errors_data, ...
+    'VariableNames', {'Frame', 'View', 'MeanError', 'RMSError', 'Variance', 'StdDev'});
+writetable(per_view_errors_table, fullfile(reconstruction_dir, 'reprojection_errors_per_view.csv'));
 
 for invalid_frame_idx = reshape(invalid_frame_idxs, 1, [])
     framewise_tracked_world_pts{invalid_frame_idx} = nan(3, num_points);
@@ -521,4 +776,31 @@ not a scalar value. So, we vectorize all three.
         vector_err = [vector_err reproj_error];
     end
     error = vector_err;
+end
+
+function [variances, std_devs] = calculate_error_statistics(mean_errors, rms_errors)
+%{
+Calculate variance and standard deviation from mean and RMS errors.
+This function converts the recover_stdev_and_var.m script into a reusable function.
+
+INPUTS:
+    mean_errors: Array of mean reprojection errors for each frame
+    rms_errors: Array of RMS reprojection errors for each frame
+
+OUTPUTS:
+    variances: Array of variances for each frame
+    std_devs: Array of standard deviations for each frame
+%}
+    % Get the number of frames
+    num_frames = length(mean_errors);
+
+    % Initialize arrays to store variance and standard deviation
+    variances = zeros(1, num_frames);
+    std_devs = zeros(1, num_frames);
+
+    % Compute variance and standard deviation for each frame
+    for i = 1:num_frames
+        variances(i) = rms_errors(i)^2 - mean_errors(i)^2;
+        std_devs(i) = sqrt(variances(i));
+    end
 end

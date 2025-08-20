@@ -61,7 +61,7 @@ switch nargin
             'integer corresponding to the reference image number from BCT calibration.']);
     case 2
         error(['Missing translation vector Tc_x, where x is an integer ' ...
-            'corresponding to the reference eimage number from BCT calibration.'])
+            'corresponding to the reference image number from BCT calibration.'])
 end
 
 dlt = K * [Rc Tc];
